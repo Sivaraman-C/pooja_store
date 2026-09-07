@@ -83,6 +83,11 @@ const Products = () => {
   };
 
 
+  const getImageUrl = (image) => {
+    if (!image) return "/logo.svg";
+    return image.startsWith("http") ? image : `${API_URL}${image}`;
+  };
+
   return (
     <div className="products-admin">
 
@@ -150,7 +155,7 @@ const Products = () => {
                       <div className="admin-product">
 
                         <img
-                          src={`${API_URL}${product.image}`}
+                          src={getImageUrl(product.image)}
                           alt={product.name}
                         />
 

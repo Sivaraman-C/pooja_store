@@ -47,6 +47,11 @@ const Wishlist = () => {
     }
   };
 
+  const getImageUrl = (image) => {
+    if (!image) return "/logo.svg";
+    return image.startsWith("http") ? image : `${API_URL}${image}`;
+  };
+
   if (!userId) {
     return (
       <div className="wishlist-page empty">
@@ -71,7 +76,7 @@ const Wishlist = () => {
           <div className="wishlist-grid">
             {items.map(product => (
               <div key={product.id} className="wishlist-card">
-                <img src={`${API_URL}${product.image}`} alt={product.name} />
+                <img src={getImageUrl(product.image)} alt={product.name} />
                 <div className="wishlist-info">
                   <h3>{product.name}</h3>
                   <p>₹{Number(product.price).toLocaleString("en-IN")}</p>

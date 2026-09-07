@@ -356,7 +356,7 @@ const EditProduct = () => {
               </label>
 
               <img
-                src={`${API_URL}${currentImage}`}
+                src={currentImage.startsWith("http") ? currentImage : `${API_URL}${currentImage}`}
                 alt={formData.name}
               />
 

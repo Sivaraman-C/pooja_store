@@ -70,7 +70,7 @@ const Profile = () => {
             state: fetchedUser.state || "",
             pincode: fetchedUser.pincode || "",
           });
-          setImagePreview(fetchedUser.profile_image ? `${API_URL}${fetchedUser.profile_image}` : "");
+          setImagePreview(fetchedUser.profile_image ? (fetchedUser.profile_image.startsWith("http") ? fetchedUser.profile_image : `${API_URL}${fetchedUser.profile_image}`) : "");
 
           // Sync local storage
           localStorage.setItem("user", JSON.stringify({

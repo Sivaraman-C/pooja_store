@@ -1,85 +1,19 @@
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 const db = require("../db");
+const { productStorage } = require("../cloudinaryConfig");
 
 const router = express.Router();
-
-const productImagesDirectory = path.join(
-  __dirname,
-  "../uploads/Products_images"
-);
-
-fs.mkdirSync(productImagesDirectory, { recursive: true });
 
 /* =========================
    IMAGE UPLOAD
 ========================= */
 
-const storage = multer.diskStorage({
-
-  destination: (req, file, cb) => {
-    cb(null, productImagesDirectory);
-  },
-
-  filename: (req, file, cb) => {
-
-    const uniqueName =
-      Date.now() +
-      "-" +
-      Math.round(Math.random() * 100000);
-
-    cb(
-      null,
-      uniqueName +
-      path.extname(file.originalname)
-    );
-
-  },
-
-});
-
-
 const upload = multer({
-
-  storage: storage,
-
+  storage: productStorage,
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
-
-  fileFilter: (req, file, cb) => {
-
-    const allowed =
-      /jpeg|jpg|png|webp/;
-
-    const ext =
-      allowed.test(
-        path.extname(
-          file.originalname
-        ).toLowerCase()
-      );
-
-    const mime =
-      allowed.test(file.mimetype);
-
-    if (ext && mime) {
-
-      cb(null, true);
-
-    } else {
-
-      cb(
-        new Error(
-          "Only JPG, PNG and WEBP images are allowed"
-        )
-      );
-
-    }
-
-  },
-
 });
 
 
@@ -129,9 +63,7 @@ router.post(
     }
 
 
-    const image = req.file
-      ? `/uploads/Products_images/${req.file.filename}`
-      : null;
+    const image = req.file ? req.file.path : null;
 
 
     const sql = `
@@ -439,7 +371,7 @@ router.put(
     // If new image is uploaded
     if (req.file) {
 
-      const image = `/uploads/Products_images/${req.file.filename}`;
+      const image = req.file.path;
 
       const sql = `
         UPDATE products

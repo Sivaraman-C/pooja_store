@@ -1207,7 +1207,7 @@ const FestivalCalendar = () => {
                       <div className="festival-product" key={product.id}>
                         <div className="festival-product-image">
                           {product.image ? (
-                            <img src={`${API_URL}${product.image}`} alt="" />
+                            <img src={product.image.startsWith("http") ? product.image : `${API_URL}${product.image}`} alt="" />
                           ) : (
                             <span>🪔</span>
                           )}

@@ -1,9 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
-const path = require("path");
 const db = require("../db");
 const twilio = require("twilio");
+const { profileStorage } = require("../cloudinaryConfig");
 
 const router = express.Router();
 
@@ -14,25 +14,9 @@ const requireRole = (...roles) => (req, res, next) => {
     next();
 };
 
-const profileImageStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, "../uploads"));
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + "-" + Math.round(Math.random() * 100000);
-        cb(null, uniqueName + path.extname(file.originalname));
-    },
-});
-
 const profileImageUpload = multer({
-    storage: profileImageStorage,
+    storage: profileStorage,
     limits: { fileSize: 5 * 1024 * 1024 },
-    fileFilter: (req, file, cb) => {
-        const allowed = /jpeg|jpg|png|webp/;
-        const extensionValid = allowed.test(path.extname(file.originalname).toLowerCase());
-        const mimeValid = allowed.test(file.mimetype);
-        cb(extensionValid && mimeValid ? null : new Error("Only JPG, PNG and WEBP images are allowed"), extensionValid && mimeValid);
-    },
 });
 
 const sendSmsOtp = async (phone, otp) => {
@@ -167,7 +151,7 @@ router.get("/profile/:id", (req, res) => {
 router.put("/profile/:id", profileImageUpload.single("profileImage"), (req, res) => {
     const { name, email, phone, address, city, state, pincode } = req.body;
     const sql = "UPDATE users SET name=?, email=?, phone=?, address=?, city=?, state=?, pincode=?, profile_image=COALESCE(?, profile_image) WHERE id=?";
-    db.query(sql, [name, email, phone, address, city, state, pincode, req.file ? `/uploads/${req.file.filename}` : null, req.params.id], (err) => {
+    db.query(sql, [name, email, phone, address, city, state, pincode, req.file ? req.file.path : null, req.params.id], (err) => {
         if (err) return res.status(500).json({ message: "Failed to update profile" });
 
         db.query("SELECT id, name, email, phone, address, city, state, pincode, profile_image, role FROM users WHERE id = ?", [req.params.id], (selectErr, results) => {

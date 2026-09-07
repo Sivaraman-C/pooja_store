@@ -264,6 +264,11 @@ const Featured = () => {
   }
 
 
+  const getImageUrl = (image) => {
+    if (!image) return "/logo.svg";
+    return image.startsWith("http") ? image : `${API_URL}${image}`;
+  };
+
   return (
 
     <section className="featured-section">
@@ -313,7 +318,7 @@ const Featured = () => {
                 <div className="product-image">
 
                   <img
-                    src={`${API_URL}${product.image}`}
+                    src={getImageUrl(product.image)}
                     alt={product.name}
                   />
 
