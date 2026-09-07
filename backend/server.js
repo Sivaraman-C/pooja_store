@@ -3,10 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
-const environmentFile = ".env.example";
-
 require("dotenv").config({
-  path: path.join(__dirname, environmentFile),
+  path: path.join(__dirname, ".env"),
 });
 
 const productRoutes = require("./routes/productRoutes");
@@ -19,7 +17,7 @@ const wishlistRoutes = require("./routes/wishlistRoutes");
 
 const app = express();
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 /* =========================
    MIDDLEWARE
@@ -133,6 +131,6 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(
-    `Server running on port ${PORT} (Available to all devices on the network)`
+    `Server running on port ${PORT}`
   );
 });
