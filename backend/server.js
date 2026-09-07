@@ -3,9 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
-require("dotenv").config({
-  path: path.join(__dirname, ".env"),
-});
+// Load .env only if it exists
+require("dotenv").config();
 
 const productRoutes = require("./routes/productRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -17,6 +16,7 @@ const wishlistRoutes = require("./routes/wishlistRoutes");
 
 const app = express();
 
+// Render uses port 10000 by default, or process.env.PORT
 const PORT = process.env.PORT || 5000;
 
 /* =========================
@@ -121,6 +121,7 @@ app.use((error, req, res, next) => {
 app.get("/", (req, res) => {
   res.json({
     message: "Devaloka API running",
+    db_host: process.env.DB_HOST ? "Configured" : "Not Set"
   });
 });
 
@@ -129,8 +130,7 @@ app.get("/", (req, res) => {
    SERVER
 ========================= */
 
+// Listen on 0.0.0.0 for Render
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(
-    `Server running on port ${PORT}`
-  );
+  console.log(`Server running on port ${PORT}`);
 });

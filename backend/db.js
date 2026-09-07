@@ -2,30 +2,37 @@
 const mysql = require("mysql2");
 const path = require("path");
 
-// Load .env from the backend directory
-require("dotenv").config({
-  path: path.join(__dirname, ".env"),
-});
+// Load .env only if it exists (for local development)
+require("dotenv").config();
 
-const db = mysql.createPool({
+const dbConfig = {
   host: process.env.DB_HOST || "localhost",
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "Admin1234#@",
   database: process.env.DB_NAME || "devaloka",
-  port: process.env.DB_PORT || 3306,
+  port: parseInt(process.env.DB_PORT) || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : null
-});
+};
+
+// Add SSL for cloud databases (like Aiven)
+if (process.env.DB_SSL === "true" || dbConfig.host.includes("aivencloud.com")) {
+  dbConfig.ssl = { rejectUnauthorized: false };
+}
+
+console.log(`Connecting to database at ${dbConfig.host}:${dbConfig.port}...`);
+
+const db = mysql.createPool(dbConfig);
 
 db.getConnection((err, connection) => {
   if (err) {
-    console.error("MySQL connection failed:", err.message);
+    console.error("MySQL connection failed! Error:", err.message);
+    console.error("Current Config Host:", dbConfig.host);
     return;
   }
 
-  console.log("MySQL connected successfully");
+  console.log("MySQL connected successfully to", dbConfig.host);
   connection.release();
 });
 

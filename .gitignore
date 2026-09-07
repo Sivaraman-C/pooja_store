@@ -36,3 +36,8 @@ backend/.env
 
 # Local config
 src/apiConfig.js
+
+# Backend uploads
+backend/uploads/
+devaloka_backup.sql
+*.log
