@@ -103,10 +103,11 @@ app.use(
 
 app.use((error, req, res, next) => {
   if (error) {
-    console.error("REQUEST ERROR:", error.message);
+    console.error("REQUEST ERROR:", error);
 
     return res.status(error.code === "LIMIT_FILE_SIZE" ? 400 : 500).json({
       message: error.message || "Request failed",
+      error: error
     });
   }
 
