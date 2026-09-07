@@ -1,0 +1,252 @@
+.admin-layout {
+  min-height: 100vh;
+  display: flex;
+  background: linear-gradient(180deg, #f7f2ec 0%, #f3efe9 100%);
+}
+
+/* SIDEBAR */
+
+.admin-sidebar {
+  width: 250px;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #261d18 0%, #1d1713 100%);
+  color: white;
+  box-shadow: 14px 0 30px rgba(27, 18, 13, 0.12);
+  z-index: 5;
+}
+
+.admin-logo {
+  padding: 28px 22px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logo img {
+  max-width: 145px;
+  height: auto;
+  filter: drop-shadow(0 6px 12px rgba(240, 68, 10, 0.22));
+}
+
+.admin-logo span {
+  display: block;
+  margin-top: 12px;
+  color: #d8b998;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* NAV */
+
+.admin-nav {
+  flex: 1;
+  padding: 22px 14px;
+}
+
+.admin-nav a,
+.admin-sidebar-bottom a,
+.admin-sidebar-bottom button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #ddd0c1;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.admin-nav a span,
+.admin-sidebar-bottom span {
+  width: 22px;
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.96;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+  background: linear-gradient(135deg, #f15b24 0%, #d73e0d 100%);
+  color: white;
+  box-shadow: 0 10px 20px rgba(240, 68, 10, 0.18);
+}
+
+.admin-sidebar-bottom {
+  padding: 16px 14px 18px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-sidebar-bottom button {
+  font-family: inherit;
+}
+
+.admin-sidebar-bottom a:hover,
+.admin-sidebar-bottom button:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* MAIN */
+
+.admin-main {
+  width: calc(100% - 250px);
+  margin-left: 250px;
+  background: transparent;
+}
+
+.admin-header {
+  height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px 0 35px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(131, 115, 101, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.admin-header h3 {
+  margin: 0;
+  color: #2e261f;
+  font-family: Georgia, serif;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid rgba(88, 67, 55, 0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.admin-user:hover {
+  box-shadow: 0 10px 20px rgba(52, 38, 27, 0.08);
+}
+
+.admin-avatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f15b24 0%, #c7440d 100%);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.admin-user strong,
+.admin-user small {
+  display: block;
+}
+
+.admin-user strong {
+  color: #342d26;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-user small {
+  margin-top: 3px;
+  color: #8a8177;
+  font-size: 11px;
+}
+
+.admin-content {
+  padding: 30px 30px 40px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+  .admin-sidebar {
+    width: 72px;
+  }
+
+  .admin-logo {
+    padding: 20px 10px;
+    text-align: center;
+  }
+
+  .nav-logo img {
+    max-width: 36px;
+  }
+
+  .admin-logo span {
+    display: none;
+  }
+
+  .admin-nav {
+    padding: 15px 8px;
+  }
+
+  .admin-nav a,
+  .admin-sidebar-bottom a,
+  .admin-sidebar-bottom button {
+    justify-content: center;
+    padding: 13px 5px;
+    font-size: 0;
+  }
+
+  .admin-nav a span,
+  .admin-sidebar-bottom span {
+    font-size: 18px;
+  }
+
+  .admin-main {
+    width: calc(100% - 72px);
+    margin-left: 72px;
+  }
+
+  .admin-header {
+    padding: 0 15px;
+    height: 76px;
+  }
+
+  .admin-header h3 {
+    font-size: 19px;
+  }
+
+  .admin-user {
+    padding: 6px 8px 6px 6px;
+  }
+
+  .admin-user div:last-child {
+    display: none;
+  }
+
+  .admin-content {
+    padding: 18px 15px 24px;
+  }
+}

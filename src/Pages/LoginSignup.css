@@ -1,0 +1,391 @@
+/* =========================================================
+   DEVALOKA LOGIN / SIGNUP
+========================================================= */
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8f3e8 0%,
+      #fffaf1 50%,
+      #f3ead8 100%
+    );
+
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.login-container {
+  width: 100%;
+  max-width: 480px;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  padding: 45px 42px;
+
+  box-shadow:
+    0 20px 60px rgba(70, 48, 20, 0.12);
+
+  border: 1px solid rgba(150, 110, 50, 0.12);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.login-content {
+  width: 100%;
+}
+
+
+.login-label {
+  margin: 0 0 12px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  color: #C9371B;
+
+  text-transform: uppercase;
+}
+
+
+.login-content h1 {
+  margin: 0 0 12px;
+
+  font-size: 36px;
+
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  color: #332313;
+}
+
+
+.login-description {
+  margin: 0 0 30px;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+
+  color: #77706a;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #C9371B;
+}
+
+
+.form-group input {
+  width: 100%;
+
+  height: 50px;
+
+  padding: 0 15px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ddd3c3;
+
+  border-radius: 10px;
+
+  background: #fff;
+
+  color: #C9371B;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.form-group input::placeholder {
+  color: #aaa19a;
+}
+
+
+.form-group input:focus {
+  border-color: #C9371B;
+
+  box-shadow:
+    0 0 0 3px rgba(178, 122, 34, 0.12);
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.login-submit {
+  width: 100%;
+
+  height: 52px;
+
+  margin-top: 8px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #a96f18;
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.login-submit:hover {
+  background: #C9371B;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 20px rgba(143, 93, 19, 0.2);
+}
+
+
+.login-submit:active {
+  transform: translateY(0);
+}
+
+
+.login-submit:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+.otp-btn {
+  background: #C9371B;
+}
+
+.register-steps {
+  width: 100%;
+}
+
+.input-with-eye {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-eye input {
+  padding-right: 45px !important;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+  opacity: 0.7;
+}
+
+.eye-icon:hover {
+  opacity: 1;
+}
+
+.back-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  height: 45px;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.login-error {
+  margin-bottom: 20px;
+
+  padding: 12px 15px;
+
+  border-radius: 8px;
+
+  background: #fff0f0;
+
+  border: 1px solid #f2c5c5;
+
+  color: #b42318;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.login-success {
+  margin-bottom: 20px;
+
+  padding: 12px 15px;
+
+  border-radius: 8px;
+
+  background: #eefaf1;
+
+  border: 1px solid #b9e4c3;
+
+  color: #18753c;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   LOGIN / SIGNUP SWITCH
+========================================================= */
+
+.login-switch {
+  margin-top: 25px;
+
+  text-align: center;
+
+  font-size: 14px;
+
+  color: #77706a;
+}
+
+
+.login-switch button {
+  margin-left: 6px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #a96f18;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+.login-switch button:hover {
+  color: #C9371B;
+
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+  .login-page {
+    padding: 20px 15px;
+  }
+
+
+  .login-container {
+    padding: 35px 25px;
+
+    border-radius: 16px;
+  }
+
+
+  .login-content h1 {
+    font-size: 30px;
+  }
+
+
+  .login-description {
+    font-size: 14px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .login-container {
+    padding: 30px 20px;
+  }
+
+
+  .login-content h1 {
+    font-size: 27px;
+  }
+
+}

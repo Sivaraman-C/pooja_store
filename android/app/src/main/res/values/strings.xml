@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Devaloka</string>
+    <string name="title_activity_main">Devaloka</string>
+    <string name="package_name">com.devaloka.app</string>
+    <string name="custom_url_scheme">com.devaloka.app</string>
+</resources>

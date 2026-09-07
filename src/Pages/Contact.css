@@ -1,0 +1,20 @@
+.contact-page { min-height: calc(100vh - 80px); padding: 70px 0 100px; background: #f2eee8; color: #332c26; }
+.contact-container { width: 90%; max-width: 1180px; margin: 0 auto; }
+.contact-heading { max-width: 650px; padding-bottom: 58px; border-bottom: 1px solid #d8d0c7; }
+.contact-eyebrow { margin: 0 0 15px; color: #8e2f1d; font-size: 11px; letter-spacing: 4px; }
+.contact-heading h1 { margin: 0 0 20px; font-family: Georgia, "Times New Roman", serif; font-size: 76px; font-weight: 400; line-height: 1; }
+.contact-heading > p:last-child { max-width: 510px; margin: 0; color: #766c61; font-size: 17px; line-height: 1.7; }
+.contact-layout { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 100px; padding-top: 58px; }
+.contact-details { display: grid; align-content: start; gap: 32px; }
+.contact-detail { padding-top: 14px; border-top: 1px solid #d8d0c7; }
+.contact-detail span { display: block; margin-bottom: 10px; color: #766c61; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+.contact-detail a, .contact-detail p { margin: 0; color: #332c26; line-height: 1.6; text-decoration: none; }
+.contact-detail a:hover { color: #8e2f1d; }
+.contact-form { display: grid; gap: 22px; }
+.contact-form label { display: grid; gap: 9px; color: #766c61; font-size: 13px; }
+.contact-form input, .contact-form textarea { width: 100%; box-sizing: border-box; padding: 13px 0; border: 0; border-bottom: 1px solid #bdb3a8; outline: none; background: transparent; color: #332c26; font: inherit; resize: vertical; }
+.contact-form input:focus, .contact-form textarea:focus { border-color: #ff3d00; }
+.contact-form button { justify-self: start; padding: 14px 22px; border: 0; background: #ff3d00; color: #fff; cursor: pointer; font: inherit; }
+.contact-form button span { margin-left: 12px; }
+.contact-success { margin: -5px 0 0; color: #287a35; font-size: 13px; }
+@media (max-width: 760px) { .contact-page { padding-top: 45px; } .contact-heading h1 { font-size: 56px; } .contact-layout { grid-template-columns: 1fr; gap: 55px; } }

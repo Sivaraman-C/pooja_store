@@ -1,0 +1,45 @@
+.mobile-menu-page {
+  padding: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.mobile-menu-page h2 {
+  font-family: Georgia, serif;
+  margin-bottom: 20px;
+  color: #332c25;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+.menu-card {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.menu-card:hover {
+  border-color: #a96f18;
+  transform: translateY(-2px);
+}
+
+.logout-card {
+  color: #C9371B;
+  cursor: pointer;
+}
+
+.logout-card:hover {
+  border-color: #C9371B;
+  background-color: #fff5f2;
+}
