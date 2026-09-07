@@ -161,6 +161,16 @@ router.put("/profile/:id", profileImageUpload.single("profileImage"), (req, res)
     });
 });
 
+// TEST ROUTE FOR CLOUDINARY
+router.get("/test-cloud", (req, res) => {
+    res.json({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? "Found" : "Missing",
+        api_key: process.env.CLOUDINARY_API_KEY ? "Found" : "Missing",
+        api_secret: process.env.CLOUDINARY_API_SECRET ? "Found" : "Missing",
+        env_loaded: !!process.env.PORT
+    });
+});
+
 // =====================================================
 // ADMIN USER MANAGEMENT
 // =====================================================
