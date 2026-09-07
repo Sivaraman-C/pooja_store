@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import "./Checkout.css";
 
-import API_URL from "../apiConfig";
+import API_URL, { bypassHeaders } from "../apiConfig";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -22,6 +22,38 @@ const Checkout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [order, setOrder] = useState(null);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/auth/profile/${userId}`, {
+          headers: { ...bypassHeaders },
+        });
+        const data = await response.json();
+        if (!response.ok || !data.user) return;
+
+        const profile = data.user;
+        setForm((previousForm) => ({
+          ...previousForm,
+          customer_name: profile.name || previousForm.customer_name,
+          email: profile.email || previousForm.email,
+          phone: profile.phone || "",
+          address: profile.address || "",
+          city: profile.city || "",
+          state: profile.state || "",
+          pincode: profile.pincode || "",
+        }));
+        const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+        localStorage.setItem("user", JSON.stringify({ ...currentUser, ...profile }));
+      } catch (profileError) {
+        console.error("Checkout profile fetch error:", profileError);
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });

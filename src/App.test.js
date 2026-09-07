@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 import Navbar from './Components/Navbar/Navbar';
+import Checkout from './Pages/Checkout';
 
 beforeEach(() => {
   localStorage.clear();
@@ -116,4 +117,40 @@ test('syncs a saved delivery address with the backend', async () => {
     expect.objectContaining({ method: 'PUT', body: expect.any(FormData) })
   );
   expect(JSON.parse(localStorage.getItem('user')).city).toBe('Chennai');
+});
+
+test('prefills all checkout delivery details from the latest profile', async () => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      user: {
+        id: 7,
+        name: 'Test User',
+        email: 'test@example.com',
+        phone: '9876543210',
+        address: '12 Temple Street',
+        city: 'Chennai',
+        state: 'Tamil Nadu',
+        pincode: '600001',
+      },
+    }),
+  });
+
+  localStorage.setItem('user', JSON.stringify({ id: 7, name: 'Old Name', email: 'old@example.com' }));
+
+  render(
+    <MemoryRouter>
+      <Checkout />
+    </MemoryRouter>
+  );
+
+  expect(await screen.findByDisplayValue('9876543210')).toBeInTheDocument();
+  expect(screen.getByDisplayValue('12 Temple Street')).toBeInTheDocument();
+  expect(screen.getByDisplayValue('Chennai')).toBeInTheDocument();
+  expect(screen.getByDisplayValue('Tamil Nadu')).toBeInTheDocument();
+  expect(screen.getByDisplayValue('600001')).toBeInTheDocument();
+  expect(global.fetch).toHaveBeenCalledWith(
+    expect.stringContaining('/api/auth/profile/7'),
+    expect.objectContaining({ headers: expect.any(Object) })
+  );
 });

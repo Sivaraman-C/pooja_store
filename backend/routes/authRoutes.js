@@ -163,11 +163,12 @@ router.put("/profile/:id", profileImageUpload.single("profileImage"), (req, res)
 
 // TEST ROUTE FOR CLOUDINARY
 router.get("/test-cloud", (req, res) => {
+    const keys = Object.keys(process.env).filter(k => k.startsWith("CLOUDINARY_"));
     res.json({
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? "Found" : "Missing",
-        api_key: process.env.CLOUDINARY_API_KEY ? "Found" : "Missing",
-        api_secret: process.env.CLOUDINARY_API_SECRET ? "Found" : "Missing",
-        env_loaded: !!process.env.PORT
+        status: "Diagnostic",
+        found_keys: keys,
+        api_secret_status: process.env.CLOUDINARY_API_SECRET ? "Found" : "Missing",
+        suggestion: keys.includes("CLOUDINARY_API_SECRET") ? "Key is there but empty" : "Key name is wrong or missing on Render"
     });
 });
 
