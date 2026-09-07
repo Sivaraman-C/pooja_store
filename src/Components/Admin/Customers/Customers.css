@@ -141,22 +141,110 @@
     white-space: nowrap;
 }
 
-.customer-actions button {
-    margin-right: 6px;
-    padding: 8px 12px;
-    border: 1px solid #e2dcd5;
-    border-radius: 5px;
-    background: white;
-    color: #5d534a;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.2s ease;
+.edit-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(24, 18, 14, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 12000;
 }
 
-.customer-actions button:hover {
-    border-color: #a96f18;
+.edit-modal {
+    background: #fffdf9;
+    padding: 32px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 650px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    border: 1px solid #eadfd2;
+}
+
+.edit-modal h2 {
+    margin: 0 0 24px;
+    font-family: Georgia, serif;
+    color: #342d26;
+}
+
+.edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.edit-grid .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.edit-grid .field.full {
+    grid-column: span 2;
+}
+
+.edit-grid label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #766d63;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.edit-grid input, .edit-grid textarea {
+    padding: 12px;
+    border: 1px solid #eadfd2;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 15px;
+}
+
+.edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.save-btn {
+    background: #a96f18;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #f6eee5;
+    color: #5d534a;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background: #f8f1e7;
     color: #a96f18;
+    border: 1px solid #eadfd2;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.delete-btn {
+    background: #fff5f5;
+    color: #c9371b;
+    border: 1px solid #fad2d2;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 8px;
 }
 
 .customer-actions button:last-child {

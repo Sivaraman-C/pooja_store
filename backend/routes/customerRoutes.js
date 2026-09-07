@@ -19,7 +19,13 @@ router.get("/", (req, res) => {
             id,
             name,
             email,
-            role
+            phone,
+            address,
+            city,
+            state,
+            pincode,
+            role,
+            created_at
         FROM users
         WHERE role = 'user'
         ORDER BY id DESC
@@ -52,18 +58,21 @@ router.put("/:id", (req, res) => {
         return res.status(403).json({ message: "You do not have permission" });
     }
 
-    const { name, email } = req.body || {};
+    const { name, email, phone, address, city, state, pincode } = req.body || {};
     if (!name || !email) {
         return res.status(400).json({ message: "Name and email are required" });
     }
 
     db.query(
-        "UPDATE users SET name = ?, email = ? WHERE id = ? AND role = 'user'",
-        [name, email, req.params.id],
+        "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, city = ?, state = ?, pincode = ? WHERE id = ? AND role = 'user'",
+        [name, email, phone || null, address || null, city || null, state || null, pincode || null, req.params.id],
         (err, result) => {
-            if (err) return res.status(500).json({ message: "Failed to update customer" });
+            if (err) {
+                console.error("UPDATE CUSTOMER ERROR:", err);
+                return res.status(500).json({ message: "Failed to update customer" });
+            }
             if (!result.affectedRows) return res.status(404).json({ message: "Customer not found" });
-            res.json({ message: "Customer updated successfully", customer: { id: Number(req.params.id), name, email, role: "user" } });
+            res.json({ message: "Customer updated successfully" });
         }
     );
 });
