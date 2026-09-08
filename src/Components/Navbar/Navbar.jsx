@@ -422,6 +422,7 @@ const Navbar = () => {
       <div className="mobile-navbar">
         <div className="mobile-top-bar">
           <div className="mobile-navbar-content">
+            {/* ROW 1: SEARCH BAR */}
             <div className="mobile-search-row">
               <div className="mobile-search-box">
                 <img
@@ -432,33 +433,49 @@ const Navbar = () => {
                 />
                 <input
                   type="text"
-                  placeholder="Search or ask a question"
+                  placeholder="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={handleSearch}
                 />
                 <div className="mobile-search-right-icons">
-                  <Link to="/wishlist" style={{textDecoration: 'none', fontSize: '20px', marginRight: '5px'}}>❤️</Link>
-                  {user && ["admin", "super_admin"].includes(user.role) && (
-                    <Link to="/admin" style={{textDecoration: 'none'}}>
-                      <span className="mobile-nav-icon-img" style={{fontSize: '20px'}}>📊</span>
-                    </Link>
-                  )}
                   <img
                     src="/mic.png"
                     alt="Voice"
                     className={`mobile-nav-icon-img ${isListening ? "listening" : ""}`}
                     onClick={handleVoiceSearch}
                   />
+                  <img
+                    src="/camera.svg"
+                    alt="Camera"
+                    className="mobile-nav-icon-img"
+                  />
                 </div>
               </div>
             </div>
-            <div className="mobile-location-row">
-               <button type="button" className="mobile-location-content" onClick={openLocationModal}>
-                  <span className="mobile-pin-icon">📍</span>
-                  <span className="mobile-location-text">{displayLocationLabel}</span>
-                  <span className="mobile-caret-icon">▼</span>
-               </button>
+
+            {/* ROW 2: LOCATION & USER ACTIONS */}
+            <div className="mobile-bottom-row">
+              <button type="button" className="mobile-location-pill" onClick={openLocationModal}>
+                <span className="mobile-pin-icon">📍</span>
+                <span className="mobile-location-text">{displayLocationLabel}</span>
+              </button>
+
+              <div className="mobile-user-actions">
+                <Link to="/wishlist" className="mobile-action-link">❤️</Link>
+
+                {user && ["admin", "super_admin"].includes(user.role) && (
+                  <Link to="/admin" className="mobile-action-link">📊</Link>
+                )}
+
+                <Link to="/profile" className="mobile-profile-link">
+                  {user && user.profileImage ? (
+                    <img src={`${API_URL}${user.profileImage}`} alt="Profile" className="mobile-profile-img" />
+                  ) : (
+                    <span className="mobile-profile-placeholder">👤</span>
+                  )}
+                </Link>
+              </div>
             </div>
           </div>
         </div>
