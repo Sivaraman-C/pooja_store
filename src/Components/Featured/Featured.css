@@ -212,18 +212,21 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 30px;
+  width: 100%;
+  padding-bottom: 20px;
 }
 
 .know-more-btn {
-  background: transparent;
-  color: #a96f18;
-  border: 1px solid #a96f18;
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-weight: 700;
-  font-size: 14px;
+  background: white !important;
+  color: #a96f18 !important;
+  border: 2px solid #a96f18 !important;
+  padding: 12px 24px !important;
+  border-radius: 30px !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .know-more-btn:hover {

@@ -270,7 +270,7 @@ const Featured = () => {
     return image.startsWith("http") ? image : `${API_URL}${image}`;
   };
 
-  const displayedProducts = showAll ? products : products.slice(0, 6);
+  const displayedProducts = showAll ? products : products.slice(0, 4);
 
   return (
 
@@ -285,7 +285,7 @@ const Featured = () => {
 
         <div className="featured-heading">
 
-          <p>HANDPICKED</p>
+          <p>HANDPICKED ({products.length})</p>
 
           <h2>
             Featured this week
@@ -407,10 +407,14 @@ const Featured = () => {
 
         </div>
 
-        {products.length > 6 && !showAll && (
+        {products.length > 4 && (
           <div className="featured-know-more">
-            <button className="know-more-btn" onClick={() => setShowAll(true)}>
-              Know More ➔
+            <button
+              className="know-more-btn"
+              onClick={() => setShowAll(!showAll)}
+              style={{ padding: '10px 20px', fontSize: '14px' }}
+            >
+              {showAll ? "Know Less ↵" : "Know More ➔"}
             </button>
           </div>
         )}

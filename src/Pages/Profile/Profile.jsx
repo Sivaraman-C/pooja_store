@@ -237,7 +237,30 @@ const Profile = () => {
 
             {editing && (
               <div className="profile-actions">
-                <button type="button" className="cancel-btn" onClick={() => setEditing(false)}>Cancel</button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => {
+                    setEditing(false);
+                    // Reset form data to original user details
+                    setFormData({
+                      name: user.name || "",
+                      email: user.email || "",
+                      phone: user.phone || "",
+                      address: user.address || "",
+                      city: user.city || "",
+                      state: user.state || "",
+                      pincode: user.pincode || "",
+                    });
+                    // Reset image preview
+                    setImagePreview(user.profile_image ? (user.profile_image.startsWith("http") ? user.profile_image : `${API_URL}${user.profile_image}`) : "");
+                    setProfileImage(null);
+                    setError("");
+                    setMessage("");
+                  }}
+                >
+                  Cancel
+                </button>
                 <button type="submit" className="save-profile-btn" disabled={loading}>Save Changes</button>
               </div>
             )}

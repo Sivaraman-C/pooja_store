@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Geolocation } from "@capacitor/geolocation";
 import "./Navbar.css";
 import API_URL, { bypassHeaders } from "../../apiConfig";
@@ -13,6 +13,9 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
+
+  const profileRef = useRef(null);
+  const mobileProfileRef = useRef(null);
   const [user, setUser] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("user"));
@@ -90,6 +93,23 @@ const Navbar = () => {
 
     return () => {
       window.removeEventListener("profileUpdated", handleProfileUpdated);
+    };
+  }, []);
+
+  // CLICK OUTSIDE TO CLOSE PROFILE DROPDOWN
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current && !profileRef.current.contains(event.target) &&
+        mobileProfileRef.current && !mobileProfileRef.current.contains(event.target)
+      ) {
+        setShowProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -351,6 +371,11 @@ const Navbar = () => {
                   className={`nav-mic-icon-img ${isListening ? "listening" : ""}`}
                   onClick={handleVoiceSearch}
                 />
+                <img
+                  src="/camera.svg"
+                  alt="Camera"
+                  className="nav-camera-icon-img"
+                />
               </div>
             </div>
 
@@ -366,7 +391,7 @@ const Navbar = () => {
               </div>
 
               {user ? (
-                <div className="profile-wrapper">
+                <div className="profile-wrapper" ref={profileRef}>
                   <button className="profile-button" onClick={() => setShowProfile(!showProfile)}>
                     {user.profileImage && (
                       <img className="profile-nav-image" src={`${API_URL}${user.profileImage}`} alt="" />
@@ -468,7 +493,7 @@ const Navbar = () => {
                   <Link to="/admin" className="mobile-action-link">📊</Link>
                 )}
 
-                <div className="mobile-profile-wrapper">
+                <div className="mobile-profile-wrapper" ref={mobileProfileRef}>
                   <button
                     type="button"
                     className="mobile-profile-trigger"
