@@ -468,13 +468,46 @@ const Navbar = () => {
                   <Link to="/admin" className="mobile-action-link">📊</Link>
                 )}
 
-                <Link to="/profile" className="mobile-profile-link">
-                  {user && user.profileImage ? (
-                    <img src={`${API_URL}${user.profileImage}`} alt="Profile" className="mobile-profile-img" />
-                  ) : (
-                    <span className="mobile-profile-placeholder">👤</span>
+                <div className="mobile-profile-wrapper">
+                  <button
+                    type="button"
+                    className="mobile-profile-trigger"
+                    onClick={() => setShowProfile(!showProfile)}
+                  >
+                    {user && (user.profileImage || user.profile_image) ? (
+                      <img
+                        src={(user.profileImage || user.profile_image).startsWith('http')
+                          ? (user.profileImage || user.profile_image)
+                          : `${API_URL}${user.profileImage || user.profile_image}`}
+                        alt="Profile"
+                        className="mobile-profile-img"
+                      />
+                    ) : (
+                      <span className="mobile-profile-placeholder">👤</span>
+                    )}
+                  </button>
+
+                  {showProfile && user && (
+                    <div className="mobile-profile-dropdown">
+                      <div className="profile-header">
+                        <strong>{user.name}</strong>
+                        <span>{user.email}</span>
+                      </div>
+                      <div className="profile-divider"></div>
+                      <Link to="/wishlist" onClick={() => setShowProfile(false)}>My Wishlist</Link>
+                      <Link to="/profile" onClick={() => setShowProfile(false)}>Profile</Link>
+                      <button
+                        onClick={() => {
+                          setShowProfile(false);
+                          setShowLogoutPopup(true);
+                        }}
+                        className="logout-button"
+                      >
+                        Logout
+                      </button>
+                    </div>
                   )}
-                </Link>
+                </div>
               </div>
             </div>
           </div>
