@@ -1088,9 +1088,18 @@ const FestivalCalendar = () => {
 
             {/* CENTRAL TITLE CARD */}
             <div className="upcoming-title-card">
-              <span className="title-eyebrow">MARK YOUR CALENDAR</span>
-              <h2>Upcoming Festivals</h2>
-              <div className="title-decoration">✦</div>
+              <div className="festival-hero-pattern"></div>
+
+              {/* Decorative Icons for Title Card */}
+              <div className="festival-icon icon-lotus">🪷</div>
+              <div className="festival-icon icon-kalash">🏺</div>
+              <div className="festival-icon icon-bell">🔔</div>
+
+              <div className="title-card-content">
+                <span className="title-eyebrow">MARK YOUR CALENDAR</span>
+                <h2>Upcoming Festivals</h2>
+                <div className="title-decoration">✦</div>
+              </div>
             </div>
 
             {/* Card 6 */}

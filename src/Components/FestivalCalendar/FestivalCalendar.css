@@ -921,39 +921,80 @@
 .upcoming-title-card {
   grid-column: 4 / span 6 !important; /* Explicitly start from column 4 to center it */
   grid-row: 2 !important;
+  position: relative !important;
+  overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 40px !important;
-  background: white !important;
+
+  /* HERO STYLE BACKGROUND */
+  background: linear-gradient(135deg, #5c1d13 0%, #8f321f 48%, #6d2418 100%) !important;
   border: 1px solid var(--festival-border) !important;
   border-radius: 24px !important;
   text-align: center !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+  color: white !important;
+}
+
+.upcoming-title-card .festival-hero-pattern {
+  opacity: 0.15;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .upcoming-title-card h2 {
   font-family: "Cormorant Garamond", serif;
   font-size: 38px;
   margin: 0;
-  color: var(--festival-text);
+  color: white !important;
+  position: relative;
+  z-index: 5;
 }
 
-.title-eyebrow {
-  color: var(--festival-gold);
+.upcoming-title-card .title-eyebrow {
+  color: var(--festival-gold-light) !important;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 2.5px;
   text-transform: uppercase;
   margin-bottom: 8px;
+  position: relative;
+  z-index: 5;
 }
 
-.title-decoration {
+.upcoming-title-card .title-decoration {
+  position: relative;
+  z-index: 5;
+  color: var(--festival-gold-light) !important;
   margin-top: 10px;
   font-size: 22px;
-  color: var(--festival-gold);
 }
+
+.title-card-content {
+  position: relative;
+  z-index: 5;
+}
+
+/* DECORATIVE ICONS INSIDE CARD */
+.upcoming-title-card .festival-icon {
+  width: 34px !important;
+  height: 34px !important;
+  font-size: 18px !important;
+  opacity: 0.7 !important;
+  border-color: rgba(234, 211, 155, 0.2) !important;
+  background: rgba(255, 240, 205, 0.1) !important;
+  position: absolute !important;
+  z-index: 2 !important;
+}
+
+/* Local Icon Positions for Title Card */
+.upcoming-title-card .icon-diya { left: 8% !important; top: 15% !important; }
+.upcoming-title-card .icon-lotus { right: 8% !important; top: 15% !important; }
+.upcoming-title-card .icon-kalash { left: 12% !important; bottom: 12% !important; top: auto !important; }
+.upcoming-title-card .icon-bell { right: 12% !important; bottom: 12% !important; top: auto !important; }
 
 /* Festival Card (3 units each in a 12-column grid) */
 .upcoming-card {
@@ -1757,13 +1798,6 @@
     height: 38px;
 
     font-size: 18px;
-  }
-
-
-  .icon-diya {
-    left: 7%;
-
-    top: 55%;
   }
 
 
