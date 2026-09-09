@@ -2,6 +2,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import "./FestivalCalendar.css";
 import API_URL from "../../apiConfig";
 
+import DiwaliBg from "../Assets/Diwali.jpeg";
+import DussehraBg from "../Assets/Dussehra.jpg";
+import GanpatiBg from "../Assets/Ganpati.jpeg";
+import NavratriBg from "../Assets/Navaratri.jpeg";
+import JanmashtamiBg from "../Assets/Janmashtami.jpeg";
+import ShivaratriBg from "../Assets/shivaratri.jpeg";
+import SankrantiBg from "../Assets/sankranthi.jpeg";
+import HoliBg from "../Assets/holi.jpg";
+import DefaultBg from "../Assets/banner-bg.jpg";
+
 const festivalDetails = [
   // =========================
   // JANUARY
@@ -11,6 +21,7 @@ const festivalDetails = [
     name: "Pongal",
     category: "Harvest Festival",
     icon: "🌾",
+    bgImage: SankrantiBg,
     description:
       "A joyful harvest festival celebrating prosperity, gratitude and new beginnings.",
   },
@@ -19,6 +30,7 @@ const festivalDetails = [
     name: "Makara Sankranti",
     category: "Hindu Festival",
     icon: "☀️",
+    bgImage: SankrantiBg,
     description:
       "A sacred solar festival marking the Sun's transition into Makara.",
   },
@@ -27,6 +39,7 @@ const festivalDetails = [
     name: "Vasant Panchami",
     category: "Hindu Festival",
     icon: "🌼",
+    bgImage: DefaultBg,
     description:
       "A festival dedicated to knowledge, learning and Goddess Saraswati.",
   },
@@ -39,6 +52,7 @@ const festivalDetails = [
     name: "Maha Shivaratri",
     category: "Shaivite Festival",
     icon: "🔱",
+    bgImage: ShivaratriBg,
     description:
       "A sacred night dedicated to Lord Shiva, observed with prayer and devotion.",
   },
@@ -51,6 +65,7 @@ const festivalDetails = [
     name: "Holi",
     category: "Festival of Colours",
     icon: "🎨",
+    bgImage: HoliBg,
     description:
       "The vibrant festival of colours celebrating joy, love and the arrival of spring.",
   },
@@ -59,6 +74,7 @@ const festivalDetails = [
     name: "Ugadi",
     category: "New Year",
     icon: "🌿",
+    bgImage: DefaultBg,
     description:
       "The traditional New Year celebration observed in several South Indian regions.",
   },
@@ -67,6 +83,7 @@ const festivalDetails = [
     name: "Gudi Padwa",
     category: "New Year",
     icon: "🚩",
+    bgImage: DefaultBg,
     description:
       "The traditional Marathi New Year celebrated with homes decorated for prosperity.",
   },
@@ -75,6 +92,7 @@ const festivalDetails = [
     name: "Chaitra Navratri",
     category: "Devi Festival",
     icon: "🪷",
+    bgImage: NavratriBg,
     description:
       "Nine sacred days dedicated to the divine feminine and Goddess Durga.",
   },
@@ -83,6 +101,7 @@ const festivalDetails = [
     name: "Rama Navami",
     category: "Hindu Festival",
     icon: "🏹",
+    bgImage: DefaultBg,
     description:
       "The auspicious celebration of the birth of Lord Rama.",
   },
@@ -95,6 +114,7 @@ const festivalDetails = [
     name: "Tamil New Year",
     category: "Tamil Festival",
     icon: "🌺",
+    bgImage: DefaultBg,
     description:
       "Puthandu, the traditional Tamil New Year celebrated with prayers and festive traditions.",
   },
@@ -103,6 +123,7 @@ const festivalDetails = [
     name: "Vishu",
     category: "Regional Festival",
     icon: "🪔",
+    bgImage: DefaultBg,
     description:
       "The traditional Malayalam New Year associated with auspicious beginnings.",
   },
@@ -111,6 +132,7 @@ const festivalDetails = [
     name: "Akshaya Tritiya",
     category: "Auspicious Day",
     icon: "✨",
+    bgImage: DefaultBg,
     description:
       "A highly auspicious day traditionally associated with prosperity and new beginnings.",
   },
@@ -123,6 +145,7 @@ const festivalDetails = [
     name: "Buddha Purnima",
     category: "Spiritual Festival",
     icon: "🪷",
+    bgImage: DefaultBg,
     description:
       "A sacred day commemorating the birth, enlightenment and teachings of Buddha.",
   },
@@ -135,6 +158,7 @@ const festivalDetails = [
     name: "Nirjala Ekadashi",
     category: "Vrat",
     icon: "🪔",
+    bgImage: DefaultBg,
     description:
       "An important Ekadashi observance traditionally associated with devotion and fasting.",
   },
@@ -147,6 +171,7 @@ const festivalDetails = [
     name: "Jagannath Rath Yatra",
     category: "Hindu Festival",
     icon: "🛕",
+    bgImage: DefaultBg,
     description:
       "The grand chariot festival dedicated to Lord Jagannath.",
   },
@@ -155,6 +180,7 @@ const festivalDetails = [
     name: "Guru Purnima",
     category: "Spiritual Festival",
     icon: "🙏",
+    bgImage: DefaultBg,
     description:
       "A sacred occasion to honour teachers, gurus and spiritual guides.",
   },
@@ -167,6 +193,7 @@ const festivalDetails = [
     name: "Hariyali Teej",
     category: "Devi Festival",
     icon: "🌿",
+    bgImage: DefaultBg,
     description:
       "A traditional festival celebrating devotion, nature and marital well-being.",
   },
@@ -175,6 +202,7 @@ const festivalDetails = [
     name: "Nag Panchami",
     category: "Hindu Festival",
     icon: "🐍",
+    bgImage: DefaultBg,
     description:
       "A traditional festival dedicated to the worship of serpent deities.",
   },
@@ -183,6 +211,7 @@ const festivalDetails = [
     name: "Onam",
     category: "Harvest Festival",
     icon: "🌸",
+    bgImage: DefaultBg,
     description:
       "Kerala's beloved harvest festival celebrating prosperity, culture and togetherness.",
   },
@@ -191,6 +220,7 @@ const festivalDetails = [
     name: "Varalakshmi Vrat",
     category: "Devi Festival",
     icon: "🪔",
+    bgImage: NavratriBg,
     description:
       "Varalakshmi Vratham is an auspicious Hindu festival dedicated to Goddess Lakshmi, the goddess of wealth, prosperity, happiness, and abundance. It is traditionally observed by married women, especially in South India, on the Friday before the full moon (Purnima) in the month of Shravana.",
   },
@@ -199,6 +229,7 @@ const festivalDetails = [
     name: "Raksha Bandhan",
     category: "Hindu Festival",
     icon: "🧿",
+    bgImage: DefaultBg,
     description:
       "Raksha Bandhan is a beautiful Hindu festival that celebrates the special bond of love, care, and protection between brothers and sisters. The festival is traditionally observed on the full moon day (Purnima) of the Hindu month of Shravana.",
   },
@@ -211,6 +242,7 @@ const festivalDetails = [
     name: "Janmashtami",
     category: "Krishna Festival",
     icon: "🦚",
+    bgImage: JanmashtamiBg,
     description:
       "Janmashtami, also known as Krishna Janmashtami, is a sacred Hindu festival celebrating the birth of Lord Krishna, one of the most beloved incarnations of Lord Vishnu. It is observed on the Ashtami Tithi (eighth lunar day) of the Krishna Paksha in the month of Shravana or Bhadrapada, depending on the regional calendar.",
   },
@@ -219,6 +251,7 @@ const festivalDetails = [
     name: "Ganesh Chaturthi",
     category: "Hindu Festival",
     icon: "🐘",
+    bgImage: GanpatiBg,
     description:
       "Ganesh Chaturthi is a joyful Hindu festival celebrating the birth of Lord Ganesha, the beloved deity of wisdom, prosperity, and auspicious beginnings. The festival is observed on the Chaturthi Tithi (fourth lunar day) of the Shukla Paksha in the month of Bhadrapada.",
   },
@@ -231,6 +264,7 @@ const festivalDetails = [
     name: "Sharad Navratri",
     category: "Devi Festival",
     icon: "🪷",
+    bgImage: NavratriBg,
     description:
       "Nine nights of devotion celebrating the many forms of Goddess Durga.",
   },
@@ -239,6 +273,7 @@ const festivalDetails = [
     name: "Dussehra",
     category: "Hindu Festival",
     icon: "🏹",
+    bgImage: DussehraBg,
     description:
       "The festival celebrating the victory of good over evil.",
   },
@@ -251,6 +286,7 @@ const festivalDetails = [
     name: "Diwali",
     category: "Festival of Lights",
     icon: "🪔",
+    bgImage: DiwaliBg,
     description:
       "The festival of lights celebrating hope, prosperity, devotion and the triumph of light over darkness.",
   },
@@ -259,6 +295,7 @@ const festivalDetails = [
     name: "Govardhan Puja",
     category: "Hindu Festival",
     icon: "🌿",
+    bgImage: DefaultBg,
     description:
       "A sacred celebration associated with Lord Krishna and Govardhan Hill.",
   },
@@ -267,6 +304,7 @@ const festivalDetails = [
     name: "Bhai Dooj",
     category: "Hindu Festival",
     icon: "❤️",
+    bgImage: DefaultBg,
     description:
       "A traditional celebration honouring the bond between brothers and sisters.",
   },
@@ -279,6 +317,7 @@ const festivalDetails = [
     name: "Vaikuntha Ekadashi",
     category: "Vaishnavite Festival",
     icon: "🛕",
+    bgImage: DefaultBg,
     description:
       "An important Vaishnavite observance associated with devotion to Lord Vishnu.",
   },
@@ -352,6 +391,7 @@ const parseCalendarCsv = (csv) => {
         name,
         category: details?.category || getFestivalCategory(name),
         icon: details?.icon || getFestivalIcon(name),
+        bgImage: details?.bgImage || DefaultBg,
         description: details?.description || `${name} is an auspicious day observed with prayer, offerings and devotion.`,
       };
     });
@@ -440,8 +480,8 @@ const getRelatedProducts = (festival, products) => {
 const FestivalCalendar = () => {
   const today = new Date();
 
-  const [currentMonth, setCurrentMonth] = useState(7);
-  const [currentYear, setCurrentYear] = useState(2026);
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [selectedCategory, setSelectedCategory] =
     useState("All");
   const [search, setSearch] = useState("");
@@ -695,7 +735,7 @@ const FestivalCalendar = () => {
   // UPCOMING FESTIVALS
   // =========================
 
-  const upcomingFestivals = filteredFestivals
+  const upcomingFestivalsList = filteredFestivals
     .filter(
       (festival) =>
         new Date(festival.date) >= today
@@ -705,7 +745,7 @@ const FestivalCalendar = () => {
         new Date(a.date) -
         new Date(b.date)
     )
-    .slice(0, 5);
+    .slice(0, 10);
 
   // =========================
   // FORMAT DATE
@@ -933,7 +973,7 @@ const FestivalCalendar = () => {
           </div>
 
 
-          {/* CALENDAR */}
+          {/* CALENDAR GRID */}
 
           <div className="calendar-grid">
 
@@ -1004,99 +1044,99 @@ const FestivalCalendar = () => {
 
         </div>
 
-
         {/* =========================
-            UPCOMING FESTIVALS
+            UPCOMING FESTIVALS SECTION
         ========================== */}
-
         <section className="upcoming-section">
-
-          <div className="section-heading">
-
-            <div>
-
-              <span>
-                MARK YOUR CALENDAR
-              </span>
-
-              <h2>
-                Upcoming Festivals
-              </h2>
-
-            </div>
-
-            <div className="heading-decoration">
-              ✦
-            </div>
-
-          </div>
-
-
           <div className="upcoming-grid">
 
-            {upcomingFestivals.length > 0 ? (
+            {/* ROW 1: 4 CARDS (3x3x3x3) */}
+            {upcomingFestivalsList.slice(0, 4).map((festival) => (
+              <button
+                className="upcoming-card"
+                key={festival.name}
+                onClick={() => openFestival(festival)}
+              >
+                <div className="card-bg-container">
+                  <img src={festival.bgImage || DefaultBg} alt="" className="card-bg-img" />
+                  <div className="card-overlay"></div>
+                </div>
 
-              upcomingFestivals.map(
-                (festival) => (
+                <div className="upcoming-info">
+                  <span className="upcoming-date">{formatDate(festival.date)}</span>
+                  <h3>{festival.name}</h3>
+                  <p className="mobile-hide">{festival.category}</p>
+                </div>
+                <span className="upcoming-arrow">→</span>
+              </button>
+            ))}
 
-                  <button
-                    className="upcoming-card"
-                    key={festival.name}
-                    onClick={() => openFestival(festival)}
-                  >
+            {/* ROW 2: 3 COLUMNS (3x6x3) */}
+            {/* Card 5 */}
+            {upcomingFestivalsList.slice(4, 5).map((festival) => (
+              <button className="upcoming-card" key={festival.name} onClick={() => openFestival(festival)}>
+                <div className="card-bg-container">
+                  <img src={festival.bgImage || DefaultBg} alt="" className="card-bg-img" />
+                  <div className="card-overlay"></div>
+                </div>
+                <div className="upcoming-info">
+                  <span className="upcoming-date">{formatDate(festival.date)}</span>
+                  <h3>{festival.name}</h3>
+                </div>
+              </button>
+            ))}
 
-                    <div className="upcoming-icon">
-                      {festival.icon}
-                    </div>
+            {/* CENTRAL TITLE CARD */}
+            <div className="upcoming-title-card">
+              <span className="title-eyebrow">MARK YOUR CALENDAR</span>
+              <h2>Upcoming Festivals</h2>
+              <div className="title-decoration">✦</div>
+            </div>
 
-                    <div className="upcoming-info">
+            {/* Card 6 */}
+            {upcomingFestivalsList.slice(5, 6).map((festival) => (
+              <button className="upcoming-card" key={festival.name} onClick={() => openFestival(festival)}>
+                <div className="card-bg-container">
+                  <img src={festival.bgImage || DefaultBg} alt="" className="card-bg-img" />
+                  <div className="card-overlay"></div>
+                </div>
+                <div className="upcoming-info">
+                  <span className="upcoming-date">{formatDate(festival.date)}</span>
+                  <h3>{festival.name}</h3>
+                </div>
+              </button>
+            ))}
 
-                      <span className="upcoming-date">
-                        {formatDate(
-                          festival.date
-                        )}
-                      </span>
+            {/* ROW 3: 4 CARDS (3x3x3x3) */}
+            {upcomingFestivalsList.slice(6, 10).map((festival) => (
+              <button
+                className="upcoming-card"
+                key={festival.name}
+                onClick={() => openFestival(festival)}
+              >
+                <div className="card-bg-container">
+                  <img src={festival.bgImage || DefaultBg} alt="" className="card-bg-img" />
+                  <div className="card-overlay"></div>
+                </div>
 
-                      <h3>
-                        {festival.name}
-                      </h3>
+                <div className="upcoming-info">
+                  <span className="upcoming-date">{formatDate(festival.date)}</span>
+                  <h3>{festival.name}</h3>
+                  <p className="mobile-hide">{festival.category}</p>
+                </div>
+                <span className="upcoming-arrow">→</span>
+              </button>
+            ))}
 
-                      <p>
-                        {festival.category}
-                      </p>
-
-                    </div>
-
-                    <span className="upcoming-arrow">
-                      →
-                    </span>
-
-                  </button>
-
-                )
-              )
-
-            ) : (
-
+            {upcomingFestivalsList.length === 0 && (
               <div className="empty-festivals">
-
                 <div>🪔</div>
-
-                <h3>
-                  No festivals found
-                </h3>
-
-                <p>
-                  Try another search or
-                  festival category.
-                </p>
-
+                <h3>No festivals found</h3>
+                <p>Try another month or category.</p>
               </div>
-
             )}
 
           </div>
-
         </section>
 
 
