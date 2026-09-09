@@ -207,6 +207,31 @@
   font-size: 12px;
 }
 
+/* KNOW MORE BUTTON */
+.featured-know-more {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.know-more-btn {
+  background: transparent;
+  color: #a96f18;
+  border: 1px solid #a96f18;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.know-more-btn:hover {
+  background: #a96f18;
+  color: #fff;
+  transform: translateX(5px);
+}
+
 /* =========================
    TABLET
 ========================= */
@@ -247,15 +272,41 @@
   }
 
   .featured-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
   .product-image {
-    height: 330px;
+    height: 160px;
   }
 
   .product-info {
-    padding: 20px;
+    padding: 15px;
+  }
+
+  .product-info h3 {
+    font-size: 14px;
+    min-height: 32px;
+  }
+
+  .product-price {
+    font-size: 13px;
+  }
+
+  .add-button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .product-card-actions {
+    top: 6px;
+    right: 6px;
+    opacity: 1;
+  }
+
+  .action-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
   }
 }

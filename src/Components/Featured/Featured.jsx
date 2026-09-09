@@ -12,6 +12,7 @@ const Featured = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [wishlist, setWishlist] = useState([]);
+  const [showAll, setShowAll] = useState(false);
 
   // Login popup
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -269,6 +270,8 @@ const Featured = () => {
     return image.startsWith("http") ? image : `${API_URL}${image}`;
   };
 
+  const displayedProducts = showAll ? products : products.slice(0, 6);
+
   return (
 
     <section className="featured-section">
@@ -305,7 +308,7 @@ const Featured = () => {
 
           ) : (
 
-            products.map((product) => (
+            displayedProducts.map((product) => (
 
               <div
                 className="product-card"
@@ -403,6 +406,14 @@ const Featured = () => {
           )}
 
         </div>
+
+        {products.length > 6 && !showAll && (
+          <div className="featured-know-more">
+            <button className="know-more-btn" onClick={() => setShowAll(true)}>
+              Know More ➔
+            </button>
+          </div>
+        )}
 
       </div>
 

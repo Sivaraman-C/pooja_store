@@ -212,7 +212,7 @@ router.get(
       FROM products
       WHERE featured = 1
       ORDER BY created_at DESC
-      LIMIT 4
+      LIMIT 20
     `;
 
 
