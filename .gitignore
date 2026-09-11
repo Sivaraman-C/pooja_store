@@ -41,3 +41,6 @@ src/apiConfig.js
 backend/uploads/
 devaloka_backup.sql
 *.log
+
+# Large data files
+public/*.csv
