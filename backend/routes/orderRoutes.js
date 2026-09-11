@@ -200,6 +200,7 @@ router.get("/items", async (req, res) => {
         const [items] = await db.promise().query(
             `SELECT oi.id, oi.order_id, oi.product_id,
                     COALESCE(p.name, CONCAT('Product #', oi.product_id)) AS product_name,
+                    p.image AS product_image,
                     oi.quantity,
                     oi.price, oi.total, o.shipping_name AS customer_name,
                     o.created_at
@@ -220,6 +221,7 @@ router.get("/:id/items", async (req, res) => {
         const [items] = await db.promise().query(
             `SELECT oi.id, oi.order_id, oi.product_id,
                     COALESCE(p.name, CONCAT('Product #', oi.product_id)) AS product_name,
+                    p.image AS product_image,
                     oi.quantity,
                     oi.price, oi.total, o.shipping_name AS customer_name,
                     o.created_at

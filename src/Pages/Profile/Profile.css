@@ -204,6 +204,34 @@
     gap: 12px;
 }
 
+.order-detail-product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.order-detail-image {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #f0e7d8;
+    background: #fff;
+}
+
+.order-detail-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.order-detail-text small {
+    color: #666;
+    font-size: 11px;
+}
+
 .order-item-header {
     margin-bottom: 10px;
 }

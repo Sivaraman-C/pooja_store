@@ -228,6 +228,13 @@ const Profile = () => {
     fetchOrders();
   }, [user?.id, activeTab]);
 
+  const getItemImageUrl = (image) => {
+    if (!image) return "/logo.svg";
+    if (image.startsWith("http") || image.startsWith("data:")) return image;
+    if (image.startsWith("/")) return `${API_URL}${image}`;
+    return `${API_URL}/${image}`;
+  };
+
   const fetchOrderDetails = async (orderId) => {
     if (!orderId) return;
 
@@ -426,8 +433,13 @@ const Profile = () => {
                           <ul className="order-details-list">
                             {details.map((item) => (
                               <li key={item.id} className="order-detail-item">
-                                <span>{item.product_name}</span>
-                                <span>Qty: {item.quantity}</span>
+                                <div className="order-detail-product">
+                                  <img src={getItemImageUrl(item.product_image)} alt={item.product_name || "Product"} className="order-detail-image" />
+                                  <div className="order-detail-text">
+                                    <span>{item.product_name}</span>
+                                    <small>Qty: {item.quantity}</small>
+                                  </div>
+                                </div>
                                 <span>₹{Number(item.price || 0).toLocaleString("en-IN")}</span>
                               </li>
                             ))}
