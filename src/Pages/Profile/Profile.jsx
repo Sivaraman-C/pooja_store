@@ -25,6 +25,8 @@ const Profile = () => {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState({});
   const [orderDetailsLoading, setOrderDetailsLoading] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -62,6 +64,35 @@ const Profile = () => {
   // ==========================================
   // FETCH USER FROM DB
   // ==========================================
+  useEffect(() => {
+    if (!user?.id || activeTab !== "settings") return;
+
+    const fetchNotifications = async () => {
+      setNotificationsLoading(true);
+
+      try {
+        const response = await fetch(`${API_URL}/api/orders/notifications?user_id=${user.id}`, {
+          headers: {
+            Accept: "application/json",
+            ...bypassHeaders,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch notifications");
+
+        const data = await response.json();
+        setNotifications(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Notifications fetch error:", err);
+        setNotifications([]);
+      } finally {
+        setNotificationsLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, [user?.id, activeTab]);
+
   useEffect(() => {
     const fetchProfile = async () => {
       const savedUser = localStorage.getItem("user");
@@ -297,12 +328,31 @@ const Profile = () => {
             )}
 
             {section === "notifications" && (
-              <div className="settings-row toggle-row">
-                <label>Notifications</label>
-                <label className="switch">
-                  <input type="checkbox" checked={notificationsEnabled} onChange={(e) => setNotificationsEnabled(e.target.checked)} />
-                  <span className="slider"></span>
-                </label>
+              <div className="settings-row notifications-panel">
+                <div className="toggle-row">
+                  <label>Notifications</label>
+                  <label className="switch">
+                    <input type="checkbox" checked={notificationsEnabled} onChange={(e) => setNotificationsEnabled(e.target.checked)} />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+
+                <div className="notification-list">
+                  <h4>Recent updates</h4>
+                  {notificationsLoading ? (
+                    <p>Loading notifications...</p>
+                  ) : notifications.length === 0 ? (
+                    <p>No notifications yet.</p>
+                  ) : (
+                    notifications.map((item) => (
+                      <div key={item.id} className="notification-item">
+                        <strong>{item.title}</strong>
+                        <p>{item.message}</p>
+                        <small>{new Date(item.created_at).toLocaleString("en-IN")}</small>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             )}
 

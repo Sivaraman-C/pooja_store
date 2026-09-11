@@ -4,6 +4,45 @@ const twilio = require("twilio");
 
 const router = express.Router();
 
+const ensureNotificationsTable = async () => {
+    try {
+        await db.promise().query(`
+            CREATE TABLE IF NOT EXISTS notifications (
+                id INT NOT NULL AUTO_INCREMENT,
+                user_id INT NOT NULL,
+                title VARCHAR(150) NOT NULL,
+                message TEXT NOT NULL,
+                type VARCHAR(50) DEFAULT 'order',
+                is_read TINYINT(1) DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                KEY idx_notifications_user (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        `);
+    } catch (error) {
+        console.error("NOTIFICATIONS TABLE INIT ERROR:", error);
+    }
+};
+
+ensureNotificationsTable();
+
+const createOrderNotification = async ({ userId, title, message, type = "order" }) => {
+    if (!userId) return null;
+
+    try {
+        const [result] = await db.promise().query(
+            `INSERT INTO notifications (user_id, title, message, type)
+             VALUES (?, ?, ?, ?)`,
+            [userId, title, message, type]
+        );
+
+        return result.insertId;
+    } catch (error) {
+        console.error("CREATE ORDER NOTIFICATION ERROR:", error);
+        return null;
+    }
+};
+
 const sendSmsConfirmation = async ({ phone, customerName, orderId, total }) => {
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -216,6 +255,30 @@ router.get("/items", async (req, res) => {
     }
 });
 
+router.get("/notifications", async (req, res) => {
+    const userId = req.query.user_id;
+
+    if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+    }
+
+    try {
+        const [notifications] = await db.promise().query(
+            `SELECT id, user_id, title, message, type, is_read, created_at
+             FROM notifications
+             WHERE user_id = ?
+             ORDER BY created_at DESC
+             LIMIT 20`,
+            [userId]
+        );
+
+        res.json(notifications);
+    } catch (error) {
+        console.error("GET NOTIFICATIONS ERROR:", error);
+        res.status(500).json({ message: "Unable to fetch notifications" });
+    }
+});
+
 router.get("/:id/items", async (req, res) => {
     try {
         const [items] = await db.promise().query(
@@ -242,18 +305,64 @@ router.get("/:id/items", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     const { status } = req.body;
+    const nextStatus = String(status || "").trim();
+
+    if (!nextStatus) {
+        return res.status(400).json({ message: "Order status is required" });
+    }
 
     try {
+        const [existingOrder] = await db.promise().query(
+            "SELECT user_id, order_status, payment_status FROM orders WHERE id = ?",
+            [req.params.id]
+        );
+
+        if (existingOrder.length === 0) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        const currentOrder = existingOrder[0];
+        let paymentStatus = currentOrder.payment_status;
+        let notificationTitle = `Order status updated to ${nextStatus}`;
+        let notificationMessage = `Your order #${req.params.id} is now ${nextStatus}.`;
+
+        if (nextStatus === "Delivered") {
+            paymentStatus = "Success";
+            notificationTitle = "Order delivered";
+            notificationMessage = `Your order #${req.params.id} has been delivered. Payment status updated to Success.`;
+        }
+
+        if (nextStatus === "Cancelled") {
+            paymentStatus = "Failed";
+            notificationTitle = "Order cancelled";
+            notificationMessage = `Your order #${req.params.id} has been cancelled.`;
+        }
+
         const [result] = await db.promise().query(
-            "UPDATE orders SET order_status = ? WHERE id = ?",
-            [status, req.params.id]
+            nextStatus === "Delivered" || nextStatus === "Cancelled"
+                ? "UPDATE orders SET order_status = ?, payment_status = ? WHERE id = ?"
+                : "UPDATE orders SET order_status = ? WHERE id = ?",
+            nextStatus === "Delivered" || nextStatus === "Cancelled"
+                ? [nextStatus, paymentStatus, req.params.id]
+                : [nextStatus, req.params.id]
         );
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Order not found" });
         }
 
-        res.json({ message: "Order status updated" });
+        await createOrderNotification({
+            userId: currentOrder.user_id,
+            title: notificationTitle,
+            message: notificationMessage,
+            type: "order",
+        });
+
+        res.json({
+            message: "Order status updated",
+            order_status: nextStatus,
+            payment_status: paymentStatus,
+        });
     } catch (error) {
         console.error("UPDATE ORDER ERROR:", error);
         res.status(500).json({ message: "Unable to update order" });
