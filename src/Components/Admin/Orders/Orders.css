@@ -74,6 +74,20 @@
     color: #a96f18;
     border-radius: 20px;
     font-size: 12px;
+    display: inline-block;
+}
+
+.payment-badge.success,
+.payment-badge.paid {
+    background: #eafaf0;
+    color: #1b8f4b;
+    font-weight: 600;
+}
+
+.payment-badge.failed,
+.payment-badge.cancelled {
+    background: #fff1f0;
+    color: #c9371b;
 }
 
 .order-status {

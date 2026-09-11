@@ -24,12 +24,11 @@ const ensureNotificationsTable = async () => {
     }
 };
 
-ensureNotificationsTable();
-
 const createOrderNotification = async ({ userId, title, message, type = "order" }) => {
     if (!userId) return null;
 
     try {
+        await ensureNotificationsTable();
         const [result] = await db.promise().query(
             `INSERT INTO notifications (user_id, title, message, type)
              VALUES (?, ?, ?, ?)`,
@@ -157,6 +156,13 @@ router.post("/", async (req, res) => {
         await connection.query("DELETE FROM cart_items WHERE user_id = ?", [userId]);
         await connection.commit();
 
+        await createOrderNotification({
+            userId,
+            title: "Order placed",
+            message: `Your order #${result.insertId} has been placed successfully. We will update it as it moves forward.`,
+            type: "order",
+        });
+
         let smsSent = false;
         try {
             await sendSmsConfirmation({
@@ -263,6 +269,7 @@ router.get("/notifications", async (req, res) => {
     }
 
     try {
+        await ensureNotificationsTable();
         const [notifications] = await db.promise().query(
             `SELECT id, user_id, title, message, type, is_read, created_at
              FROM notifications

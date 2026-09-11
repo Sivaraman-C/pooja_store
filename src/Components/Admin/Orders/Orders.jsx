@@ -57,12 +57,15 @@ const Orders = () => {
         throw new Error("Failed to update order");
       }
 
+      const result = await response.json();
+
       setOrders((previous) =>
         previous.map((order) =>
           order.id === id
             ? {
                 ...order,
                 status,
+                payment_status: result.payment_status || order.payment_status,
               }
             : order
         )
@@ -198,9 +201,10 @@ const Orders = () => {
                     </td>
 
                     <td>
-                      <span className="payment-badge">
-                        {order.payment_status ||
-                          "Pending"}
+                      <span
+                        className={`payment-badge ${String(order.payment_status || "Pending").toLowerCase()}`}
+                      >
+                        {order.payment_status || "Pending"}
                       </span>
                     </td>
 
