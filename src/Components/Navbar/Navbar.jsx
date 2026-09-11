@@ -43,6 +43,15 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
+  const getProfileImageSrc = (userData) => {
+    const image = userData?.profileImage || userData?.profile_image || userData?.profileImg || userData?.avatar;
+
+    if (!image) return "";
+    if (image.startsWith("http") || image.startsWith("data:")) return image;
+    if (image.startsWith("/")) return `${API_URL}${image}`;
+    return `${API_URL}/${image}`;
+  };
+
   const handleSearch = (e) => {
     if (e.key === "Enter" || e.type === "click") {
       if (searchTerm.trim()) {
@@ -393,8 +402,10 @@ const Navbar = () => {
               {user ? (
                 <div className="profile-wrapper" ref={profileRef}>
                   <button className="profile-button" onClick={() => setShowProfile(!showProfile)}>
-                    {user.profileImage && (
-                      <img className="profile-nav-image" src={`${API_URL}${user.profileImage}`} alt="" />
+                    {getProfileImageSrc(user) ? (
+                      <img className="profile-nav-image" src={getProfileImageSrc(user)} alt="Profile" />
+                    ) : (
+                      <span className="profile-nav-image profile-nav-placeholder">👤</span>
                     )}
                     <span>{user.name ? user.name.split(" ")[0] : "Profile"}</span>
                     <span className="profile-arrow">▼</span>
@@ -499,11 +510,9 @@ const Navbar = () => {
                     className="mobile-profile-trigger"
                     onClick={() => setShowProfile(!showProfile)}
                   >
-                    {user && (user.profileImage || user.profile_image) ? (
+                    {user && getProfileImageSrc(user) ? (
                       <img
-                        src={(user.profileImage || user.profile_image).startsWith('http')
-                          ? (user.profileImage || user.profile_image)
-                          : `${API_URL}${user.profileImage || user.profile_image}`}
+                        src={getProfileImageSrc(user)}
                         alt="Profile"
                         className="mobile-profile-img"
                       />

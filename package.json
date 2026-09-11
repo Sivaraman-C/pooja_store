@@ -17,6 +17,7 @@
     "express": "^5.2.1",
     "multer": "^2.2.0",
     "mysql2": "^3.23.3",
+    "panchang-ts": "^5.2.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^6.28.0",
