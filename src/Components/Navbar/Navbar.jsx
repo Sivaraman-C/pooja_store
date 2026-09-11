@@ -11,8 +11,10 @@ import LogoutPopup from "../LogoutPopup/LogoutPopup";
 const Navbar = () => {
   const [menu, setMenu] = useState("home");
   const [showProfile, setShowProfile] = useState(false);
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showCameraComingSoon, setShowCameraComingSoon] = useState(false);
 
   const profileRef = useRef(null);
   const mobileProfileRef = useRef(null);
@@ -91,6 +93,10 @@ const Navbar = () => {
     recognition.onend = () => setIsListening(false);
 
     recognition.start();
+  };
+
+  const triggerCameraSearch = () => {
+    setShowCameraComingSoon(true);
   };
 
   useEffect(() => {
@@ -384,21 +390,20 @@ const Navbar = () => {
                   src="/camera.svg"
                   alt="Camera"
                   className="nav-camera-icon-img"
+                  onClick={triggerCameraSearch}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      triggerCameraSearch();
+                    }
+                  }}
                 />
               </div>
             </div>
 
             <div className="nav-actions">
-              <div className="language-selector">
-                <span className="language-icon">🌐</span>
-                <select value={language} onChange={(e) => changeLanguage(e.target.value)}>
-                  <option value="en">English</option>
-                  <option value="ta">தமிழ்</option>
-                  <option value="hi">हिन्दी</option>
-                  <option value="te">తెలుగు</option>
-                </select>
-              </div>
-
               {user ? (
                 <div className="profile-wrapper" ref={profileRef}>
                   <button className="profile-button" onClick={() => setShowProfile(!showProfile)}>
@@ -417,9 +422,38 @@ const Navbar = () => {
                         <span>{user.email}</span>
                       </div>
                       <div className="profile-divider"></div>
-                      <Link to="/wishlist" onClick={() => setShowProfile(false)}>My Wishlist</Link>
-                      <Link to="/profile" onClick={() => setShowProfile(false)}>Profile</Link>
-                      <button onClick={() => setShowLogoutPopup(true)} className="logout-button">Logout</button>
+                      <div className="profile-dropdown-list">
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=profile"); }}>Profile</button>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/wishlist"); }}>My Wishlist</button>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=orders"); }}>My Orders</button>
+                        <div className="profile-settings-wrapper">
+                          <button
+                            type="button"
+                            className="profile-dropdown-item settings-trigger"
+                            onClick={() => setShowSettingsMenu((prev) => !prev)}
+                          >
+                            Settings
+                            <span className="settings-arrow">▸</span>
+                          </button>
+                          {showSettingsMenu && (
+                            <div className="profile-submenu">
+                              <div className="profile-submenu-row">
+                                <span className="profile-submenu-label">Language</span>
+                                <select value={language} onChange={(e) => changeLanguage(e.target.value)} className="profile-submenu-select">
+                                  <option value="en">English</option>
+                                  <option value="ta">தமிழ்</option>
+                                  <option value="hi">हिन्दी</option>
+                                  <option value="te">తెలుగు</option>
+                                </select>
+                              </div>
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=settings&section=notifications"); }}>Notifications</button>
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=profile&edit=true"); }}>Edit Profile</button>
+                            </div>
+                          )}
+                        </div>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/contact"); }}>Help Center</button>
+                        <button type="button" className="profile-dropdown-item logout-button" onClick={() => setShowLogoutPopup(true)}>Logout</button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -485,6 +519,15 @@ const Navbar = () => {
                     src="/camera.svg"
                     alt="Camera"
                     className="mobile-nav-icon-img"
+                    onClick={triggerCameraSearch}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        triggerCameraSearch();
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -528,17 +571,38 @@ const Navbar = () => {
                         <span>{user.email}</span>
                       </div>
                       <div className="profile-divider"></div>
-                      <Link to="/wishlist" onClick={() => setShowProfile(false)}>My Wishlist</Link>
-                      <Link to="/profile" onClick={() => setShowProfile(false)}>Profile</Link>
-                      <button
-                        onClick={() => {
-                          setShowProfile(false);
-                          setShowLogoutPopup(true);
-                        }}
-                        className="logout-button"
-                      >
-                        Logout
-                      </button>
+                      <div className="profile-dropdown-list">
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=profile"); }}>Profile</button>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/wishlist"); }}>My Wishlist</button>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=orders"); }}>My Orders</button>
+                        <div className="profile-settings-wrapper">
+                          <button
+                            type="button"
+                            className="profile-dropdown-item settings-trigger"
+                            onClick={() => setShowSettingsMenu((prev) => !prev)}
+                          >
+                            Settings
+                            <span className="settings-arrow">▸</span>
+                          </button>
+                          {showSettingsMenu && (
+                            <div className="profile-submenu">
+                              <div className="profile-submenu-row">
+                                <span className="profile-submenu-label">Language</span>
+                                <select value={language} onChange={(e) => changeLanguage(e.target.value)} className="profile-submenu-select">
+                                  <option value="en">English</option>
+                                  <option value="ta">தமிழ்</option>
+                                  <option value="hi">हिन्दी</option>
+                                  <option value="te">తెలుగు</option>
+                                </select>
+                              </div>
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=settings&section=notifications"); }}>Notifications</button>
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=profile&edit=true"); }}>Edit Profile</button>
+                            </div>
+                          )}
+                        </div>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/contact"); }}>Help Center</button>
+                        <button type="button" className="profile-dropdown-item logout-button" onClick={() => { setShowProfile(false); setShowLogoutPopup(true); }}>Logout</button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -594,6 +658,19 @@ const Navbar = () => {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showCameraComingSoon && (
+        <div className="camera-coming-soon-overlay" onClick={() => setShowCameraComingSoon(false)}>
+          <div className="camera-coming-soon-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="camera-coming-soon-icon">📷</div>
+            <h3>Camera Search</h3>
+            <p>Coming soon</p>
+            <button type="button" className="camera-coming-soon-btn" onClick={() => setShowCameraComingSoon(false)}>
+              OK
+            </button>
           </div>
         </div>
       )}

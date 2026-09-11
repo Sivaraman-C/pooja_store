@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./Components/Navbar/Navbar";
 // import Footer from "./Components/Footer/Footer";
@@ -47,6 +47,20 @@ function AdminRoute() {
     : <Navigate to="/login" replace />;
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   const [user, setUser] = React.useState(() => JSON.parse(localStorage.getItem("user")));
 
@@ -60,6 +74,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <CartProvider>
 
       <Routes>

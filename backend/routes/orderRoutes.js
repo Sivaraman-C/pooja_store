@@ -146,6 +146,35 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+    const userId = req.query.user_id;
+
+    try {
+        let query = `
+            SELECT id, user_id, total_amount AS total,
+                   payment_method, payment_status,
+                   order_status AS status,
+                   shipping_name AS customer_name,
+                   created_at
+            FROM orders
+        `;
+        const params = [];
+
+        if (userId) {
+            query += " WHERE user_id = ?";
+            params.push(userId);
+        }
+
+        query += " ORDER BY created_at DESC";
+
+        const [orders] = await db.promise().query(query, params);
+        res.json(orders);
+    } catch (error) {
+        console.error("GET ORDERS ERROR:", error);
+        res.status(500).json({ message: "Unable to fetch orders" });
+    }
+});
+
+router.get("/user/:userId", async (req, res) => {
     try {
         const [orders] = await db.promise().query(
             `SELECT id, user_id, total_amount AS total,
@@ -154,12 +183,15 @@ router.get("/", async (req, res) => {
                     shipping_name AS customer_name,
                     created_at
              FROM orders
-             ORDER BY created_at DESC`
+             WHERE user_id = ?
+             ORDER BY created_at DESC`,
+            [req.params.userId]
         );
+
         res.json(orders);
     } catch (error) {
-        console.error("GET ORDERS ERROR:", error);
-        res.status(500).json({ message: "Unable to fetch orders" });
+        console.error("GET USER ORDERS ERROR:", error);
+        res.status(500).json({ message: "Unable to fetch user orders" });
     }
 });
 
@@ -167,18 +199,42 @@ router.get("/items", async (req, res) => {
     try {
         const [items] = await db.promise().query(
             `SELECT oi.id, oi.order_id, oi.product_id,
-                    p.name AS product_name, oi.quantity,
+                    COALESCE(p.name, CONCAT('Product #', oi.product_id)) AS product_name,
+                    oi.quantity,
                     oi.price, oi.total, o.shipping_name AS customer_name,
                     o.created_at
              FROM order_items oi
-             INNER JOIN orders o ON o.id = oi.order_id
-             INNER JOIN products p ON p.id = oi.product_id
+             LEFT JOIN orders o ON o.id = oi.order_id
+             LEFT JOIN products p ON p.id = oi.product_id
              ORDER BY oi.created_at DESC`
         );
         res.json(items);
     } catch (error) {
         console.error("GET ORDER ITEMS ERROR:", error);
         res.status(500).json({ message: "Unable to fetch order items" });
+    }
+});
+
+router.get("/:id/items", async (req, res) => {
+    try {
+        const [items] = await db.promise().query(
+            `SELECT oi.id, oi.order_id, oi.product_id,
+                    COALESCE(p.name, CONCAT('Product #', oi.product_id)) AS product_name,
+                    oi.quantity,
+                    oi.price, oi.total, o.shipping_name AS customer_name,
+                    o.created_at
+             FROM order_items oi
+             LEFT JOIN orders o ON o.id = oi.order_id
+             LEFT JOIN products p ON p.id = oi.product_id
+             WHERE oi.order_id = ?
+             ORDER BY oi.created_at DESC`,
+            [req.params.id]
+        );
+
+        res.json(items);
+    } catch (error) {
+        console.error("GET ORDER DETAILS ERROR:", error);
+        res.status(500).json({ message: "Unable to fetch order details" });
     }
 });
 
