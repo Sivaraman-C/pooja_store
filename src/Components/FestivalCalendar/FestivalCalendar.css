@@ -592,16 +592,14 @@
   border:
     1px solid
     rgba(
-      199,
-      149, 53, 0.25
+      199, 149, 53, 0.25
     );
 
   border-radius: 7px;
 
   background:
     rgba(
-      255,
-      250, 239,
+      255, 250, 239,
       0.95
     );
 
@@ -997,433 +995,170 @@
 ========================= */
 
 @media (max-width: 800px) {
-  .festival-hero {
-    display: flex !important;
-    min-height: 140px !important;
-    height: 140px !important;
-    background: linear-gradient(135deg, #5c1d13 0%, #8f321f 48%, #6d2418 100%);
-  }
-
-  .festival-hero-content {
-    width: min(100%, 92%);
-    padding: 18px 12px 14px;
-  }
-
-  .festival-eyebrow {
-    font-size: 9px !important;
-    letter-spacing: 2px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .festival-hero h1 {
-    font-size: clamp(32px, 9vw, 52px) !important;
-    line-height: 0.9 !important;
-  }
-
-  .festival-hero p {
-    display: none !important;
-  }
-
-  .festival-icon {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 18px !important;
-    opacity: 0.8 !important;
-  }
-
-  .festival-page {
-    background: #f4efe7;
-    font-family: "Inter", sans-serif;
-  }
-
   .festival-container {
-    width: calc(100% - 18px);
-    padding: 16px 0 24px;
+    width: calc(100% - 24px);
+    padding-top: 35px;
   }
 
+  /* TOOLS GRID 2x2 */
   .festival-tools {
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 12px !important;
     align-items: flex-end !important;
-    margin-bottom: 16px !important;
   }
 
   .festival-search {
+    grid-column: span 1 !important;
     width: 100% !important;
     max-width: none !important;
-    min-width: 0 !important;
-    height: 42px !important;
-    padding: 0 12px !important;
-    border: 1px solid #ddd0c0 !important;
-    border-radius: 12px !important;
-    background: #f9f5f0 !important;
-    box-shadow: none !important;
-    box-sizing: border-box !important;
-  }
-
-  .festival-search input {
-    width: 100% !important;
-    min-width: 0 !important;
-    font-size: 12px !important;
-    color: #2d211c !important;
-  }
-
-  .festival-search span {
-    font-size: 16px !important;
-    color: #b7863f !important;
-    flex-shrink: 0 !important;
+    height: 44px !important;
+    margin: 0 !important;
   }
 
   .festival-filter {
-    min-width: 0 !important;
     width: 100% !important;
+    max-width: none !important;
     margin: 0 !important;
+    min-width: 0 !important;
   }
 
   .festival-filter select {
     width: 100% !important;
-    min-width: 0 !important;
-    height: 42px !important;
+    height: 44px !important;
     font-size: 12px !important;
-    border-radius: 12px !important;
-    padding: 0 30px 0 12px !important;
-    border: 1px solid #ddd0c0 !important;
-    background: #f9f5f0 !important;
-    box-sizing: border-box !important;
-    box-shadow: none !important;
   }
 
-  .festival-footer {
+  .festival-search input { font-size: 12px !important; }
+
+  /* CALENDAR HEADER MOBILE (MATCHING IMAGE) */
+  .calendar-header {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 20px 15px !important;
+    background: white !important;
+    border-bottom: 1px solid var(--festival-border) !important;
+  }
+
+  .header-left {
+    flex: 1 !important;
+    text-align: left !important;
+  }
+
+  .calendar-label {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1.5px !important;
+    color: var(--festival-gold) !important;
+    margin-bottom: 2px !important;
+  }
+
+  .calendar-header h2 {
+    font-size: 32px !important;
+    font-family: "Cormorant Garamond", serif !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    color: var(--festival-text) !important;
+  }
+
+  .calendar-header h2 span {
+    font-size: 20px !important;
+    color: #999 !important;
+    margin-left: 5px !important;
+  }
+
+  .header-right {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .today-btn-new {
+    height: 34px !important;
+    padding: 0 14px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    background: white !important;
+    border: 1px solid #ddd !important;
+    border-radius: 8px !important;
+    color: var(--festival-text) !important;
+    cursor: pointer !important;
+  }
+
+  .nav-buttons {
+    display: flex !important;
+    gap: 6px !important;
+  }
+
+  .nav-btn {
+    width: 34px !important;
+    height: 34px !important;
+    border: 1px solid #ddd !important;
+    background: white !important;
+    border-radius: 8px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 10px !important;
-    margin-top: 22px !important;
-    font-size: 11px !important;
-    letter-spacing: 1.5px !important;
-    text-transform: uppercase !important;
-    color: #b7863f !important;
+    font-size: 16px !important;
+    color: var(--festival-text) !important;
+  }
+
+  /* WEEKDAYS */
+  .calendar-weekdays div {
+    font-size: 10px !important;
+    padding: 15px 5px !important;
+    color: var(--festival-muted) !important;
+  }
+
+  /* CALENDAR GRID MOBILE (MATCHING IMAGE) */
+  .calendar-day {
+    min-height: 100px !important;
+    padding: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    border-right: 1px solid var(--festival-border) !important;
+    border-bottom: 1px solid var(--festival-border) !important;
+    background: #fffdf9 !important;
+  }
+
+  .day-number {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 5px !important;
+    color: #ccc !important; /* Greyed out for muted days */
   }
 
-  .festival-footer p {
-    margin: 0 !important;
-    white-space: nowrap !important;
-    font-size: 12px !important;
-    letter-spacing: 1.2px !important;
+  .calendar-day:not(.muted-day) .day-number {
+    color: var(--festival-text) !important;
   }
 
-  .upcoming-section {
-    display: block !important;
-    margin-top: 18px !important;
+  .calendar-day.today .day-number {
+    background: #8f321f !important; /* SOLID DARK RED */
+    color: white !important;
+    border-radius: 50% !important;
+    width: 28px !important;
+    height: 28px !important;
   }
 
-  .upcoming-grid {
-    display: grid !important;
-    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-    align-items: stretch !important;
-  }
-
-  .upcoming-title-card {
-    grid-column: 4 / span 6 !important;
-    grid-row: 2 !important;
-    position: relative !important;
-    overflow: hidden !important;
+  /* FESTIVAL ICONS IN GRID (CENTERED AT BOTTOM) */
+  .day-festivals-container {
+    margin-top: auto !important;
+    width: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 20px 14px !important;
-    min-height: 100px !important;
-    height: 100px !important;
-    background: linear-gradient(135deg, #5c1d13 0%, #8f321f 48%, #6d2418 100%) !important;
-    border: 1px solid var(--festival-border) !important;
-    border-radius: 20px !important;
-    text-align: center !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12) !important;
-    color: white !important;
-  }
-
-  .title-eyebrow {
-    color: var(--festival-gold-light) !important;
-    font-size: 9px !important;
-    font-weight: 800 !important;
-    letter-spacing: 2px !important;
-    text-transform: uppercase !important;
-    margin-bottom: 8px !important;
-    position: relative !important;
-    z-index: 5 !important;
-  }
-
-  .upcoming-title-card h2 {
-    font-family: "Cormorant Garamond", serif !important;
-    font-size: 28px !important;
-    margin: 0 !important;
-    color: white !important;
-    position: relative !important;
-    z-index: 5 !important;
-    line-height: 0.95 !important;
-  }
-
-  .upcoming-title-card .festival-icon {
-    width: 34px !important;
-    height: 34px !important;
-    font-size: 18px !important;
-    opacity: 0.65 !important;
-    border-color: rgba(234, 211, 155, 0.2) !important;
-    background: rgba(255, 240, 205, 0.1) !important;
-    position: absolute !important;
-    z-index: 2 !important;
-    animation: festivalFloat 5s ease-in-out infinite;
-  }
-
-  .upcoming-title-card .icon-diya { left: 8% !important; top: 15% !important; animation-delay: 0s; }
-  .upcoming-title-card .icon-lotus { right: 8% !important; top: 15% !important; animation-delay: 1s; }
-  .upcoming-title-card .icon-kalash { left: 12% !important; bottom: 12% !important; top: auto !important; animation-delay: 2s; }
-  .upcoming-title-card .icon-bell { right: 12% !important; bottom: 12% !important; top: auto !important; animation-delay: 3s; }
-
-  .upcoming-title-card .title-decoration {
-    position: relative !important;
-    z-index: 5 !important;
-    color: var(--festival-gold-light) !important;
-    margin-top: 10px !important;
-    font-size: 20px !important;
-  }
-
-  .upcoming-card {
-    grid-column: span 3 !important;
-    position: relative !important;
-    height: 140px !important;
-    border-radius: 18px !important;
-    overflow: hidden !important;
-    border: none !important;
-    cursor: pointer !important;
-  }
-
-  .card-bg-container {
-    position: absolute !important;
-    inset: 0 !important;
-    z-index: 1 !important;
-  }
-
-  .card-bg-img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    display: block !important;
-    transition: transform 0.5s ease !important;
-  }
-
-  .upcoming-card:hover .card-bg-img {
-    transform: scale(1.05) !important;
-  }
-
-  .card-overlay {
-    position: absolute !important;
-    inset: 0 !important;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.1) 100%) !important;
-    z-index: 2 !important;
-  }
-
-  .upcoming-info {
-    position: absolute !important;
-    bottom: 14px !important;
-    left: 14px !important;
-    right: 14px !important;
-    z-index: 3 !important;
-    color: white !important;
-    text-align: left !important;
-  }
-
-  .upcoming-date {
-    font-size: 10px !important;
-    font-weight: 700 !important;
-    color: var(--festival-gold-light) !important;
-    text-transform: uppercase !important;
-  }
-
-  .upcoming-info h3 {
-    font-family: "Cormorant Garamond", serif !important;
-    font-size: 12px !important;
-    margin: 4px 0 0 !important;
-    line-height: 1.1 !important;
-    color: white !important;
-  }
-
-  .upcoming-arrow {
-    position: absolute !important;
-    top: 1px !important;
-    right: 0px !important;
-    z-index: 3 !important;
-    color: darkgreen !important;
-    font-size: 25px !important;
-    opacity: 0.7 !important;
-  }
-
-  .festival-page {
-    background: #f4efe7;
-    font-family: "Inter", sans-serif;
-  }
-
-  .festival-container {
-    width: calc(100% - 18px);
-    padding: 16px 0 24px;
-  }
-
-  .calendar-card {
-    margin-bottom: 0;
-    border-radius: 18px;
-    border: 1px solid #e7dfd1;
-    box-shadow: none;
-    background: #f7f3ee;
-    overflow: hidden;
-  }
-
-  .calendar-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 18px 14px 16px !important;
-    background: #f7f3ee;
-    border-bottom: 1px solid #e7dfd1;
-  }
-
-  .calendar-header > div:first-child {
-    flex: 1;
-    text-align: left;
-  }
-
-  .calendar-label {
-    display: inline-block;
-    margin-bottom: 4px;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: #b7863f;
-  }
-
-  .calendar-header h2 {
-    margin: 0;
-    font-size: 26px;
-    line-height: 1;
-    font-family: "Cormorant Garamond", serif;
-    font-weight: 600;
-    color: #2f231d;
-    letter-spacing: -0.6px;
-  }
-
-  .calendar-header h2 span {
-    font-size: 18px;
-    font-weight: 500;
-    color: #6d625b;
-    letter-spacing: 0;
-  }
-
-  .calendar-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .today-button,
-  .calendar-nav {
-    height: 38px;
-    min-width: 38px;
-    padding: 0 14px;
-    border: 1px solid #d9cdc0;
-    background: #f9f5f0;
-    color: #2d211c;
-    border-radius: 12px;
-    font-size: 13px;
-    font-weight: 600;
-    box-shadow: none;
-  }
-
-  .today-button {
-    padding: 0 18px;
-    min-width: 90px;
-    order: 0;
-  }
-
-  .calendar-nav {
-    width: 38px;
-    padding: 0;
-    font-size: 18px;
-  }
-
-  .calendar-weekdays {
-    display: grid !important;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    background: #f7f3ee;
-    border-bottom: 1px solid #e7dfd1;
-  }
-
-  .calendar-weekdays div {
-    padding: 12px 4px 10px;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    color: #7d6d64;
-    font-weight: 700;
-  }
-
-  .calendar-grid {
-    display: grid !important;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    background: #faf4ec;
-  }
-
-  .calendar-day {
-    min-height: 62px;
-    padding: 6px 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    background: #f7f3ee;
-    border-right: 1px solid #e7dfd1;
-    border-bottom: 1px solid #e7dfd1;
-  }
-
-  .calendar-day:nth-child(7n) {
-    border-right: none;
-  }
-
-  .day-number {
-    width: 26px;
-    height: 26px;
-    margin: 0 auto 6px;
-    font-size: 12px;
-    color: #b9b1a9;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .calendar-day:not(.muted-day) .day-number {
-    color: #2d211c;
-  }
-
-  .calendar-day.today .day-number {
-    background: #8f321f;
-    color: #fff;
-    border-radius: 50%;
-    width: 27px;
-    height: 27px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .day-festivals-container {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    width: 100%;
+    gap: 4px !important;
   }
 
   .festival-event {
@@ -1432,29 +1167,54 @@
     padding: 0 !important;
     margin: 0 !important;
     width: auto !important;
-    min-height: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex !important;
+    justify-content: center !important;
     box-shadow: none !important;
     transform: none !important;
   }
 
   .fest-icon {
-    font-size: 20px;
-    line-height: 1;
+    font-size: 22px !important;
+    line-height: 1 !important;
   }
 
   .fest-name {
-    display: none !important;
+    display: none !important; /* HIDE TEXT ON MOBILE GRID TO MATCH IMAGE */
   }
 
-  .festival-modal {
-    width: 92%;
-    padding: 40px 24px 28px;
+  /* UPCOMING SECTION MOBILE */
+  .upcoming-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
   }
 
-  .festival-modal h2 {
-    font-size: 35px;
+  .upcoming-title-card {
+    grid-column: span 2 !important;
+    grid-row: auto !important;
+    padding: 25px !important;
+    height: 180px !important;
   }
+
+  .upcoming-title-card h2 {
+    font-size: 24px !important;
+  }
+
+  .upcoming-card {
+    grid-column: span 1 !important;
+    height: 200px !important;
+    border-radius: 16px !important;
+  }
+
+  .upcoming-info {
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+  }
+
+  .upcoming-info h3 {
+    font-size: 16px !important;
+  }
+
+  .festival-modal { padding: 40px 24px 28px; width: 92%; }
+  .festival-modal h2 { font-size: 35px; }
 }

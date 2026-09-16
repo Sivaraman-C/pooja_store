@@ -1,123 +1,511 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Great+Vibes&family=Inter:wght@400;500;600;700&display=swap');
+
 .hero {
   width: 100%;
-  min-height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
+  background: #fdfaf5;
+  color: #2d211c;
+  overflow-x: hidden;
+}
+
+/* 1. Top Bar */
+.hero-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 5% 5px; /* Reduced padding */
+  background: white;
+  border-bottom: 1px solid #f0e6d2;
+}
+
+.brand-box {
   display: flex;
   align-items: center;
+  gap: 15px;
 }
 
-.hero-overlay {
-  width: 100%;
-  min-height: 600px;
-  display: flex;
-  align-items: center;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.65) 0%,
-    rgba(0, 0, 0, 0.35) 45%,
-    rgba(0, 0, 0, 0.05) 100%
-  );
+.brand-logo-img {
+  width: 50px;
+  height: auto;
 }
 
-.hero-content {
-  width: min(1280px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 60px 0;
-  color: white;
-}
-
-.hero-content h3 {
-  margin: 0 0 10px;
-  font-size: 26px;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-
-.hero-content h1 {
-  max-width: 650px;
-  margin: 0 0 25px;
-  font-size: 58px;
-  line-height: 1.1;
+.brand-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  color: #7d1232;
+  margin: 0;
+  line-height: 0.9;
   font-weight: 700;
 }
 
-.description {
-  max-width: 650px;
-  margin: 0 0 35px;
-  font-size: 18px;
-  line-height: 1.7;
+.brand-tagline {
+  font-size: 0.75rem;
+  color: #666;
+  margin: 4px 0 0;
+  letter-spacing: 0.8px;
+  font-weight: 500;
 }
 
-.know-more-btn {
-  padding: 14px 30px;
-  border: none;
-  border-radius: 5px;
-  background: #a96f18;
-  color: white;
-  font-size: 16px;
+.brand-quote p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #444;
+  max-width: 200px;
+  text-align: right;
+  line-height: 1.2;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  margin: 0; /* Removed margin */
 }
 
-.know-more-btn:hover {
-  background: #C9371B;
-  transform: translateY(-2px);
+/* 2. Main Banner */
+.hero-main-banner {
+  position: relative;
+  height: clamp(550px, 80vh, 850px);
+  width: 100%;
 }
 
-.know-more-btn span {
-  margin-left: 8px;
-  font-size: 20px;
+.banner-image-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
-/* Tablet */
-@media (max-width: 768px) {
-  .hero,
-  .hero-overlay {
-    min-height: 520px;
+.banner-image-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-text-layer {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 5%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.9) 35%, rgba(255, 255, 255, 0.4) 65%, transparent 100%);
+}
+
+.vibes-badge {
+  color: #b7863f;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+/* NEW CURVED PROMO HEADLINE */
+.promo-headline-curved {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 220px;
+  margin: 10px 0;
+}
+
+.headline-paint-bg {
+  position: absolute;
+  left: -20px;
+  top: 0;
+  width: 110%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
+
+.sales-curved-svg {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.1));
+}
+
+.sales-title-text {
+  font-family: 'Great Vibes', cursive;
+  font-size: 82px;
+  fill: #fff;
+}
+
+.sales-subtitle-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 700;
+  fill: #7d1232;
+}
+
+.banner-footer-text {
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.purity-words {
+  color: #b7863f;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.blessed-home {
+  color: #222;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* 3. Features Strip */
+.hero-features-strip {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 600px;
+}
+
+.feature-item {
+  width: 160px;
+  height: 60px;
+  flex: 0 0 auto;
+}
+
+.feature-button-card {
+  padding: 0;
+}
+
+.feature-button-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
+}
+
+/* 4. Explore Categories */
+.hero-explore-section {
+  padding: 60px 5%;
+  background: white;
+  border-top: 1px solid #f0e6d2;
+}
+
+.explore-header {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.script-text {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.8rem;
+  color: #7d1232;
+}
+
+.explore-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  margin: 0;
+  color: #111;
+}
+
+.one-roof-tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.mini-lotus {
+  font-size: 1.2rem;
+}
+
+.one-roof-tag p {
+  font-size: 0.9rem;
+  color: #b7863f;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.explore-horizontal-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 10px 30px;
+  scrollbar-width: none;
+}
+
+.explore-card {
+  flex: 0 0 160px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.explore-card-arch {
+  width: 140px;
+  height: 180px;
+  margin: 0 auto 15px;
+  border-radius: 70px 70px 15px 15px;
+  overflow: hidden;
+  border: 5px solid #fdfaf5;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  transition: transform 0.3s ease;
+}
+
+.explore-card-arch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.explore-card:hover .explore-card-arch {
+  transform: translateY(-8px);
+  border-color: #f0e6d2;
+}
+
+.explore-card h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  color: #7d1232;
+  margin: 0;
+  font-weight: 700;
+}
+
+.explore-card p {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 4px 0 0;
+  font-weight: 500;
+}
+
+.special-discount-card {
+  flex: 0 0 180px;
+  display: flex;
+  align-items: center;
+}
+
+.discount-circle {
+  width: 160px;
+  height: 160px;
+  background: #7d1232;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  box-shadow: 0 15px 30px rgba(125, 18, 50, 0.25);
+  border: 4px double rgba(255,255,255,0.2);
+}
+
+.discount-circle h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.discount-circle p {
+  font-size: 0.8rem;
+  margin: 10px 0;
+  opacity: 0.9;
+}
+
+.discount-leaf {
+  font-size: 1.8rem;
+  margin-top: 5px;
+}
+
+/* 5. Bottom Action Bar */
+.hero-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
+  background: #5c1426;
+  color: white;
+  border-top: 2px solid #b7863f;
+}
+
+.action-left-keywords {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f0e6d2;
+}
+
+.action-left-keywords .dot {
+  color: #b7863f;
+  font-size: 1.2rem;
+}
+
+.action-center-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shop-now-image-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.shop-now-image-link:hover {
+  transform: translateY(-2px) scale(1.03);
+  filter: brightness(1.05);
+}
+
+.shop-now-image-button {
+  display: block;
+  width: clamp(170px, 24vw, 235px);
+  height: auto;
+  max-height: 70px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.18));
+}
+
+.action-right-info {
+  display: flex;
+  align-items: center;
+}
+
+.journey-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.journey-text p {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .hero-top-bar {
+    flex-direction: column;
+    padding: 12px 15px 5px; /* Reduced mobile padding */
+    gap: 10px;
   }
 
-  .hero-content {
-    padding: 40px 25px;
+  .brand-quote p {
+    text-align: center;
+    max-width: none;
+    font-size: 1rem;
   }
 
-  .hero-content h3 {
-    font-size: 22px;
+  .hero-main-banner {
+    height: 600px;
   }
 
-  .hero-content h1 {
-    font-size: 42px;
+  .banner-text-layer {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 45%, rgba(255, 255, 255, 0.5) 100%);
+    /* justify-content: flex-end; */
+    align-items: flex-start; /* LEFT ALIGNED */
+    text-align: left;
+    padding-bottom: 40px;
   }
 
-  .description {
-    font-size: 16px;
+  .promo-headline-curved {
+    height: 160px;
+    max-width: 340px;
+  }
+
+  .sales-title-text {
+    font-size: 52px;
+  }
+
+  .sales-subtitle-text {
+    font-size: 32px;
+  }
+
+  /* BUTTONS GRID 3+2 (LEFT ALIGNED) */
+  .hero-features-strip {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* LEFT ALIGNED */
+    gap: 10px 8px;
+    padding: 10px 0;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .feature-item {
+    flex: 0 0 calc(32% - 6px);
+    width: auto !important;
+    height: 50px !important;
+    transform: none !important;
+    margin: 0 !important;
+    background: transparent;
+  }
+
+  .feature-item:nth-child(4),
+  .feature-item:nth-child(5) {
+    flex: 0 0 calc(48% - 4px);
+  }
+
+  .explore-horizontal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    overflow-x: visible;
+  }
+
+  .explore-card {
+    flex: none;
+    width: 100%;
+  }
+
+  .explore-card-arch {
+    width: 100%;
+    height: 160px;
+  }
+
+  .special-discount-card {
+    grid-column: span 2;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .hero-action-bar {
+    flex-direction: column;
+    gap: 20px;
+    padding: 25px 20px;
   }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
-  .hero,
-  .hero-overlay {
-    min-height: 500px;
+  .promo-headline-curved {
+    height: 130px;
+    max-width: 280px;
   }
 
-  .hero-content {
-    padding: 30px 20px;
+  .sales-title-text {
+    font-size: 44px;
   }
 
-  .hero-content h3 {
-    font-size: 20px;
+  .sales-subtitle-text {
+    font-size: 26px;
   }
 
-  .hero-content h1 {
-    font-size: 34px;
+  .explore-card-arch {
+    height: 140px;
   }
 
-  .description {
-    font-size: 15px;
-    line-height: 1.6;
+  .discount-circle {
+    width: 140px;
+    height: 140px;
   }
 }
