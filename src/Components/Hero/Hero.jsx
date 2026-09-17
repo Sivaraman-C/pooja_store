@@ -24,28 +24,38 @@ import Kits from "../Assets/pooja-kit.png";
 const Hero = () => {
   return (
     <section className="hero">
-      {/* 1. Brand Header */}
-      <div className="hero-top-bar">
-        <div className="brand-box">
-          <img src={Logo} alt="" className="brand-logo-img" />
-          <div className="brand-names">
-            <h1 className="brand-title">Devaloka</h1>
-            <p className="brand-tagline">Pooja Essentials • Spiritual Living • Online</p>
+      {/* Main Visual Banner Area */}
+      <div className="hero-main-banner">
+        {/* 1. Brand Header - MOVED INSIDE BANNER */}
+        <div className="hero-top-bar">
+          <div className="brand-box">
+            <img src={Logo} alt="" className="brand-logo-img" />
+            <div className="brand-names">
+              <h1 className="brand-title">Devaloka</h1>
+              <p className="brand-tagline">Pooja Essentials • Spiritual Living • Online</p>
+            </div>
+          </div>
+          <div className="brand-quote">
+            <p>Light Up Your Prayers with the Best Pooja Essentials</p>
           </div>
         </div>
-        <div className="brand-quote">
-          <p>Light Up Your Prayers with the Best Pooja Essentials</p>
-        </div>
-      </div>
 
-      {/* 2. Main Visual Banner */}
-      <div className="hero-main-banner">
         <div className="banner-image-layer">
           <img src={BannerBg} alt="Sacred Home Temple" />
         </div>
 
         <div className="banner-text-layer">
-          <span className="vibes-badge">✧ Divine Vibes, Now Online! ✧</span>
+          {/* CURVED BADGE TEXT */}
+          <div className="vibes-badge-curved">
+            <svg viewBox="0 0 400 60" className="vibes-svg">
+              <path id="vibes-curve" d="M 40 40 Q 200 10 360 40" fill="transparent" />
+              <text className="vibes-text">
+                <textPath href="#vibes-curve" startOffset="50%" textAnchor="middle">
+                  ✧ Divine Vibes, Now Online! ✧
+                </textPath>
+              </text>
+            </svg>
+          </div>
 
           {/* CURVED TEXT WITH PAINT STROKE BG */}
           <div className="promo-headline-curved">
@@ -56,8 +66,8 @@ const Hero = () => {
               role="img"
               aria-label="Sales Started For Your Pooja"
             >
-              <path id="sales-title-curve" d="M 45 125 Q 300 0 555 125" fill="transparent" />
-              <path id="sales-subtitle-curve" d="M 105 195 Q 300 105 495 195" fill="transparent" />
+              <path id="sales-title-curve" d="M 45 155 Q 300 0 555 155" fill="transparent" />
+              <path id="sales-subtitle-curve" d="M 105 185 Q 300 85 495 185" fill="transparent" />
               <text className="sales-title-text">
                 <textPath href="#sales-title-curve" startOffset="50%" textAnchor="middle">
                   Sales Started
@@ -85,9 +95,8 @@ const Hero = () => {
               { src: SpecialOfferButton, alt: "Special offers" },
               { src: FastDelivery, alt: "Fast delivery" }
             ].map((button, i) => (
-              <div key={i} className="feature-item feature-button-card" aria-label={button.alt}>
-                <img src={button.src} alt={button.alt} className="feature-button-image" />
-              </div>
+              <Link to="/shop" key={i} className="feature-item feature-button-card" aria-label={button.alt} > 
+              <img src={button.src} alt={button.alt} className="feature-button-image" /> </Link>
             ))}
           </div>
         </div>
