@@ -1,6 +1,6 @@
 .featured-section {
   width: 100%;
-  background: #faf9f6;
+  background: #ffffff;
   padding: 60px 0 80px;
 }
 
@@ -10,306 +10,87 @@
 }
 
 /* Heading */
-
 .featured-heading {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+  text-align: left;
 }
 
 .featured-heading p {
-  margin: 0 0 12px;
-
+  margin: 0 0 8px;
   color: #756d63;
-  font-family: Arial, sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 3px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .featured-heading h2 {
   margin: 0;
-
-  color: #342d26;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 44px;
-  font-weight: 400;
-  line-height: 1.1;
+  color: #333;
+  font-family: 'Inter', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
 }
 
-/* Product Grid */
-
+/* SINGLE ROW SCROLLABLE GRID */
 .featured-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-
-/* Product Card */
-
-.product-card {
-  overflow: hidden;
-
-  background: #ffffff;
-
-  border: 1px solid #ebe7e0;
-  border-radius: 11px;
-
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-}
-
-/* Image */
-
-.product-image {
-  width: 100%;
-  height: 285px;
-  overflow: hidden;
-  position: relative;
-}
-
-.product-card-actions {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 30px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
-.product-card:hover .product-card-actions {
-  opacity: 1;
+.featured-grid::-webkit-scrollbar {
+  height: 6px;
 }
 
-.action-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  font-size: 16px;
-  transition: all 0.2s ease;
+.featured-grid::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 10px;
 }
 
-.action-btn:hover {
-  transform: scale(1.1);
-}
-
-.heart-btn.active {
-  color: #ff3d0a;
-}
-
-.product-image img {
-  width: 100%;
-  height: 100%;
-
-  display: block;
-
-  object-fit: cover;
-
-  transition: transform 0.5s ease;
-}
-
-.product-card:hover .product-image img {
-  transform: scale(1.05);
-}
-
-/* Product Info */
-
-.product-info {
-  padding: 22px 20px 20px;
-}
-
-.product-category {
-  display: block;
-
-  margin-bottom: 14px;
-
-  color: #766d63;
-
-  font-family: Arial, sans-serif;
-  font-size: 10px;
-  font-weight: 500;
-
-  letter-spacing: 2.5px;
-}
-
-.product-info h3 {
-  min-height: 48px;
-
-  margin: 0 0 18px;
-
-  color: #423a32;
-
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 1.4;
-}
-
-/* Bottom */
-
-.product-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.product-price {
-  color: #29241f;
-
-  font-family: Arial, sans-serif;
-  font-size: 17px;
-  font-weight: 600;
-}
-
-/* Add Button */
-
-.add-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-
-  padding: 9px 16px;
-
-  border: none;
-  border-radius: 30px;
-
-  background: #ff3d0a;
-  color: #ffffff;
-
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  transition: all 0.3s ease;
-}
-
-.add-button:hover {
-  background: #d92f05;
-  transform: scale(1.04);
-}
-
-.cart-small {
-  font-size: 12px;
+.featured-grid .walmart-card {
+  flex: 0 0 240px; /* Fixed width for scrolling row */
 }
 
 /* KNOW MORE BUTTON */
 .featured-know-more {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
+  justify-content: center;
+  margin-top: 20px;
   width: 100%;
-  padding-bottom: 20px;
 }
 
 .know-more-btn {
-  background: white !important;
-  color: #a96f18 !important;
-  border: 2px solid #a96f18 !important;
-  padding: 12px 24px !important;
+  background: #4d00d1 !important;
+  color: white !important;
+  border: none !important;
+  padding: 12px 40px !important;
   border-radius: 30px !important;
   font-weight: 700 !important;
   font-size: 15px !important;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(77, 0, 209, 0.3);
 }
 
-.know-more-btn:hover {
-  background: #a96f18;
-  color: #fff;
-  transform: translateX(5px);
+/* RESPONSIVE */
+@media (max-width: 800px) {
+    .featured-grid .walmart-card {
+        flex: 0 0 200px;
+    }
 }
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 1100px) {
-  .featured-container {
-    max-width: 900px;
-  }
-
-  .featured-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .product-image {
-    height: 300px;
-  }
-}
-
-/* =========================
-   MOBILE
-========================= */
 
 @media (max-width: 600px) {
-  .featured-section {
-    padding: 55px 0 70px;
-  }
+    .featured-grid {
+        gap: 15px;
+    }
 
-  .featured-container {
-    width: calc(100% - 36px);
-  }
-
-  .featured-heading {
-    margin-bottom: 30px;
-  }
-
-  .featured-heading h2 {
-    font-size: 35px;
-  }
-
-  .featured-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .product-image {
-    height: 160px;
-  }
-
-  .product-info {
-    padding: 15px;
-  }
-
-  .product-info h3 {
-    font-size: 14px;
-    min-height: 32px;
-  }
-
-  .product-price {
-    font-size: 13px;
-  }
-
-  .add-button {
-    padding: 6px 10px;
-    font-size: 11px;
-  }
-
-  .product-card-actions {
-    top: 6px;
-    right: 6px;
-    opacity: 1;
-  }
-
-  .action-btn {
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
-  }
+    .featured-grid .walmart-card {
+        flex: 0 0 180px;
+    }
 }

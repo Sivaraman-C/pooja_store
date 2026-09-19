@@ -1,148 +1,183 @@
-.cart-page {
-  min-height: 100vh;
-  padding: 48px 0 90px;
-  background: #faf9f6;
-  color: #332c26;
+.cart-page-walmart {
+    width: 100%;
+    min-height: 100vh;
+    background: #f1f3f6;
+    padding: 30px 0 80px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
 }
 
-.cart-container {
-  width: 90%;
-  max-width: 1180px;
-  margin: 0 auto;
+.cart-web-container {
+    width: min(1280px, calc(100% - 40px));
+    margin: 0 auto;
 }
 
-.cart-header {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 42px;
+.cart-main-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #222;
 }
 
-.cart-eyebrow {
-  margin: 0 0 12px;
-  color: #766c61;
-  font-size: 12px;
-  letter-spacing: 4px;
+/* LAYOUT */
+.cart-layout-walmart {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 30px;
+    align-items: flex-start;
 }
 
-.cart-header h1,
-.cart-message h1 {
-  margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 48px;
-  font-weight: 400;
+/* LEFT COLUMN (The one that scrolls) */
+.cart-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.cart-clear-button,
-.remove-button {
-  border: 0;
-  background: transparent;
-  color: #8e2f1d;
-  cursor: pointer;
-  text-decoration: underline;
+/* STICKY SUMMARY (The one that stays fixed) */
+.cart-right-col {
+    position: sticky;
+    top: 130px;
+    z-index: 10;
 }
 
-.cart-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
-  gap: 48px;
-  align-items: start;
+.cart-delivery-header {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-.cart-items {
-  border-top: 1px solid #e4dfd7;
+.delivery-icon-box { font-size: 22px; }
+.cart-delivery-header h3 { margin: 0; font-size: 18px; font-weight: 700; flex: 1; }
+.arrow-down { color: #888; font-size: 12px; }
+
+.cart-shipping-group {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.cart-item {
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr) auto;
-  gap: 22px;
-  align-items: center;
-  padding: 22px 0;
-  border-bottom: 1px solid #e4dfd7;
+.shipping-banner {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background: #eef7ff;
+    border-radius: 8px;
+    margin-bottom: 25px;
 }
 
-.cart-item img {
-  width: 112px;
-  aspect-ratio: 1;
-  object-fit: cover;
-  background: #eee9e2;
+.truck-icon { font-size: 24px; }
+.shipping-text h4 { margin: 0 0 5px; font-size: 16px; font-weight: 700; }
+.zip-link { font-size: 13px; color: #0071ce; text-decoration: underline; margin: 0; }
+
+/* CART ITEM */
+.walmart-cart-item { padding: 20px 0; border-bottom: 1px solid #f0f0f0; }
+.item-main-row { display: flex; gap: 25px; }
+.item-img { width: 130px; height: 130px; flex-shrink: 0; }
+.item-img img { width: 100%; height: 100%; object-fit: contain; }
+.item-info { flex: 1; display: flex; flex-direction: column; }
+.item-price { font-size: 22px; font-weight: 800; color: #222; }
+.item-name { margin: 10px 0; font-size: 15px; font-weight: 400; line-height: 1.4; color: #444; }
+.returns-tag { font-size: 12px; color: #0071ce; display: block; margin-bottom: 20px; }
+.item-actions-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+.item-links { display: flex; gap: 15px; }
+.item-links button { background: none; border: none; color: #222; font-size: 13px; font-weight: 600; text-decoration: underline; cursor: pointer; }
+.item-qty-pill { display: flex; align-items: center; border: 1px solid #ddd; border-radius: 20px; padding: 2px; gap: 12px; }
+.item-qty-pill button { width: 30px; height: 30px; border: none; background: none; font-size: 18px; cursor: pointer; }
+
+/* SUMMARY CARD */
+.cart-summary-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+.walmart-checkout-btn { width: 100%; height: 48px; background: #4d00d1; color: white; border: none; border-radius: 30px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 15px; transition: background 0.2s; }
+.walmart-checkout-btn:hover { background: #3c00a6; }
+.checkout-note { font-size: 12px; color: #666; text-align: center; margin-bottom: 25px; }
+.summary-rows { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; margin-bottom: 20px; }
+.s-row { display: flex; justify-content: space-between; font-size: 14px; }
+.summary-total-row { display: flex; justify-content: space-between; font-size: 18px; }
+
+/* RECOMMENDATIONS - MATCH LEFT CART WIDTH */
+.cart-recommendations {
+    margin-top: 15px;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.cart-item h2 {
-  margin: 0 0 8px;
-  font-size: 17px;
-  font-weight: 500;
+.rec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.rec-header h2 { font-size: 20px; font-weight: 700; margin: 0; }
+.rec-grid { display: flex; flex-wrap: nowrap; gap: 20px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: thin; }
+.rec-grid::-webkit-scrollbar { height: 6px; }
+.rec-grid::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+.rec-grid .walmart-card { flex: 0 0 230px; }
+
+/* SAVED FOR LATER - SYNCED WIDTH */
+.saved-later-section {
+    margin-top: 15px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.cart-item p {
-  margin: 0 0 18px;
-  color: #766c61;
+.saved-header {
+    background: #eef1f6;
+    padding: 15px 25px;
+    border-bottom: 1px solid #e0e6ed;
 }
 
-.cart-item-actions,
-.quantity-control {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.saved-header h3 { margin: 0; font-size: 20px; font-weight: 700; color: #222; }
+
+.saved-toggle-row {
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
 }
 
-.quantity-control {
-  gap: 0;
-  border: 1px solid #d8d0c7;
+.saved-count-text { font-size: 16px; font-weight: 700; color: #111; }
+
+.toggle-arrow { font-size: 12px; color: #666; transition: transform 0.3s; }
+.toggle-arrow.up { transform: rotate(180deg); }
+
+.saved-content { padding: 0 25px 30px; }
+.saved-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+.saved-item-card { display: flex; gap: 20px; border: 1px solid #f0f0f0; border-radius: 12px; padding: 15px; }
+.s-img-wrap { width: 100px; height: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fdfdfd; }
+.s-img-wrap img { max-height: 100%; max-width: 100%; object-fit: contain; }
+.move-to-cart-btn { background: #4d00d1; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer; width: fit-content; }
+.s-item-details { display: flex; flex-direction: column; gap: 5px; text-align: left; flex: 1; }
+.s-item-price { font-size: 18px; font-weight: 800; color: #222; }
+.s-item-name { font-size: 14px; font-weight: 400; color: #333; margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.s-item-qty { font-size: 12px; color: #777; margin: 0; }
+.s-item-remove { background: none; border: none; color: #222; text-decoration: underline; font-weight: 600; font-size: 12px; cursor: pointer; padding: 0; margin-top: auto; }
+
+/* RESPONSIVE */
+@media (max-width: 950px) {
+    .cart-layout-walmart { grid-template-columns: 1fr; }
+    .cart-right-col { position: relative; top: 0; order: -1; }
+    .saved-grid { grid-template-columns: 1fr; }
 }
 
-.quantity-control button,
-.quantity-control span {
-  display: grid;
-  width: 32px;
-  height: 30px;
-  place-items: center;
-  border: 0;
-  background: #fff;
-  color: #332c26;
-}
-
-.quantity-control button { cursor: pointer; font-size: 18px; }
-
-.cart-item > strong { align-self: start; font-weight: 600; }
-
-.cart-summary {
-  padding: 26px;
-  background: #fff;
-  border: 1px solid #e4dfd7;
-}
-
-.cart-summary h2 { margin: 0 0 25px; font-size: 20px; font-weight: 500; }
-.cart-summary div { display: flex; justify-content: space-between; margin-bottom: 18px; color: #766c61; }
-.cart-summary .summary-total { padding-top: 18px; border-top: 1px solid #e4dfd7; color: #332c26; }
-.summary-total strong { font-size: 20px; }
-
-.cart-primary-button {
-  display: inline-block;
-  padding: 13px 20px;
-  border: 0;
-  background: #ff3d00;
-  color: #fff;
-  cursor: pointer;
-  text-decoration: none;
-  text-align: center;
-}
-
-.cart-summary .cart-primary-button { width: 100%; box-sizing: border-box; margin-top: 10px; }
-.cart-empty, .cart-message { padding: 72px 20px; text-align: center; border-top: 1px solid #e4dfd7; }
-.cart-empty h2 { margin: 0 0 10px; font-family: Georgia, "Times New Roman", serif; font-size: 30px; font-weight: 400; }
-.cart-empty p { margin: 0 0 24px; color: #766c61; }
-.cart-message-page { display: grid; place-items: center; }
-.cart-message h1 { margin-bottom: 24px; font-size: 38px; }
-.cart-status, .cart-error { color: #766c61; }
-.cart-error { margin: -22px 0 24px; color: #a33a24; }
-
-@media (max-width: 760px) {
-  .cart-header h1 { font-size: 38px; }
-  .cart-layout { grid-template-columns: 1fr; gap: 32px; }
-  .cart-item { grid-template-columns: 82px minmax(0, 1fr); gap: 14px; }
-  .cart-item img { width: 82px; }
-  .cart-item > strong { grid-column: 2; }
+@media (max-width: 600px) {
+    .cart-page-walmart { padding-top: 15px; }
+    .cart-main-title { font-size: 20px; padding-left: 5px; }
+    .item-main-row { gap: 15px; }
+    .item-img { width: 100px; height: 100px; }
+    .item-price { font-size: 18px; }
+    .item-name { font-size: 13px; }
+    .item-actions-row { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .item-qty-pill { width: 100%; justify-content: space-between; }
+    .cart-right-col { order: 1; }
 }

@@ -1,92 +1,68 @@
 import React, { useEffect, useState } from "react";
-import { Share } from "@capacitor/share";
 import "./Featured.css";
+import { Link } from "react-router-dom";
 
 import LoginPopup from "../LoginPopup/LoginPopup";
-
-import API_URL from "../../apiConfig";
+import API_URL, { bypassHeaders } from "../../apiConfig";
 
 const Featured = () => {
-
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [wishlist, setWishlist] = useState([]);
   const [showAll, setShowAll] = useState(false);
-
-  // Login popup
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [addingProductId, setAddingProductId] = useState(null);
+  const [cartMap, setCartMap] = useState({}); // productId -> quantity
 
+  const getLoggedInUser = () => {
+    const user = localStorage.getItem("user");
+    try { return user ? JSON.parse(user) : null; } catch { return null; }
+  };
+
+  const getUserId = () => {
+    const user = getLoggedInUser();
+    return user?.id || user?.user_id || null;
+  };
+
+  const fetchCart = async (userId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/cart?user_id=${userId}`, {
+        headers: { ...bypassHeaders }
+      });
+      const data = await response.json();
+      if (response.ok && data.cart) {
+        const mapping = {};
+        data.cart.forEach(item => { mapping[item.product_id] = item.quantity; });
+        setCartMap(mapping);
+      }
+    } catch (error) { console.error(error); }
+  };
 
   useEffect(() => {
-
     const fetchFeaturedProducts = async () => {
-
       try {
-
         const response = await fetch(`${API_URL}/api/products/featured`);
-
-        if (!response.ok) {
-          throw new Error(
-            "Failed to fetch featured products"
-          );
-        }
-
         const data = await response.json();
-
-        setProducts(
-          Array.isArray(data) ? data : []
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Featured products error:",
-          error
-        );
-
-        setError(
-          "Unable to load featured products"
-        );
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
+        setProducts(Array.isArray(data) ? data : []);
+      } catch (error) { setError("Unable to load products"); } finally { setLoading(false); }
     };
-
     fetchFeaturedProducts();
-
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user && (user.id || user.user_id)) {
-      fetchWishlist(user.id || user.user_id);
-    }
-
+    const userId = getUserId();
+    if (userId) { fetchWishlist(userId); fetchCart(userId); }
   }, []);
 
   const fetchWishlist = async (userId) => {
     try {
       const response = await fetch(`${API_URL}/api/wishlist/${userId}`);
       const data = await response.json();
-      if (response.ok) {
-        setWishlist(Array.isArray(data) ? data.map(item => item.id) : []);
-      }
-    } catch (error) {
-      console.error("Fetch wishlist error:", error);
-    }
+      if (response.ok) setWishlist(Array.isArray(data) ? data.map(item => item.id) : []);
+    } catch {}
   };
 
   const handleToggleWishlist = async (productId) => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-      setShowLoginPopup(true);
-      return;
-    }
-
-    const userId = user.id || user.user_id;
-
+    const userId = getUserId();
+    if (!userId) { setShowLoginPopup(true); return; }
     try {
       const response = await fetch(`${API_URL}/api/wishlist/toggle`, {
         method: "POST",
@@ -94,352 +70,115 @@ const Featured = () => {
         body: JSON.stringify({ userId, productId }),
       });
       const data = await response.json();
-
-      if (response.ok) {
-        if (data.liked) {
-          setWishlist(prev => [...prev, productId]);
-        } else {
-          setWishlist(prev => prev.filter(id => id !== productId));
-        }
-      }
-    } catch (error) {
-      console.error("Toggle wishlist error:", error);
-    }
+      if (response.ok) setWishlist(prev => data.liked ? [...prev, productId] : prev.filter(id => id !== productId));
+    } catch {}
   };
 
-  const handleShareProduct = async (product) => {
+  const handleAddToCart = async (product) => {
+    const userId = getUserId();
+    if (!userId) { setShowLoginPopup(true); return; }
     try {
-      const shareUrl = `${window.location.origin}/shop?search=${encodeURIComponent(product.name)}`;
-
-      if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-        await Share.share({
-          title: product.name,
-          text: `Check out this ${product.name} at Devaloka!`,
-          url: shareUrl,
-          dialogTitle: 'Share this product',
-        });
-      } else if (navigator.share) {
-        await navigator.share({
-          title: product.name,
-          text: `Check out this ${product.name} at Devaloka!`,
-          url: shareUrl,
-        });
-      } else {
-        // Fallback: Copy to clipboard
-        await navigator.clipboard.writeText(shareUrl);
-        alert("Product link copied to clipboard!");
-      }
-    } catch (error) {
-      console.error("Error sharing:", error);
-    }
-  };
-
-
-  // =========================
-  // ADD TO CART
-  // =========================
-
-  const handleAddToCart = (product) => {
-
-    // Check login
-    const user = localStorage.getItem("user");
-
-    // Not logged in
-    if (!user) {
-
-      setShowLoginPopup(true);
-
-      return;
-    }
-
-
-    let currentUser;
-
-    try {
-      currentUser = JSON.parse(user);
-    } catch (error) {
-      setShowLoginPopup(true);
-      return;
-    }
-
-    const userId = currentUser.id || currentUser.user_id;
-
-    if (!userId) {
-      setShowLoginPopup(true);
-      return;
-    }
-
-    fetch(`${API_URL}/api/cart`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: userId,
-        product_id: product.id,
-        quantity: 1,
-      }),
-    })
-      .then(async (response) => {
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to add product to cart");
-        }
-      })
-      .then(() => {
-        window.dispatchEvent(new Event("cartUpdated"));
-        alert(`${product.name} added to cart`);
-      })
-      .catch((error) => {
-        console.error("Add to cart error:", error);
-        alert(error.message || "Unable to add product to cart");
+      setAddingProductId(product.id);
+      const response = await fetch(`${API_URL}/api/cart`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, product_id: product.id, quantity: 1 }),
       });
-
+      if (response.ok) {
+        setCartMap(prev => ({ ...prev, [product.id]: (prev[product.id] || 0) + 1 }));
+        window.dispatchEvent(new Event("cartUpdated"));
+      }
+    } catch { alert("Unable to add to cart"); } finally { setAddingProductId(null); }
   };
 
-
-  // =========================
-  // LOADING
-  // =========================
-
-  if (loading) {
-
-    return (
-      <section className="featured-section">
-
-        <div className="featured-container">
-
-          <div className="featured-heading">
-
-            <p>HANDPICKED</p>
-
-            <h2>
-              Featured this week
-            </h2>
-
-          </div>
-
-          <p>
-            Loading products...
-          </p>
-
-        </div>
-
-      </section>
-    );
-
-  }
-
-
-  // =========================
-  // ERROR
-  // =========================
-
-  if (error) {
-
-    return (
-      <section className="featured-section">
-
-        <div className="featured-container">
-
-          <div className="featured-heading">
-
-            <p>HANDPICKED</p>
-
-            <h2>
-              Featured this week
-            </h2>
-
-          </div>
-
-          <p className="product-error">
-            {error}
-          </p>
-
-        </div>
-
-      </section>
-    );
-
-  }
-
-
-  const getImageUrl = (image) => {
-    if (!image) return "/logo.svg";
-    return image.startsWith("http") ? image : `${API_URL}${image}`;
+  const handleUpdateQuantity = async (productId, newQty) => {
+    const userId = getUserId();
+    if (!userId) return;
+    if (newQty < 1) {
+      try {
+        const response = await fetch(`${API_URL}/api/cart/${productId}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId }),
+        });
+        if (response.ok) {
+          const newMap = { ...cartMap }; delete newMap[productId]; setCartMap(newMap);
+          window.dispatchEvent(new Event("cartUpdated"));
+        }
+      } catch {}
+      return;
+    }
+    try {
+      const response = await fetch(`${API_URL}/api/cart/${productId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, quantity: newQty }),
+      });
+      if (response.ok) {
+        setCartMap(prev => ({ ...prev, [productId]: newQty }));
+        window.dispatchEvent(new Event("cartUpdated"));
+      }
+    } catch {}
   };
+
+  if (loading) return <section className="featured-section"><p>Loading sacred products...</p></section>;
 
   const displayedProducts = showAll ? products : products.slice(0, 4);
 
   return (
-
     <section className="featured-section">
-
       <div className="featured-container">
-
-
-        {/* =========================
-            HEADING
-        ========================== */}
-
         <div className="featured-heading">
-
-          <p>HANDPICKED ({products.length})</p>
-
-          <h2>
-            Featured this week
-          </h2>
-
+          <p>HANDPICKED COLLECTIONS</p>
+          <h2>Featured this week</h2>
         </div>
-
-
-        {/* =========================
-            PRODUCTS
-        ========================== */}
 
         <div className="featured-grid">
-
-          {products.length === 0 ? (
-
-            <p>
-              No featured products available.
-            </p>
-
-          ) : (
-
-            displayedProducts.map((product) => (
-
-              <div
-                className="product-card"
-                key={product.id}
-              >
-
-
-                {/* IMAGE */}
-
-                <div className="product-image">
-
-                  <img
-                    src={getImageUrl(product.image)}
-                    alt={product.name}
-                  />
-
-                  <div className="product-card-actions">
-                    <button
-                      className={`action-btn heart-btn ${wishlist.includes(product.id) ? "active" : ""}`}
-                      onClick={(e) => { e.stopPropagation(); handleToggleWishlist(product.id); }}
-                    >
-                      {wishlist.includes(product.id) ? "❤️" : "🤍"}
-                    </button>
-                    <button
-                      className="action-btn share-btn"
-                      onClick={(e) => { e.stopPropagation(); handleShareProduct(product); }}
-                    >
-                      📤
-                    </button>
-                  </div>
-
+          {displayedProducts.map((product) => {
+            const qty = cartMap[product.id] || 0;
+            return (
+              <div className="walmart-card" key={product.id}>
+                <div className="card-image-wrap">
+                  <img src={product.image.startsWith("http") ? product.image : `${API_URL}${product.image}`} alt={product.name} />
+                  <button className={`wish-btn ${wishlist.includes(product.id) ? 'active' : ''}`} onClick={() => handleToggleWishlist(product.id)}>
+                    {wishlist.includes(product.id) ? '❤️' : '🤍'}
+                  </button>
                 </div>
 
-
-                {/* INFO */}
-
-                <div className="product-info">
-
-
-                  {/* CATEGORY */}
-
-                  <span className="product-category">
-
-                    {product.category}
-
-                  </span>
-
-
-                  {/* NAME */}
-
-                  <h3>
-
-                    {product.name}
-
-                  </h3>
-
-
-                  {/* PRICE + ADD */}
-
-                  <div className="product-bottom">
-
-                    <span className="product-price">
-
-                      ₹
-                      {Number(
-                        product.price
-                      ).toLocaleString("en-IN")}
-
-                    </span>
-
-
-                    <button
-                      className="add-button"
-                      onClick={() =>
-                        handleAddToCart(product)
-                      }
-                    >
-
-                      <span className="cart-small">
-                        ▣
-                      </span>
-
-                      Add
-
+                <div className="card-add-area">
+                  {qty === 0 ? (
+                    <button className="add-btn-expandable" onClick={() => handleAddToCart(product)} disabled={addingProductId === product.id}>
+                      {addingProductId === product.id ? '...' : '+ Add'}
                     </button>
-
-                  </div>
-
+                  ) : (
+                    <div className="qty-selector-pill">
+                      <button onClick={() => handleUpdateQuantity(product.id, qty - 1)}>−</button>
+                      <span>{qty}</span>
+                      <button onClick={() => handleUpdateQuantity(product.id, qty + 1)}>+</button>
+                    </div>
+                  )}
                 </div>
 
+                <div className="card-details">
+                  <span className="sponsored-tag">Sponsored ⓘ</span>
+                  <div className="card-price-row">
+                    <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
+                  </div>
+                  <h4 className="card-name">{product.name}</h4>
+                  <div className="card-rating">
+                    <span className="stars">★★★★☆</span>
+                    <span className="count">12</span>
+                  </div>
+                  <p className="shipping-info">Arriving <strong>Soon</strong></p>
+                </div>
               </div>
-
-            ))
-
-          )}
-
+            );
+          })}
         </div>
-
-        {products.length > 4 && (
-          <div className="featured-know-more">
-            <button
-              className="know-more-btn"
-              onClick={() => setShowAll(!showAll)}
-              style={{ padding: '10px 20px', fontSize: '14px' }}
-            >
-              {showAll ? "Know Less ↵" : "Know More ➔"}
-            </button>
-          </div>
-        )}
-
       </div>
-
-
-      {/* =========================
-          LOGIN POPUP
-      ========================== */}
-
-      {showLoginPopup && (
-
-        <LoginPopup
-          onClose={() =>
-            setShowLoginPopup(false)
-          }
-        />
-
-      )}
-
+      {showLoginPopup && <LoginPopup onClose={() => setShowLoginPopup(false)} />}
     </section>
-
   );
-
 };
 
 export default Featured;

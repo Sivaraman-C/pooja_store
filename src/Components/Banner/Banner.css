@@ -1,0 +1,181 @@
+.banner-carousel-container {
+    width: min(1280px, calc(100% - 40px));
+    margin: 30px auto;
+}
+
+.banner-carousel {
+    position: relative;
+    border-radius: 14px; /* Rounded as in image */
+    overflow: hidden;
+    height: 300px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.4s ease;
+}
+
+.banner-slider {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.banner-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+}
+
+.banner-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 6%;
+    color: white;
+}
+
+.banner-text-content {
+    flex: 1;
+    max-width: 50%;
+    text-align: left;
+}
+
+.banner-eyebrow {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    opacity: 0.9;
+}
+
+.banner-title {
+    font-size: 34px;
+    font-weight: 800;
+    margin: 0 0 25px;
+    line-height: 1.1;
+    max-width: 450px;
+}
+
+/* PILL BUTTON STYLE */
+.banner-pill-btn {
+    display: inline-block;
+    background: white;
+    color: #111;
+    padding: 12px 28px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.2s;
+}
+
+.banner-pill-btn:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+}
+
+.banner-image-content {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-main-img {
+    height: 85%;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.15));
+}
+
+/* TOP RIGHT NAVIGATION */
+.banner-nav-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.banner-arrow-btn,
+.banner-play-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.banner-arrow-btn:hover,
+.banner-play-btn:hover {
+    background: white;
+}
+
+/* BOTTOM INFO */
+.banner-bottom-info {
+    margin-top: 25px;
+    padding: 0 5px;
+}
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.info-header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+    color: #111;
+}
+
+.info-header a {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    text-decoration: underline;
+}
+
+.banner-bottom-info p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 800px) {
+    .banner-carousel {
+        height: 240px;
+    }
+
+    .banner-title {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .banner-pill-btn {
+        padding: 10px 22px;
+        font-size: 13px;
+    }
+
+    .banner-nav-overlay {
+        top: 15px;
+        right: 15px;
+    }
+
+    .info-header h2 {
+        font-size: 22px;
+    }
+}

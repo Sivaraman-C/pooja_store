@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Share } from "@capacitor/share";
 import "./Shop.css";
+import { Link } from "react-router-dom";
 
 import LoginPopup from "../Components/LoginPopup/LoginPopup";
+import API_URL, { bypassHeaders } from "../apiConfig";
 
-import API_URL from "../apiConfig";
+// Icons for the top category strip
+import IdolsIcon from "../Components/Assets/idols.jpeg";
+import DiyasIcon from "../Components/Assets/diyas.jpeg";
+import IncenseIcon from "../Components/Assets/incense.jpeg";
+import EssentialsIcon from "../Components/Assets/Essentials.jpeg";
+import KumkumIcon from "../Components/Assets/kumkum.jpg";
+import KitsIcon from "../Components/Assets/pooja-kit.png";
 
 const poojaFestivals = [
   "All Festivals", "Pongal", "Makara Sankranti", "Vasant Panchami",
@@ -16,305 +24,96 @@ const poojaFestivals = [
   "Govardhan Puja", "Bhai Dooj", "Vaikuntha Ekadashi",
 ];
 
-const festivalKeywords = {
-  Pongal: ["pongal", "rice", "sugarcane"],
-  "Makara Sankranti": ["sankranti", "sesame", "til", "kite"],
-  "Vasant Panchami": ["saraswati", "yellow"],
-  "Maha Shivaratri": ["shiva", "shiv", "bilva", "rudraksha"],
-  Holi: ["holi", "colour", "color", "gulal"],
-  Ugadi: ["ugadi", "neem", "mango"],
-  "Gudi Padwa": ["gudi", "neem", "mango"],
-  "Chaitra Navratri": ["navratri", "durga"],
-  "Rama Navami": ["rama", "ram"],
-  "Tamil New Year": ["tamil", "puthandu"],
-  Vishu: ["vishu", "kanikonna"],
-  "Akshaya Tritiya": ["akshaya", "lakshmi"],
-  "Buddha Purnima": ["buddha", "lotus"],
-  "Nirjala Ekadashi": ["ekadashi", "vishnu"],
-  "Jagannath Rath Yatra": ["jagannath", "rath yatra"],
-  "Guru Purnima": ["guru", "chandan"],
-  "Hariyali Teej": ["teej", "mehndi"],
-  "Nag Panchami": ["nag panchami", "naga"],
-  Onam: ["onam", "pookalam"],
-  "Varalakshmi Vrat": ["varalakshmi", "lakshmi"],
-  "Raksha Bandhan": ["raksha", "rakhi", "bandhan"],
-  Janmashtami: ["janmashtami", "krishna"],
-  "Ganesh Chaturthi": ["ganesh", "ganesha", "modak"],
-  "Sharad Navratri": ["navratri", "durga"],
-  Dussehra: ["dussehra", "rama", "ram"],
-  Diwali: ["diwali", "deepavali", "lakshmi"],
-  "Govardhan Puja": ["govardhan", "krishna"],
-  "Bhai Dooj": ["bhai dooj", "dooj", "tilak"],
-  "Vaikuntha Ekadashi": ["vaikuntha", "ekadashi", "vishnu"],
-};
-
 const Shop = () => {
   const [products, setProducts] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
-
   const [category, setCategory] = useState("All");
-
   const [search, setSearch] = useState("");
-  const [isListening, setIsListening] = useState(false);
-
-  const [selectedFestival, setSelectedFestival] =
-    useState("All Festivals");
-
-  const [showLoginPopup, setShowLoginPopup] =
-    useState(false);
-
-  const [addingProductId, setAddingProductId] =
-    useState(null);
-
-  // =====================================================
-  // CART COUNT
-  // =====================================================
-  const [selectedProduct, setSelectedProduct] =
-  useState(null);
-
-  const [quantity, setQuantity] = useState(1);
-  const [cartCount, setCartCount] = useState(0);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [addingProductId, setAddingProductId] = useState(null);
   const [wishlist, setWishlist] = useState([]);
+  const [cartMap, setCartMap] = useState({}); // productId -> quantity
 
-  // =====================================================
-  // GET LOGGED-IN USER
-  // =====================================================
+  // Filter States
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedFestival, setSelectedFestival] = useState("All Festivals");
+  const [sortBy, setSortBy] = useState("Best Match");
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
+
+  // Sidebar state
+  const [activeFilters, setActiveFilters] = useState({
+    price: true,
+    brand: true,
+    category: true,
+    pooja: true
+  });
+
+  const toggleFilter = (filter) => {
+    setActiveFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+  };
 
   const getLoggedInUser = () => {
     const user = localStorage.getItem("user");
-
-    if (!user) {
-      return null;
-    }
-
-    try {
-      const parsedUser = JSON.parse(user);
-
-      return parsedUser;
-
-    } catch (error) {
-      console.error(
-        "Invalid user data:",
-        error
-      );
-
-      localStorage.removeItem("user");
-
-      return null;
-    }
+    try { return user ? JSON.parse(user) : null; } catch { return null; }
   };
-
-  // =====================================================
-  // GET USER ID
-  // =====================================================
 
   const getUserId = () => {
     const user = getLoggedInUser();
-
-    if (!user) {
-      return null;
-    }
-
-    // Supports both id and user_id
-    return user.id || user.user_id || null;
+    return user?.id || user?.user_id || null;
   };
 
-  const handleVoiceSearch = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      alert("Voice search is not supported on this device.");
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-IN";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => setIsListening(true);
-    recognition.onresult = (event) => {
-      const query = event.results[0][0].transcript;
-      setSearch(query);
-    };
-    recognition.onerror = (event) => {
-      console.error("Speech Recognition Error:", event.error);
-      if (event.error === "not-allowed") {
-        alert("Microphone permission denied. Please allow microphone access in your browser settings.");
-      } else if (event.error !== "aborted" && event.error !== "no-speech") {
-        alert(`Voice search error: ${event.error}`);
+  const fetchCart = async (userId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/cart?user_id=${userId}`, {
+        headers: { ...bypassHeaders }
+      });
+      const data = await response.json();
+      if (response.ok && data.cart) {
+        const mapping = {};
+        data.cart.forEach(item => {
+          mapping[item.product_id] = item.quantity;
+        });
+        setCartMap(mapping);
       }
-    };
-    recognition.onend = () => setIsListening(false);
-
-    recognition.start();
+    } catch (error) {
+      console.error("Fetch cart error:", error);
+    }
   };
-
-  // =====================================================
-  // GET CATEGORY FROM URL
-  // =====================================================
-
-  useEffect(() => {
-    const params = new URLSearchParams(
-      window.location.search
-    );
-
-    const urlCategory =
-      params.get("category");
-
-    const urlSearch = params.get("search");
-
-    if (urlCategory) {
-      setCategory(urlCategory);
-    } else {
-      setCategory("All");
-    }
-
-    if (urlSearch) {
-      setSearch(urlSearch);
-    }
-  }, []);
-
-  // =====================================================
-  // FETCH PRODUCTS
-  // =====================================================
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        setError("");
-
-        const response = await fetch(
-          `${API_URL}/api/products`
-        );
-
-        if (!response.ok) {
-          throw new Error(
-            "Failed to fetch products"
-          );
-        }
-
-        const data =
-          await response.json();
-
-        console.log(
-          "Products from database:",
-          data
-        );
-
-        setProducts(
-          Array.isArray(data)
-            ? data
-            : []
-        );
-
+        const response = await fetch(`${API_URL}/api/products`);
+        const data = await response.json();
+        setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error(
-          "Shop products error:",
-          error
-        );
-
-        setError(
-          "Unable to load products"
-        );
-
+        setError("Unable to load products");
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
-
+    const userId = getUserId();
+    if (userId) {
+      fetchWishlist(userId);
+      fetchCart(userId);
+    }
   }, []);
-
-  // =====================================================
-  // FETCH CART COUNT
-  // =====================================================
-
-  const fetchCartCount = async (userId) => {
-    if (!userId) {
-      setCartCount(0);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${API_URL}/api/cart?user_id=${userId}`
-      );
-
-      const data =
-        await response.json();
-
-      console.log(
-        "Cart response:",
-        data
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-          "Failed to fetch cart"
-        );
-      }
-
-      const cart =
-        Array.isArray(data.cart)
-          ? data.cart
-          : [];
-
-      // Total quantity
-      const totalQuantity =
-        cart.reduce(
-          (total, item) =>
-            total +
-            Number(
-              item.quantity || 0
-            ),
-          0
-        );
-
-      setCartCount(
-        totalQuantity
-      );
-
-    } catch (error) {
-      console.error(
-        "Fetch cart count error:",
-        error
-      );
-
-      setCartCount(0);
-    }
-  };
-
-  // =====================================================
-  // FETCH WISHLIST
-  // =====================================================
 
   const fetchWishlist = async (userId) => {
     try {
       const response = await fetch(`${API_URL}/api/wishlist/${userId}`);
       const data = await response.json();
-      if (response.ok) {
-        setWishlist(Array.isArray(data) ? data.map(item => item.id) : []);
-      }
-    } catch (error) {
-      console.error("Fetch wishlist error:", error);
-    }
+      if (response.ok) setWishlist(Array.isArray(data) ? data.map(item => item.id) : []);
+    } catch {}
   };
 
   const handleToggleWishlist = async (productId) => {
     const userId = getUserId();
-    if (!userId) {
-      setShowLoginPopup(true);
-      return;
-    }
-
+    if (!userId) { setShowLoginPopup(true); return; }
     try {
       const response = await fetch(`${API_URL}/api/wishlist/toggle`, {
         method: "POST",
@@ -322,756 +121,323 @@ const Shop = () => {
         body: JSON.stringify({ userId, productId }),
       });
       const data = await response.json();
-
       if (response.ok) {
-        if (data.liked) {
-          setWishlist(prev => [...prev, productId]);
-        } else {
-          setWishlist(prev => prev.filter(id => id !== productId));
-        }
+        setWishlist(prev => data.liked ? [...prev, productId] : prev.filter(id => id !== productId));
       }
-    } catch (error) {
-      console.error("Toggle wishlist error:", error);
-    }
+    } catch {}
   };
 
-  const handleShareProduct = async (product) => {
+  const handleAddToCart = async (product) => {
+    const userId = getUserId();
+    if (!userId) { setShowLoginPopup(true); return; }
     try {
-      const shareUrl = `${window.location.origin}/shop?search=${encodeURIComponent(product.name)}`;
-
-      if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-        await Share.share({
-          title: product.name,
-          text: `Check out this ${product.name} at Devaloka!`,
-          url: shareUrl,
-          dialogTitle: 'Share this product',
-        });
-      } else if (navigator.share) {
-        await navigator.share({
-          title: product.name,
-          text: `Check out this ${product.name} at Devaloka!`,
-          url: shareUrl,
-        });
-      } else {
-        // Fallback: Copy to clipboard
-        await navigator.clipboard.writeText(shareUrl);
-        alert("Product link copied to clipboard!");
+      setAddingProductId(product.id);
+      const response = await fetch(`${API_URL}/api/cart`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, product_id: product.id, quantity: 1 }),
+      });
+      if (response.ok) {
+        setCartMap(prev => ({ ...prev, [product.id]: (prev[product.id] || 0) + 1 }));
+        window.dispatchEvent(new Event("cartUpdated"));
       }
     } catch (error) {
-      console.error("Error sharing:", error);
+      alert("Unable to add product to cart");
+    } finally {
+      setAddingProductId(null);
     }
   };
 
-  // =====================================================
-  // LOAD CART COUNT WHEN USER LOGS IN
-  // =====================================================
+  const handleUpdateQuantity = async (productId, newQty) => {
+    const userId = getUserId();
+    if (!userId) return;
 
-  useEffect(() => {
-    const userId =
-      getUserId();
-
-    if (userId) {
-      fetchCartCount(userId);
-      fetchWishlist(userId);
-    } else {
-      setCartCount(0);
-      setWishlist([]);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // =====================================================
-  // CATEGORY FILTER
-  // =====================================================
-
-  const filteredProducts =
-    products.filter((product) => {
-      const productCategory =
-        String(
-          product.category || ""
-        )
-          .toLowerCase()
-          .trim();
-
-      const productName =
-        String(
-          product.name || ""
-        ).toLowerCase();
-
-      const productDescription = String(
-        product.description || ""
-      ).toLowerCase();
-
-      const searchText =
-        search
-          .toLowerCase()
-          .trim();
-
-      let categoryMatch = true;
-
-      if (category !== "All") {
-        if (
-          category ===
-          "Idols & Murtis"
-        ) {
-          categoryMatch =
-            productCategory.includes(
-              "idol"
-            ) ||
-            productCategory.includes(
-              "murti"
-            ) ||
-            productCategory.includes(
-              "statue"
-            ) ||
-            productCategory.includes(
-              "god"
-            );
+    if (newQty < 1) {
+      try {
+        const response = await fetch(`${API_URL}/api/cart/${productId}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId }),
+        });
+        if (response.ok) {
+          const newMap = { ...cartMap };
+          delete newMap[productId];
+          setCartMap(newMap);
+          window.dispatchEvent(new Event("cartUpdated"));
         }
-
-        else if (
-          category ===
-          "Diyas & Lamps"
-        ) {
-          categoryMatch =
-            productCategory.includes(
-              "diya"
-            ) ||
-            productCategory.includes(
-              "lamp"
-            );
-        }
-
-        else if (
-          category ===
-          "Incense"
-        ) {
-          categoryMatch =
-            productCategory.includes(
-              "incense"
-            ) ||
-            productCategory.includes(
-              "agarbatti"
-            );
-        }
-
-        else if (
-          category ===
-          "Essentials"
-        ) {
-          categoryMatch =
-            productCategory.includes(
-              "essential"
-            );
-        }
-      }
-
-      const searchMatch =
-        productName.includes(
-          searchText
-        ) ||
-        productCategory.includes(
-          searchText
-        );
-
-      const festivalMatch =
-        selectedFestival === "All Festivals" ||
-        (festivalKeywords[selectedFestival] || []).some(
-          (keyword) =>
-            `${productName} ${productCategory} ${productDescription}`
-              .includes(keyword)
-        );
-
-      return (
-        categoryMatch &&
-        searchMatch &&
-        festivalMatch
-      );
-    });
-
-  // =====================================================
-  // IMAGE URL
-  // =====================================================
-
-  const getImageUrl = (image) => {
-    if (!image) {
-      return "/logo.svg";
-    }
-
-    if (
-      image.startsWith("http")
-    ) {
-      return image;
-    }
-
-    return `${API_URL}${image}`;
-  };
-
-  // =====================================================
-  // PRICE
-  // =====================================================
-
-  const formatPrice = (price) => {
-    return `₹${Number(
-      price || 0
-    ).toLocaleString("en-IN")}`;
-  };
-
-  // =====================================================
-  // ADD TO CART
-  // =====================================================
-
-  const handleAddToCart = async (
-  product = selectedProduct
-) => {
-  console.log("Add to cart:", product);
-
-  const user = getLoggedInUser();
-
-  if (!user) {
-    setShowLoginPopup(true);
-    return;
-  }
-
-  const userId =
-    user.id ||
-    user.user_id;
-
-  if (!userId) {
-    console.error(
-      "Logged-in user does not have an ID:",
-      user
-    );
-
-    localStorage.removeItem("user");
-
-    setShowLoginPopup(true);
-
-    return;
-  }
-
-  try {
-    setAddingProductId(product.id);
-
-    const response = await fetch(
-      `${API_URL}/api/cart`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-
-        body: JSON.stringify({
-          user_id: userId,
-          product_id: product.id,
-          quantity: quantity,
-        }),
-      }
-    );
-
-    const data =
-      await response.json();
-
-    console.log(
-      "Add cart API response:",
-      data
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        data.message ||
-        "Failed to add product to cart"
-      );
-    }
-
-    await fetchCartCount(userId);
-    window.dispatchEvent(new Event("cartUpdated"));
-
-    // Close popup
-    setSelectedProduct(null);
-
-    // Reset quantity
-    setQuantity(1);
-
-    alert(
-      `${product.name} added to cart`
-    );
-
-  } catch (error) {
-    console.error(
-      "Add to cart error:",
-      error
-    );
-
-    alert(
-      error.message ||
-      "Unable to add product to cart"
-    );
-
-  } finally {
-    setAddingProductId(null);
-  }
-};
-
-  // =====================================================
-  // RENDER
-  // =====================================================
-
-  return (
-    <section className="shop-page">
-
-      <div className="shop-container">
-
-        {/* =================================================
-            HEADER
-        ================================================== */}
-
-        <div className="shop-header">
-
-          <div className="shop-title">
-
-            <p>SHOP</p>
-
-            <h1>
-              {category === "All"
-                ? "All Products"
-                : category}
-            </h1>
-
-          </div>
-
-
-          {/* SEARCH */}
-
-          <div className="shop-search">
-
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) =>
-                setSearch(
-                  e.target.value
-                )
-              }
-            />
-
-            <button
-              type="button"
-              className={`voice-search-button${isListening ? " listening" : ""}`}
-              onClick={handleVoiceSearch}
-              aria-label={isListening ? "Listening" : "Search by voice"}
-              title={isListening ? "Listening" : "Search by voice"}
-            >
-              {isListening ? "●" : "🎙"}
-            </button>
-
-            <button>
-              Search
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* =================================================
-            FILTERS
-        ================================================== */}
-
-        <div className="shop-toolbar">
-
-          <div className="category-filters">
-
-            {[
-              "All",
-              "Idols & Murtis",
-              "Diyas & Lamps",
-              "Incense",
-              "Essentials",
-            ].map((item) => (
-
-              <button
-                key={item}
-
-                className={
-                  category === item
-                    ? "active"
-                    : ""
-                }
-
-                onClick={() => {
-                  setCategory(item);
-
-                  if (
-                    item === "All"
-                  ) {
-                    window.history.pushState(
-                      {},
-                      "",
-                      "/shop"
-                    );
-                  } else {
-                    window.history.pushState(
-                      {},
-                      "",
-                      `/shop?category=${encodeURIComponent(
-                        item
-                      )}`
-                    );
-                  }
-                }}
-              >
-                {item}
-              </button>
-
-            ))}
-
-          </div>
-
-          <div className="pooja-filter">
-            <label htmlFor="pooja-festival">Pooja</label>
-            <select
-              id="pooja-festival"
-              value={selectedFestival}
-              onChange={(e) => setSelectedFestival(e.target.value)}
-            >
-              {poojaFestivals.map((festival) => (
-                <option key={festival} value={festival}>
-                  {festival}
-                </option>
-              ))}
-            </select>
-          </div>
-
-        </div>
-
-        {/* =================================================
-            LOADING
-        ================================================== */}
-
-        {loading && (
-          <div className="shop-message">
-            <p>
-              Loading products...
-            </p>
-          </div>
-        )}
-
-        {/* =================================================
-            ERROR
-        ================================================== */}
-
-        {!loading &&
-          error && (
-            <div className="shop-message error">
-              <p>
-                {error}
-              </p>
-            </div>
-          )}
-
-        {/* =================================================
-            PRODUCTS
-        ================================================== */}
-
-        {!loading &&
-          !error && (
-
-            <div className="shop-grid">
-
-              {filteredProducts.length >
-              0 ? (
-
-                filteredProducts.map(
-                  (product) => (
-
-                    <div
-                      className="shop-product-card"
-                      key={product.id}
-                    >
-
-                      {/* IMAGE */}
-
-                      <div className="shop-product-image">
-                        <img
-                          src={getImageUrl(
-                            product.image
-                          )}
-                          alt={
-                            product.name
-                          }
-                        />
-
-                        <div className="product-card-actions">
-                          <button
-                            className={`action-btn heart-btn ${wishlist.includes(product.id) ? "active" : ""}`}
-                            onClick={(e) => { e.stopPropagation(); handleToggleWishlist(product.id); }}
-                          >
-                            {wishlist.includes(product.id) ? "❤️" : "🤍"}
-                          </button>
-                          <button
-                            className="action-btn share-btn"
-                            onClick={(e) => { e.stopPropagation(); handleShareProduct(product); }}
-                          >
-                            📤
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* INFO */}
-
-                      <div className="shop-product-info">
-
-                        <span className="shop-product-category">
-
-                          {String(
-                            product.category ||
-                            ""
-                          ).toUpperCase()}
-
-                        </span>
-
-                        <h3>
-                          {product.name}
-                        </h3>
-
-                        <div className="shop-product-bottom">
-
-                          <span className="shop-product-price">
-
-                            {formatPrice(
-                              product.price
-                            )}
-
-                          </span>
-
-<button
-  className="shop-add-button"
-  onClick={() => {
-    const user = getLoggedInUser();
-
-    if (!user) {
-      setShowLoginPopup(true);
+      } catch {}
       return;
     }
 
-    setSelectedProduct(product);
-    setQuantity(1);
-  }}
->
-  <span>▣</span>
-  Add
-</button>
+    try {
+      const response = await fetch(`${API_URL}/api/cart/${productId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, quantity: newQty }),
+      });
+      if (response.ok) {
+        setCartMap(prev => ({ ...prev, [productId]: newQty }));
+        window.dispatchEvent(new Event("cartUpdated"));
+      } else {
+        const data = await response.json();
+        if (data.message) alert(data.message);
+      }
+    } catch {}
+  };
 
-                        </div>
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlCategory = params.get("category");
+    const urlSearch = params.get("search");
+    if (urlCategory) setCategory(urlCategory);
+    if (urlSearch) setSearch(urlSearch);
+  }, []);
 
-                      </div>
+  // Filter Toggle Helpers
+  const togglePriceRange = (range) => {
+    setSelectedPriceRanges(prev =>
+      prev.includes(range) ? prev.filter(r => r !== range) : [...prev, range]
+    );
+  };
 
-                    </div>
+  const toggleBrand = (brand) => {
+    setSelectedBrands(prev =>
+      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
+    );
+  };
 
-                  )
-                )
+  // FILTER LOGIC
+  const filteredProducts = useMemo(() => {
+    let result = products.filter((product) => {
+      const pCat = String(product.category || "").toLowerCase();
+      const pName = String(product.name || "").toLowerCase();
+      const pPrice = Number(product.price);
+      const s = search.toLowerCase().trim();
 
-              ) : (
+      // Category Match
+      let catMatch = category === "All" || pCat === category.toLowerCase();
 
-                <div className="no-products">
+      // Search Match
+      let searchMatch = pName.includes(s) || pCat.includes(s);
 
-                  <h3>
-                    No products found
-                  </h3>
+      // Price Range Match
+      let priceMatch = true;
+      if (selectedPriceRanges.length > 0) {
+        priceMatch = selectedPriceRanges.some(range => {
+          if (range === 'under500') return pPrice < 500;
+          if (range === '500-1000') return pPrice >= 500 && pPrice <= 1000;
+          if (range === 'above1000') return pPrice > 1000;
+          return true;
+        });
+      }
 
-                  <p>
-                    Try another category
-                    or search term.
-                  </p>
+      // Brand Match
+      let brandMatch = true;
+      if (selectedBrands.length > 0) {
+        brandMatch = selectedBrands.some(brand =>
+          pName.includes(brand.toLowerCase()) || pCat.includes(brand.toLowerCase())
+        );
+      }
 
+      // Festival Match
+      let festivalMatch = true;
+      if (selectedFestival !== "All Festivals") {
+        const desc = String(product.description || "").toLowerCase();
+        festivalMatch = pName.includes(selectedFestival.toLowerCase()) ||
+                        pCat.includes(selectedFestival.toLowerCase()) ||
+                        desc.includes(selectedFestival.toLowerCase());
+      }
+
+      return catMatch && searchMatch && priceMatch && brandMatch && festivalMatch;
+    });
+
+    // SORTING
+    if (sortBy === "Price: Low to High") {
+      result.sort((a, b) => Number(a.price) - Number(b.price));
+    } else if (sortBy === "Price: High to Low") {
+      result.sort((a, b) => Number(b.price) - Number(a.price));
+    } else if (sortBy === "Newest") {
+      result.sort((a, b) => b.id - a.id);
+    }
+
+    return result;
+  }, [products, category, search, selectedPriceRanges, selectedBrands, sortBy]);
+
+  const stripCategories = [
+    { name: "Idols", img: IdolsIcon, link: "Idols & Murtis" },
+    { name: "Diyas", img: DiyasIcon, link: "Diyas & Lamps" },
+    { name: "Incense", img: IncenseIcon, link: "Incense" },
+    { name: "Essentials", img: EssentialsIcon, link: "Essentials" },
+    { name: "Kumkum", img: KumkumIcon, link: "Kumkum & Turmeric" },
+    { name: "Kits", img: KitsIcon, link: "Pooja Kits" }
+  ];
+
+  return (
+    <div className="shop-page-new">
+      <div className="shop-web-container">
+
+        {/* TOP PILLS */}
+        <div className="top-pills-row">
+           <button className="pill-btn">In-store</button>
+           <button className="pill-btn">Get it fast</button>
+           <div className="pill-dropdown-wrap">
+             <button className="pill-btn" onClick={() => setShowSortDropdown(!showSortDropdown)}>
+               {sortBy} ▾
+             </button>
+             {showSortDropdown && (
+               <div className="sort-dropdown">
+                 {["Best Match", "Price: Low to High", "Price: High to Low", "Newest"].map(opt => (
+                   <div key={opt} className="sort-opt" onClick={() => { setSortBy(opt); setShowSortDropdown(false); }}>{opt}</div>
+                 ))}
+               </div>
+             )}
+           </div>
+           <button className="pill-btn" onClick={() => setCategory("All")}>Clear Filters</button>
+        </div>
+
+        {/* CATEGORY ICONS */}
+        <div className="category-strip">
+          {stripCategories.map((cat, i) => (
+            <div key={i} className="strip-item" onClick={() => setCategory(cat.link)}>
+              <div className={`strip-icon-box ${category === cat.link ? 'active' : ''}`}>
+                <img src={cat.img} alt={cat.name} />
+              </div>
+              <span>{cat.name}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="shop-main-layout">
+          <aside className="shop-sidebar">
+            <div className="filter-group">
+              <h4 onClick={() => toggleFilter('price')}>Price {activeFilters.price ? '▴' : '▾'}</h4>
+              {activeFilters.price && (
+                <div className="filter-options">
+                   <label>
+                     <input type="checkbox" checked={selectedPriceRanges.includes('under500')} onChange={() => togglePriceRange('under500')} />
+                     Under ₹500
+                   </label>
+                   <label>
+                     <input type="checkbox" checked={selectedPriceRanges.includes('500-1000')} onChange={() => togglePriceRange('500-1000')} />
+                     ₹500 - ₹1000
+                   </label>
+                   <label>
+                     <input type="checkbox" checked={selectedPriceRanges.includes('above1000')} onChange={() => togglePriceRange('above1000')} />
+                     Above ₹1000
+                   </label>
                 </div>
-
               )}
-
             </div>
 
-          )}
+            <div className="filter-group">
+              <h4 onClick={() => toggleFilter('category')}>Category {activeFilters.category ? '▴' : '▾'}</h4>
+              {activeFilters.category && (
+                <div className="filter-options">
+                   {["Idols & Murtis", "Diyas & Lamps", "Incense", "Essentials", "Pooja Kits"].map(c => (
+                     <label key={c}>
+                       <input type="radio" name="cat" checked={category === c} onChange={() => setCategory(c)} />
+                       {c}
+                     </label>
+                   ))}
+                   <label>
+                     <input type="radio" name="cat" checked={category === "All"} onChange={() => setCategory("All")} />
+                     All
+                   </label>
+                </div>
+              )}
+            </div>
 
-      </div>
+            <div className="filter-group">
+              <h4 onClick={() => toggleFilter('brand')}>Brands {activeFilters.brand ? '▴' : '▾'}</h4>
+              {activeFilters.brand && (
+                <div className="filter-options">
+                   <label>
+                     <input type="checkbox" checked={selectedBrands.includes('Devaloka')} onChange={() => toggleBrand('Devaloka')} />
+                     Devaloka Exclusive
+                   </label>
+                   <label>
+                     <input type="checkbox" checked={selectedBrands.includes('Authentic')} onChange={() => toggleBrand('Authentic')} />
+                     Authentic Handcrafted
+                   </label>
+                </div>
+              )}
+            </div>
 
-{/* =================================================
-    ADD TO CART POPUP
-================================================= */}
+            <div className="filter-group">
+              <h4 onClick={() => toggleFilter('pooja')}>Pooja {activeFilters.pooja ? '▴' : '▾'}</h4>
+              {activeFilters.pooja && (
+                <div className="filter-options">
+                   <select
+                     className="pooja-select-sidebar"
+                     value={selectedFestival}
+                     onChange={(e) => setSelectedFestival(e.target.value)}
+                   >
+                     {poojaFestivals.map(f => <option key={f} value={f}>{f}</option>)}
+                   </select>
+                </div>
+              )}
+            </div>
+          </aside>
 
-{selectedProduct && (
-  <div
-    className="cart-popup-overlay"
-    onClick={() =>
-      setSelectedProduct(null)
-    }
-  >
-    <div
-      className="cart-popup"
-      onClick={(e) =>
-        e.stopPropagation()
-      }
-    >
+          <main className="shop-content">
+            <div className="content-header">
+              <h3>Results for "{search || category}" ({filteredProducts.length})</h3>
+              <div className="sort-box">Sort by | <strong>{sortBy} ▾</strong></div>
+            </div>
 
-      {/* CLOSE */}
+            <div className="shop-grid-new">
+              {filteredProducts.map((product) => {
+                const qty = cartMap[product.id] || 0;
+                return (
+                  <div className="walmart-card" key={product.id}>
+                    <div className="card-image-wrap">
+                      <img src={product.image.startsWith("http") ? product.image : `${API_URL}${product.image}`} alt={product.name} />
+                      <button className={`wish-btn ${wishlist.includes(product.id) ? 'active' : ''}`} onClick={() => handleToggleWishlist(product.id)}>
+                        {wishlist.includes(product.id) ? '❤️' : '🤍'}
+                      </button>
+                    </div>
 
-      <button
-        className="cart-popup-close"
-        onClick={() => {
-          setSelectedProduct(null);
-          setQuantity(1);
-        }}
-      >
-        ×
-      </button>
+                    <div className="card-add-area">
+                      {qty === 0 ? (
+                        <button className="add-btn-expandable" onClick={() => handleAddToCart(product)} disabled={addingProductId === product.id}>
+                          {addingProductId === product.id ? '...' : '+ Add'}
+                        </button>
+                      ) : (
+                        <div className="qty-selector-pill">
+                          <button onClick={() => handleUpdateQuantity(product.id, qty - 1)}>−</button>
+                          <span>{qty}</span>
+                          <button onClick={() => handleUpdateQuantity(product.id, qty + 1)}>+</button>
+                        </div>
+                      )}
+                    </div>
 
-      {/* IMAGE */}
-
-      <div className="cart-popup-image">
-        <img
-          src={getImageUrl(
-            selectedProduct.image
-          )}
-          alt={selectedProduct.name}
-        />
-      </div>
-
-      {/* PRODUCT */}
-
-      <div className="cart-popup-content">
-
-        <span className="cart-popup-category">
-          {selectedProduct.category}
-        </span>
-
-        <h2>
-          {selectedProduct.name}
-        </h2>
-
-        <p className="cart-popup-price">
-          {formatPrice(
-            selectedProduct.price
-          )}
-        </p>
-
-        {/* QUANTITY */}
-
-        <div className="quantity-section">
-
-          <label>
-            Quantity
-          </label>
-
-          <div className="quantity-control">
-
-            <button
-              onClick={() =>
-                setQuantity(
-                  Math.max(
-                    1,
-                    quantity - 1
-                  )
-                )
-              }
-            >
-              −
-            </button>
-
-            <span>
-              {quantity}
-            </span>
-
-            <button
-              onClick={() => {
-                const stock =
-                  Number(
-                    selectedProduct.stock || 0
-                  );
-
-                if (
-                  stock > 0 &&
-                  quantity >= stock
-                ) {
-                  alert(
-                    `Only ${stock} item(s) available`
-                  );
-                  return;
-                }
-
-                setQuantity(
-                  quantity + 1
+                    <div className="card-details">
+                      <span className="sponsored-tag">Pooja Essential ⓘ</span>
+                      <div className="card-price-row">
+                        <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
+                      </div>
+                      <h4 className="card-name">{product.name}</h4>
+                      <div className="card-rating">
+                        <span className="stars">★★★★☆</span>
+                        <span className="count">12</span>
+                      </div>
+                      <p className="shipping-info">Shipping, arrives <strong>Soon</strong></p>
+                    </div>
+                  </div>
                 );
-              }}
-            >
-              +
-            </button>
-
-          </div>
-
+              })}
+              {filteredProducts.length === 0 && (
+                <div className="no-results">
+                  <h4>No products match your filters.</h4>
+                  <button className="pill-btn" onClick={() => { setCategory("All"); setSelectedPriceRanges([]); setSelectedBrands([]); setSearch(""); }}>Reset All Filters</button>
+                </div>
+              )}
+            </div>
+          </main>
         </div>
-
-        {/* TOTAL */}
-
-        <div className="popup-total">
-
-          <span>
-            Total
-          </span>
-
-          <strong>
-            {formatPrice(
-              Number(
-                selectedProduct.price
-              ) * quantity
-            )}
-          </strong>
-
-        </div>
-
-        {/* ADD */}
-
-        <button
-          className="popup-add-cart-button"
-          disabled={
-            addingProductId ===
-            selectedProduct.id
-          }
-          onClick={() =>
-            handleAddToCart(
-              selectedProduct
-            )
-          }
-        >
-          {addingProductId ===
-          selectedProduct.id
-            ? "Adding..."
-            : "Add to Cart"}
-        </button>
-
       </div>
-
+      {showLoginPopup && <LoginPopup onClose={() => setShowLoginPopup(false)} />}
     </div>
-  </div>
-)}
-
-      {/* =================================================
-          LOGIN POPUP
-      ================================================== */}
-
-      {showLoginPopup && (
-
-        <LoginPopup
-          onClose={() =>
-            setShowLoginPopup(false)
-          }
-        />
-
-      )}
-
-    </section>
   );
 };
 
