@@ -19,6 +19,157 @@
     color: #222;
 }
 
+.cart-empty-walmart {
+     background: #f9f5ef;
+    border-radius: 12px;
+    padding: 80px 40px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 15px;
+}
+
+.cart-empty-illustration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto 24px;
+}
+
+.empty-cart-icon {
+  font-size: 90px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: cartFloat 2.5s ease-in-out infinite;
+}
+
+@keyframes cartFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+
+.cart-empty-walmart h2 {
+    margin: 0 0 8px;
+    font-size: clamp(28px, 2.4vw, 38px);
+    font-weight: 700;
+    color: #1e1f22;
+}
+
+.cart-empty-walmart p {
+    margin: 0 0 26px;
+    font-size: 22px;
+    color: #2d2d2d;
+    font-weight: 500;
+}
+
+.empty-cart-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.empty-cart-cta-row.single-row {
+    margin-top: 14px;
+}
+
+.empty-cart-tag {
+    min-width: 150px;
+    height: 44px;
+    border: 1.5px solid #3a3a3a;
+    background: transparent;
+    color: #222;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.empty-cart-tag:hover {
+    background: #f2f2f2;
+}
+
+/* =========================================
+   EMPTY CART ACTION BUTTONS
+========================================= */
+
+.empty-cart-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+/* Individual department button */
+.dept-btn {
+  position: relative;
+  min-width: 145px;
+  height: 48px;
+  padding: 0 22px;
+
+  border: 1px solid #d8dce2;
+  border-radius: 8px;
+
+  background: #76361a;
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Hover */
+.dept-btn:hover {
+  background: #A96F1D;
+  color: #ffffff;
+  border-color: #A96F1D;
+
+  box-shadow: 0 5px 14px rgba(0, 113, 220, 0.22);
+
+  transform: translateY(-2px);
+}
+
+/* Click */
+.dept-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 113, 220, 0.15);
+}
+
+/* Keyboard accessibility */
+.dept-btn:focus-visible {
+  outline: 3px solid rgba(0, 113, 220, 0.25);
+  outline-offset: 2px;
+}
+
+
 /* LAYOUT */
 .cart-layout-walmart {
     display: grid;
@@ -32,13 +183,23 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    min-width: 0;
+    width: 100%;
 }
 
 /* STICKY SUMMARY (The one that stays fixed) */
 .cart-right-col {
-    position: sticky;
-    top: 130px;
+    align-self: start;
     z-index: 10;
+}
+
+.cart-right-col.is-sticky {
+    position: sticky;
+    top: 30px;
+}
+
+.cart-right-col.is-static {
+    position: static;
 }
 
 .cart-delivery-header {
@@ -94,8 +255,8 @@
 
 /* SUMMARY CARD */
 .cart-summary-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-.walmart-checkout-btn { width: 100%; height: 48px; background: #4d00d1; color: white; border: none; border-radius: 30px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 15px; transition: background 0.2s; }
-.walmart-checkout-btn:hover { background: #3c00a6; }
+.walmart-checkout-btn { width: 100%; height: 48px; background: #76361a; color: white; border: none; border-radius: 30px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 15px; transition: background 0.2s; }
+.walmart-checkout-btn:hover { background: #A96F1D; }
 .checkout-note { font-size: 12px; color: #666; text-align: center; margin-bottom: 25px; }
 .summary-rows { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; margin-bottom: 20px; }
 .s-row { display: flex; justify-content: space-between; font-size: 14px; }
@@ -109,6 +270,8 @@
     padding: 25px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     box-sizing: border-box;
 }
 
@@ -119,7 +282,7 @@
 .rec-grid::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
 .rec-grid .walmart-card { flex: 0 0 230px; }
 
-/* SAVED FOR LATER - SYNCED WIDTH */
+.discover-brands-section,
 .saved-later-section {
     margin-top: 15px;
     background: white;
@@ -127,47 +290,117 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     overflow: hidden;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     box-sizing: border-box;
 }
 
-.saved-header {
-    background: #eef1f6;
-    padding: 15px 25px;
-    border-bottom: 1px solid #e0e6ed;
-}
-
-.saved-header h3 { margin: 0; font-size: 20px; font-weight: 700; color: #222; }
-
-.saved-toggle-row {
-    padding: 15px 25px;
+.discover-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer;
+    padding: 25px 25px 15px;
 }
 
-.saved-count-text { font-size: 16px; font-weight: 700; color: #111; }
+.discover-header h2,
+.saved-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+}
 
-.toggle-arrow { font-size: 12px; color: #666; transition: transform 0.3s; }
-.toggle-arrow.up { transform: rotate(180deg); }
+.brand-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    padding: 0 25px 25px;
+}
 
-.saved-content { padding: 0 25px 30px; }
-.saved-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
-.saved-item-card { display: flex; gap: 20px; border: 1px solid #f0f0f0; border-radius: 12px; padding: 15px; }
-.s-img-wrap { width: 100px; height: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fdfdfd; }
-.s-img-wrap img { max-height: 100%; max-width: 100%; object-fit: contain; }
-.move-to-cart-btn { background: #4d00d1; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer; width: fit-content; }
+.brand-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 16px;
+    background: #f7f8fb;
+    border: 1px solid #eef1f3;
+    border-radius: 12px;
+}
+
+.brand-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: #4d00d1;
+    background: linear-gradient(135deg, #eae3ff 0%, #dfe7ff 100%);
+}
+
+.brand-content h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1c1d1f;
+}
+
+.brand-content p {
+    margin: 0;
+    font-size: 12px;
+    color: #6a6d75;
+}
+
+/* SAVED FOR LATER - SYNCED WIDTH */
+.saved-later-section {
+    margin-top: 15px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #f0e6d2;
+}
+
+.saved-header {
+    background: #f9f5ef;
+    padding: 15px 30px;
+    border-bottom: 1px solid #f0e6d2;
+}
+
+.saved-header h3 { margin: 0; font-size: 22px; font-weight: 800; color: #76361A; }
+.saved-count-pill { background: #76361A; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px; margin-left: 10px; }
+
+.saved-content { padding: 30px; }
+.saved-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+.saved-item-card { display: flex; gap: 20px; border: 1px solid #f0e6d2; border-radius: 12px; padding: 15px; }
+.s-img-wrap { width: 100px; height: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fdfaf5; border-radius: 8px; }
+.s-img-wrap img { max-height: 90%; max-width: 90%; object-fit: contain; }
+.move-to-cart-btn { background: #76361A; color: white; border: none; padding: 8px 18px; border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer; width: fit-content; transition: all 0.2s; }
+.move-to-cart-btn:hover { background: #5c2912; transform: scale(1.05); }
+
 .s-item-details { display: flex; flex-direction: column; gap: 5px; text-align: left; flex: 1; }
 .s-item-price { font-size: 18px; font-weight: 800; color: #222; }
-.s-item-name { font-size: 14px; font-weight: 400; color: #333; margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.s-item-qty { font-size: 12px; color: #777; margin: 0; }
-.s-item-remove { background: none; border: none; color: #222; text-decoration: underline; font-weight: 600; font-size: 12px; cursor: pointer; padding: 0; margin-top: auto; }
+.s-item-name { font-size: 14px; font-weight: 400; color: #555; margin: 0; line-height: 1.4; display: -webkit-box; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.s-item-qty { font-size: 12px; color: #888; margin: 0; }
+.s-item-remove { background: none; border: none; color: #222; text-decoration: underline; font-weight: 700; font-size: 13px; cursor: pointer; padding: 0; margin-top: auto; }
+
 
 /* RESPONSIVE */
 @media (max-width: 950px) {
     .cart-layout-walmart { grid-template-columns: 1fr; }
     .cart-right-col { position: relative; top: 0; order: -1; }
+    .cart-recommendations,
+    .discover-brands-section,
+    .saved-later-section { width: 100%; }
+    .brand-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .saved-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+    .brand-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
@@ -180,4 +413,28 @@
     .item-actions-row { flex-direction: column; align-items: flex-start; gap: 15px; }
     .item-qty-pill { width: 100%; justify-content: space-between; }
     .cart-right-col { order: 1; }
+}
+
+@media (max-width: 600px) {
+  .empty-cart-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  .dept-btn {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .empty-cart-actions {
+    grid-template-columns: 1fr;
+  }
 }

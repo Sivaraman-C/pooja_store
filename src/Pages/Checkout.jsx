@@ -22,6 +22,8 @@ const Checkout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [order, setOrder] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const [cartLoaded, setCartLoaded] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -52,7 +54,24 @@ const Checkout = () => {
       }
     };
 
+    const fetchCart = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/cart?user_id=${userId}`, {
+          headers: { ...bypassHeaders },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setCartItems(Array.isArray(data.cart) ? data.cart : []);
+        }
+      } catch (cartError) {
+        console.error("Checkout cart fetch error:", cartError);
+      } finally {
+        setCartLoaded(true);
+      }
+    };
+
     fetchProfile();
+    fetchCart();
   }, [userId]);
 
   const handleChange = (event) => {
@@ -61,6 +80,12 @@ const Checkout = () => {
 
   const placeOrder = async (event) => {
     event.preventDefault();
+
+    if (cartItems.length === 0) {
+      setError("Your cart is empty. Add at least one item before checkout.");
+      return;
+    }
+
     setSubmitting(true);
     setError("");
 
@@ -104,6 +129,18 @@ const Checkout = () => {
           <h1>Thank you for your order.</h1>
           <p>Your order #{order.id} has been placed successfully.</p>
           <button className="checkout-button" onClick={() => navigate("/")}>Continue shopping</button>
+        </div>
+      </main>
+    );
+  }
+
+  if (userId && cartLoaded && cartItems.length === 0) {
+    return (
+      <main className="checkout-page checkout-message-page">
+        <div className="checkout-message">
+          <p className="checkout-eyebrow">CART EMPTY</p>
+          <h1>Add items before checkout</h1>
+          <Link className="checkout-button" to="/cart">Back to cart</Link>
         </div>
       </main>
     );

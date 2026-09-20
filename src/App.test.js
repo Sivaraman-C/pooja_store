@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 import Navbar from './Components/Navbar/Navbar';
 import Checkout from './Pages/Checkout';
+import Cart from './Pages/Cart';
 
 beforeEach(() => {
   localStorage.clear();
@@ -153,4 +154,27 @@ test('prefills all checkout delivery details from the latest profile', async () 
     expect.stringContaining('/api/auth/profile/7'),
     expect.objectContaining({ headers: expect.any(Object) })
   );
+});
+
+test('hides checkout action when the cart is empty', async () => {
+  global.fetch = jest.fn()
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ cart: [] }),
+    })
+    .mockResolvedValueOnce({
+      ok: true,
+      json: async () => [],
+    });
+
+  localStorage.setItem('user', JSON.stringify({ id: 7, name: 'Test User' }));
+
+  render(
+    <MemoryRouter initialEntries={['/cart']}>
+      <Cart />
+    </MemoryRouter>
+  );
+
+  expect(await screen.findByText(/your cart is empty/i)).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /continue to checkout/i })).not.toBeInTheDocument();
 });
