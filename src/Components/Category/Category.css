@@ -1,144 +1,194 @@
 .category-section {
     width: 100%;
     background: #ffffff;
-    padding: 60px 0;
+    padding: 40px 0 60px;
+    font-family: 'Inter', sans-serif;
 }
 
-.category-container {
-    width: min(1280px, calc(100% - 40px));
+.category-grid-container {
+    width: min(1380px, calc(100% - 40px));
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 20px;
-    height: 580px;
+    grid-template-columns: 1fr 1.3fr 1fr;
+    grid-template-rows: 360px 240px;
+    gap: 15px;
 }
 
-/* Base Card Style */
-.cat-card {
-    background: #ededed;
-    border-radius: 20px;
-    text-decoration: none;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
+/* BASE BOX STYLE */
+.cat-box {
     position: relative;
+    border-radius: 12px;
     overflow: hidden;
+    text-decoration: none;
+    display: flex;
     transition: transform 0.3s ease;
+    background: #f8f8f8; /* Fallback */
 }
 
-.cat-card:hover {
+.cat-box:hover {
     transform: translateY(-5px);
 }
 
-.cat-info h3 {
-    font-family: 'Inter', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    color: #1a0dab; /* Dark purple/blue like image */
-    margin: 0 0 10px;
-    line-height: 1.2;
+/* IMAGE LAYER AS BACKGROUND */
+.cat-image-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
 }
 
-.shop-now-link {
-    font-size: 15px;
-    font-weight: 600;
+.cat-image-layer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This makes the image fill the background */
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.cat-box:hover .cat-image-layer img {
+    transform: scale(1.05);
+}
+
+/* TEXT CONTENT LAYER */
+.cat-text-layer {
+    position: relative;
+    z-index: 2;
+    padding: 30px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none; /* Let clicks pass to the Link */
+    /* Add a subtle overlay to ensure text is readable regardless of image brightness */
+    background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 40%, transparent 100%);
+}
+
+.cat-promo {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a0dab;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cat-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #1a0dab;
+    margin: 0 0 20px;
+    max-width: 80%;
+}
+
+.cat-pill-btn {
+    width: fit-content;
+    padding: 10px 24px;
+    background: white;
+    color: #111;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    pointer-events: auto; /* Re-enable clicks for the button */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cat-link-text {
+    font-size: 13px;
+    font-weight: 700;
     color: #1a0dab;
     text-decoration: underline;
+    margin-top: 5px;
 }
 
-.cat-img-box {
-    flex: 1;
+/* 1. LARGE BOX */
+.box-large {
+    grid-row: span 2;
+}
+
+.cat-badge-oval {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    background: #ff5757;
+    color: white;
+    padding: 12px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 800;
+    text-align: center;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
+    z-index: 3;
+    line-height: 1.2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.cat-card img {
-    max-height: 80%;
-    width: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
-}
-
-/* Large Card Specific */
-.large-card {
-    height: 100%;
-}
-
-.cat-footer-text {
-    margin-top: auto;
-    font-size: 26px;
-    font-weight: 800;
-    color: #111;
-}
-
-/* Right Stack */
-.cat-right-stack {
+/* 2. MIDDLE COLUMN */
+.cat-middle-col {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    height: 100%;
+    gap: 15px;
 }
 
-.small-card {
+.box-medium {
+    flex: none;
+    height: 360px;
+}
+
+.cat-bottom-row {
+    flex: none;
+    height: 240px;
+    display: flex;
+    gap: 15px;
+}
+
+.box-small {
     flex: 1;
-    padding: 20px 25px;
 }
 
-.small-card h3 {
+.cat-title-small {
     font-size: 20px;
-    max-width: 180px;
+    font-weight: 800;
+    color: #1a0dab;
+    margin: 0;
 }
 
-.small-card .cat-img-box {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 60%;
-    height: 100%;
-    margin-top: 0;
+/* 3. TALL BOX */
+.box-tall {
+    grid-row: span 2;
 }
 
-.small-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 0 0 20px 0;
-    filter: none;
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+    .category-grid-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
 }
 
-/* Mobile Responsive */
-@media (max-width: 850px) {
-    .category-container {
+@media (max-width: 768px) {
+    .category-grid-container {
         grid-template-columns: 1fr;
-        height: auto;
     }
 
-    .large-card {
-        height: 400px;
+    .box-large, .box-tall {
+        grid-row: auto;
+        height: 350px;
     }
 
-    .cat-right-stack {
-        height: auto;
-    }
-
-    .small-card {
-        height: 220px;
-    }
-
-    .cat-footer-text {
-        font-size: 20px;
-    }
+    .cat-title { font-size: 26px; }
 }
 
 @media (max-width: 480px) {
-    .cat-info h3 {
-        font-size: 18px;
-    }
-
-    .large-card {
-        height: 320px;
-    }
+    .box-large, .box-tall { height: 280px; }
+    .cat-bottom-row { flex-direction: column; }
+    .box-small { height: 180px; }
 }

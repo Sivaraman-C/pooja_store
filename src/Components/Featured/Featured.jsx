@@ -8,9 +8,7 @@ import API_URL, { bypassHeaders } from "../../apiConfig";
 const Featured = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [wishlist, setWishlist] = useState([]);
-  const [showAll, setShowAll] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [addingProductId, setAddingProductId] = useState(null);
   const [cartMap, setCartMap] = useState({}); // productId -> quantity
@@ -45,7 +43,7 @@ const Featured = () => {
         const response = await fetch(`${API_URL}/api/products/featured`);
         const data = await response.json();
         setProducts(Array.isArray(data) ? data : []);
-      } catch (error) { setError("Unable to load products"); } finally { setLoading(false); }
+      } catch (error) {} finally { setLoading(false); }
     };
     fetchFeaturedProducts();
     const userId = getUserId();
@@ -123,8 +121,6 @@ const Featured = () => {
 
   if (loading) return <section className="featured-section"><p>Loading sacred products...</p></section>;
 
-  const displayedProducts = showAll ? products : products.slice(0, 4);
-
   return (
     <section className="featured-section">
       <div className="featured-container">
@@ -134,7 +130,7 @@ const Featured = () => {
         </div>
 
         <div className="featured-grid">
-          {displayedProducts.map((product) => {
+          {products.map((product) => {
             const qty = cartMap[product.id] || 0;
             return (
               <div className="walmart-card" key={product.id}>
@@ -160,7 +156,7 @@ const Featured = () => {
                 </div>
 
                 <div className="card-details">
-                  <span className="sponsored-tag">Sponsored ⓘ</span>
+                  <span className="sponsored-tag">{product.brand || "Sacred Item"} ⓘ</span>
                   <div className="card-price-row">
                     <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
                   </div>
@@ -169,7 +165,6 @@ const Featured = () => {
                     <span className="stars">★★★★☆</span>
                     <span className="count">12</span>
                   </div>
-                  <p className="shipping-info">Arriving <strong>Soon</strong></p>
                 </div>
               </div>
             );

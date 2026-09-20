@@ -5,70 +5,76 @@ import { Link } from "react-router-dom";
 import Idols from "../Assets/idols.jpeg";
 import Diyas from "../Assets/diyas.jpeg";
 import Incense from "../Assets/incense.jpeg";
+import Kumkum from "../Assets/kumkum.jpg";
+import Haldi from "../Assets/Haldi.jpg";
 
 const Category = () => {
-  const categories = [
-    {
-      name: "Handcrafted Idols & Murthis",
-      img: Idols,
-      link: "/shop?category=Idols%20%26%20Murtis",
-      desc: "Bring divinity home"
-    },
-    {
-      name: "Traditional Diyas & Lamps",
-      img: Diyas,
-      link: "/shop?category=Diyas%20%26%20Lamps",
-      desc: "Light up your sacred space"
-    },
-    {
-      name: "Sacred Incense & Dhoop",
-      img: Incense,
-      link: "/shop?category=Incense",
-      desc: "Pure fragrance of faith"
-    },
-  ];
-
   return (
     <section className="category-section">
-      <div className="category-container">
-        {/* Large Left Card */}
-        <Link to={categories[0].link} className="cat-card large-card">
-          <div className="cat-info">
-            <h3>{categories[0].name}</h3>
-            <span className="shop-now-link">Shop now</span>
-          </div>
-          <div className="cat-img-box">
-            <img src={categories[0].img} alt={categories[0].name} />
-          </div>
-          <div className="cat-footer-text">
-            <span>Sacred Collection</span>
-          </div>
+      <div className="category-grid-container">
+
+        {/* 1. LARGE LEFT CARD */}
+        <Link to="/shop?category=Idols%20%26%20Murtis" className="cat-box box-large">
+           <div className="cat-image-layer">
+              <img src={Idols} alt="Idols" />
+           </div>
+           <div className="cat-text-layer">
+              <span className="cat-promo">Blessed Collections</span>
+              <h2 className="cat-title">Divine Murtis & Handcrafted Idols</h2>
+              <button className="cat-pill-btn">Shop now</button>
+           </div>
+           <div className="cat-badge-oval">New Arrivals</div>
         </Link>
 
-        {/* Right Side Stack */}
-        <div className="cat-right-stack">
-          {/* Small Top Card */}
-          <Link to={categories[1].link} className="cat-card small-card">
-            <div className="cat-info">
-              <h3>{categories[1].name}</h3>
-              <span className="shop-now-link">Shop now</span>
-            </div>
-            <div className="cat-img-box">
-              <img src={categories[1].img} alt={categories[1].name} />
-            </div>
-          </Link>
+        {/* 2. MIDDLE COLUMN */}
+        <div className="cat-middle-col">
+           {/* Top Medium Card */}
+           <Link to="/shop?category=Diyas%20%26%20Lamps" className="cat-box box-medium">
+              <div className="cat-image-layer">
+                 <img src={Diyas} alt="Diyas" />
+              </div>
+              <div className="cat-text-layer">
+                 <span className="cat-promo">Decor & more</span>
+                 <h2 className="cat-title">Traditional Diyas</h2>
+                 <span className="cat-link-text">Shop now</span>
+              </div>
+           </Link>
 
-          {/* Small Bottom Card */}
-          <Link to={categories[2].link} className="cat-card small-card">
-            <div className="cat-info">
-              <h3>{categories[2].name}</h3>
-              <span className="shop-now-link">Shop now</span>
-            </div>
-            <div className="cat-img-box">
-              <img src={categories[2].img} alt={categories[2].name} />
-            </div>
-          </Link>
+           {/* Bottom two small cards */}
+           <div className="cat-bottom-row">
+              <Link to="/shop?category=Essentials" className="cat-box box-small">
+                 <div className="cat-image-layer">
+                    <img src={Kumkum} alt="Kumkum" />
+                 </div>
+                 <div className="cat-text-layer">
+                    <h3 className="cat-title-small">Pooja Essentials</h3>
+                    <span className="cat-link-text">Shop now</span>
+                 </div>
+              </Link>
+              <Link to="/shop?category=Essentials" className="cat-box box-small">
+                 <div className="cat-image-layer">
+                    <img src={Haldi} alt="Haldi" />
+                 </div>
+                 <div className="cat-text-layer">
+                    <h3 className="cat-title-small">Pure Haldi</h3>
+                    <span className="cat-link-text">Shop now</span>
+                 </div>
+              </Link>
+           </div>
         </div>
+
+        {/* 3. TALL RIGHT CARD */}
+        <Link to="/shop?category=Incense" className="cat-box box-tall">
+           <div className="cat-image-layer">
+              <img src={Incense} alt="Incense" />
+           </div>
+           <div className="cat-text-layer">
+              <span className="cat-promo">Classic Fragrance</span>
+              <h2 className="cat-title">Sacred Incense & Dhoop</h2>
+              <span className="cat-link-text">Shop now</span>
+           </div>
+        </Link>
+
       </div>
     </section>
   );

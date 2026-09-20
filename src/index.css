@@ -138,6 +138,7 @@ body {
     font-weight: 400;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: 1.4;
@@ -210,4 +211,49 @@ body {
   .price-now {
     color: #2e7d32; /* Keep green price for mobile as previously requested */
   }
+}
+
+
+
+/* =========================================
+   GOOGLE TRANSLATE - HIDE TOP INFORMATION
+========================================= */
+
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-tooltip {
+  display: none !important;
+}
+
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  font-size: 0 !important;
+}
+
+.goog-te-gadget span {
+  display: none !important;
+}
+
+body > .skiptranslate {
+  display: none !important;
 }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Share } from "@capacitor/share";
 import "./Shop.css";
 import { Link } from "react-router-dom";
 
@@ -11,7 +10,6 @@ import IdolsIcon from "../Components/Assets/idols.jpeg";
 import DiyasIcon from "../Components/Assets/diyas.jpeg";
 import IncenseIcon from "../Components/Assets/incense.jpeg";
 import EssentialsIcon from "../Components/Assets/Essentials.jpeg";
-import KumkumIcon from "../Components/Assets/kumkum.jpg";
 import KitsIcon from "../Components/Assets/pooja-kit.png";
 
 const poojaFestivals = [
@@ -27,7 +25,6 @@ const poojaFestivals = [
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -90,7 +87,6 @@ const Shop = () => {
         const data = await response.json();
         setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
-        setError("Unable to load products");
       } finally {
         setLoading(false);
       }
@@ -193,34 +189,23 @@ const Shop = () => {
     if (urlSearch) setSearch(urlSearch);
   }, []);
 
-  // Filter Toggle Helpers
   const togglePriceRange = (range) => {
     setSelectedPriceRanges(prev =>
       prev.includes(range) ? prev.filter(r => r !== range) : [...prev, range]
     );
   };
 
-  const toggleBrand = (brand) => {
-    setSelectedBrands(prev =>
-      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
-    );
-  };
-
-  // FILTER LOGIC
   const filteredProducts = useMemo(() => {
     let result = products.filter((product) => {
       const pCat = String(product.category || "").toLowerCase();
       const pName = String(product.name || "").toLowerCase();
+      const pBrand = String(product.brand || "").toLowerCase();
       const pPrice = Number(product.price);
       const s = search.toLowerCase().trim();
 
-      // Category Match
       let catMatch = category === "All" || pCat === category.toLowerCase();
+      let searchMatch = pName.includes(s) || pCat.includes(s) || pBrand.includes(s);
 
-      // Search Match
-      let searchMatch = pName.includes(s) || pCat.includes(s);
-
-      // Price Range Match
       let priceMatch = true;
       if (selectedPriceRanges.length > 0) {
         priceMatch = selectedPriceRanges.some(range => {
@@ -231,15 +216,11 @@ const Shop = () => {
         });
       }
 
-      // Brand Match
       let brandMatch = true;
       if (selectedBrands.length > 0) {
-        brandMatch = selectedBrands.some(brand =>
-          pName.includes(brand.toLowerCase()) || pCat.includes(brand.toLowerCase())
-        );
+        brandMatch = selectedBrands.some(brand => pBrand.includes(brand.toLowerCase()));
       }
 
-      // Festival Match
       let festivalMatch = true;
       if (selectedFestival !== "All Festivals") {
         const desc = String(product.description || "").toLowerCase();
@@ -251,24 +232,18 @@ const Shop = () => {
       return catMatch && searchMatch && priceMatch && brandMatch && festivalMatch;
     });
 
-    // SORTING
-    if (sortBy === "Price: Low to High") {
-      result.sort((a, b) => Number(a.price) - Number(b.price));
-    } else if (sortBy === "Price: High to Low") {
-      result.sort((a, b) => Number(b.price) - Number(a.price));
-    } else if (sortBy === "Newest") {
-      result.sort((a, b) => b.id - a.id);
-    }
+    if (sortBy === "Price: Low to High") result.sort((a, b) => Number(a.price) - Number(b.price));
+    else if (sortBy === "Price: High to Low") result.sort((a, b) => Number(b.price) - Number(a.price));
+    else if (sortBy === "Newest") result.sort((a, b) => b.id - a.id);
 
     return result;
-  }, [products, category, search, selectedPriceRanges, selectedBrands, sortBy]);
+  }, [products, category, search, selectedPriceRanges, selectedBrands, sortBy, selectedFestival]);
 
   const stripCategories = [
-    { name: "Idols", img: IdolsIcon, link: "Idols & Murtis" },
-    { name: "Diyas", img: DiyasIcon, link: "Diyas & Lamps" },
+    { name: "Idols", img: IdolsIcon, link: "Idols" },
+    { name: "Diyas", img: DiyasIcon, link: "Diyas" },
     { name: "Incense", img: IncenseIcon, link: "Incense" },
-    { name: "Essentials", img: EssentialsIcon, link: "Essentials" },
-    { name: "Kumkum", img: KumkumIcon, link: "Kumkum & Turmeric" },
+    { name: "Essentials", img: EssentialsIcon, link: "Pooja Essentials" },
     { name: "Kits", img: KitsIcon, link: "Pooja Kits" }
   ];
 
@@ -276,7 +251,6 @@ const Shop = () => {
     <div className="shop-page-new">
       <div className="shop-web-container">
 
-        {/* TOP PILLS */}
         <div className="top-pills-row">
            <button className="pill-btn">In-store</button>
            <button className="pill-btn">Get it fast</button>
@@ -292,10 +266,9 @@ const Shop = () => {
                </div>
              )}
            </div>
-           <button className="pill-btn" onClick={() => setCategory("All")}>Clear Filters</button>
+           <button className="pill-btn" onClick={() => {setCategory("All"); setSelectedBrands([]); setSelectedPriceRanges([]); setSelectedFestival("All Festivals"); setSearch("");}}>Clear Filters</button>
         </div>
 
-        {/* CATEGORY ICONS */}
         <div className="category-strip">
           {stripCategories.map((cat, i) => (
             <div key={i} className="strip-item" onClick={() => setCategory(cat.link)}>
@@ -313,18 +286,9 @@ const Shop = () => {
               <h4 onClick={() => toggleFilter('price')}>Price {activeFilters.price ? '▴' : '▾'}</h4>
               {activeFilters.price && (
                 <div className="filter-options">
-                   <label>
-                     <input type="checkbox" checked={selectedPriceRanges.includes('under500')} onChange={() => togglePriceRange('under500')} />
-                     Under ₹500
-                   </label>
-                   <label>
-                     <input type="checkbox" checked={selectedPriceRanges.includes('500-1000')} onChange={() => togglePriceRange('500-1000')} />
-                     ₹500 - ₹1000
-                   </label>
-                   <label>
-                     <input type="checkbox" checked={selectedPriceRanges.includes('above1000')} onChange={() => togglePriceRange('above1000')} />
-                     Above ₹1000
-                   </label>
+                   <label><input type="checkbox" checked={selectedPriceRanges.includes('under500')} onChange={() => togglePriceRange('under500')} /> Under ₹500</label>
+                   <label><input type="checkbox" checked={selectedPriceRanges.includes('500-1000')} onChange={() => togglePriceRange('500-1000')} /> ₹500 - ₹1000</label>
+                   <label><input type="checkbox" checked={selectedPriceRanges.includes('above1000')} onChange={() => togglePriceRange('above1000')} /> Above ₹1000</label>
                 </div>
               )}
             </div>
@@ -333,32 +297,13 @@ const Shop = () => {
               <h4 onClick={() => toggleFilter('category')}>Category {activeFilters.category ? '▴' : '▾'}</h4>
               {activeFilters.category && (
                 <div className="filter-options">
-                   {["Idols & Murtis", "Diyas & Lamps", "Incense", "Essentials", "Pooja Kits"].map(c => (
+                   {["Idols", "Diyas", "Incense", "Pooja Essentials", "Pooja Kits"].map(c => (
                      <label key={c}>
                        <input type="radio" name="cat" checked={category === c} onChange={() => setCategory(c)} />
                        {c}
                      </label>
                    ))}
-                   <label>
-                     <input type="radio" name="cat" checked={category === "All"} onChange={() => setCategory("All")} />
-                     All
-                   </label>
-                </div>
-              )}
-            </div>
-
-            <div className="filter-group">
-              <h4 onClick={() => toggleFilter('brand')}>Brands {activeFilters.brand ? '▴' : '▾'}</h4>
-              {activeFilters.brand && (
-                <div className="filter-options">
-                   <label>
-                     <input type="checkbox" checked={selectedBrands.includes('Devaloka')} onChange={() => toggleBrand('Devaloka')} />
-                     Devaloka Exclusive
-                   </label>
-                   <label>
-                     <input type="checkbox" checked={selectedBrands.includes('Authentic')} onChange={() => toggleBrand('Authentic')} />
-                     Authentic Handcrafted
-                   </label>
+                   <label><input type="radio" name="cat" checked={category === "All"} onChange={() => setCategory("All")} /> All</label>
                 </div>
               )}
             </div>
@@ -367,11 +312,7 @@ const Shop = () => {
               <h4 onClick={() => toggleFilter('pooja')}>Pooja {activeFilters.pooja ? '▴' : '▾'}</h4>
               {activeFilters.pooja && (
                 <div className="filter-options">
-                   <select
-                     className="pooja-select-sidebar"
-                     value={selectedFestival}
-                     onChange={(e) => setSelectedFestival(e.target.value)}
-                   >
+                   <select className="pooja-select-sidebar" value={selectedFestival} onChange={(e) => setSelectedFestival(e.target.value)}>
                      {poojaFestivals.map(f => <option key={f} value={f}>{f}</option>)}
                    </select>
                 </div>
@@ -412,7 +353,7 @@ const Shop = () => {
                     </div>
 
                     <div className="card-details">
-                      <span className="sponsored-tag">Pooja Essential ⓘ</span>
+                      <span className="sponsored-tag">{product.brand || "Sacred Item"} ⓘ</span>
                       <div className="card-price-row">
                         <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
                       </div>
@@ -429,7 +370,7 @@ const Shop = () => {
               {filteredProducts.length === 0 && (
                 <div className="no-results">
                   <h4>No products match your filters.</h4>
-                  <button className="pill-btn" onClick={() => { setCategory("All"); setSelectedPriceRanges([]); setSelectedBrands([]); setSearch(""); }}>Reset All Filters</button>
+                  <button className="pill-btn" onClick={() => { setCategory("All"); setSelectedPriceRanges([]); setSelectedBrands([]); setSearch(""); setSelectedFestival("All Festivals"); }}>Reset All Filters</button>
                 </div>
               )}
             </div>

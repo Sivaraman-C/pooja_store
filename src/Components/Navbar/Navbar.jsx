@@ -116,6 +116,7 @@ const Navbar = () => {
         mobileProfileRef.current && !mobileProfileRef.current.contains(event.target)
       ) {
         setShowProfile(false);
+        setShowSettingsMenu(false);
       }
     };
 
@@ -278,12 +279,25 @@ const Navbar = () => {
   };
 
   const handleUseCurrentLocation = async () => {
+    const isNativeApp = !!window.Capacitor;
+
     setLocationLoading(true);
 
     try {
       let coords;
 
-      if (navigator.geolocation) {
+      if (isNativeApp) {
+        const permission = await Geolocation.requestPermissions();
+        if (permission.location !== 'granted') {
+          throw new Error('Location permission denied');
+        }
+
+        const result = await Geolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 20000,
+        });
+        coords = result.coords;
+      } else if (navigator.geolocation) {
         coords = await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             enableHighAccuracy: true,
@@ -321,7 +335,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      {/* DESKTOP VIEW - RESTORED ORIGINAL PROJECT STYLE */}
+      {/* DESKTOP VIEW */}
       <div className="navbar-container desktop-navbar">
         <div className="nav-left">
           <Link to="/">
@@ -362,6 +376,14 @@ const Navbar = () => {
                   alt="Camera"
                   className="nav-camera-icon-img"
                   onClick={triggerCameraSearch}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      triggerCameraSearch();
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -389,6 +411,34 @@ const Navbar = () => {
                         <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=profile"); }}>Profile</button>
                         <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/wishlist"); }}>My Wishlist</button>
                         <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=orders"); }}>My Orders</button>
+
+                        <div className="profile-settings-wrapper">
+                          <button
+                            type="button"
+                            className="profile-dropdown-item settings-trigger"
+                            onClick={() => setShowSettingsMenu((prev) => !prev)}
+                          >
+                            Settings
+                            <span className="settings-arrow">{showSettingsMenu ? "▼" : "▶"}</span>
+                          </button>
+                          {showSettingsMenu && (
+                            <div className="profile-submenu">
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=settings&section=notifications"); }}>Notifications</button>
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=profile&edit=true"); }}>Edit Profile</button>
+                              <div className="profile-submenu-row">
+                                <span className="profile-submenu-label">Language</span>
+                                <select value={language} onChange={(e) => changeLanguage(e.target.value)} className="profile-submenu-select">
+                                  <option value="en">English</option>
+                                  <option value="ta">தமிழ்</option>
+                                  <option value="hi">हिन्दी</option>
+                                  <option value="te">తెలుగు</option>
+                                </select>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/contact"); }}>Help Center</button>
                         <button type="button" className="profile-dropdown-item logout-button" onClick={() => setShowLogoutPopup(true)}>Logout</button>
                       </div>
                     </div>
@@ -426,48 +476,81 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* MOBILE NAVBAR - KEEP WALMART STYLE AS REQUESTED FOR MOBILE */}
+      {/* MOBILE VIEW */}
       <div className="mobile-navbar">
         <div className="mobile-top-bar">
           <div className="mobile-navbar-content">
-            {/* ROW 1: WALMART STYLE */}
-            <div className="mobile-main-row">
-              <button className="mobile-hamburger"><span></span><span></span><span></span></button>
-              <Link to="/" className="mobile-logo-link"><img src={Logo} alt="Logo" className="mobile-logo-img" /></Link>
-              <div className="mobile-search-pill">
-                <input type="text" placeholder="Search Devaloka" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleSearch} />
-                <button className="mobile-search-icon-btn" onClick={handleSearch}><img src="/search.svg" alt="Search" /></button>
-              </div>
-              <div className="mobile-cart-wrap">
-                <Link to="/cart" className="mobile-cart-btn">
-                  <div className="mobile-cart-icon-container"><img src={Cart} alt="Cart" /><span className="mobile-cart-count">{cartCount}</span></div>
-                  <span className="mobile-cart-amount">₹{cartTotal.toLocaleString("en-IN")}</span>
-                </Link>
+            <div className="mobile-search-row">
+              <div className="mobile-search-box">
+                <img src="/search.svg" alt="Search" className="mobile-nav-icon-img" onClick={handleSearch} />
+                <input type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleSearch} />
+                <div className="mobile-search-right-icons">
+                  <img src="/mic.png" alt="Voice" className={`mobile-nav-icon-img ${isListening ? "listening" : ""}`} onClick={handleVoiceSearch} />
+                  <img src="/camera.svg" alt="Camera" className="mobile-nav-icon-img" onClick={triggerCameraSearch} />
+                </div>
               </div>
             </div>
 
-            {/* ROW 2: OLD STYLE (LOCATION + ACTIONS) */}
-            <div className="mobile-old-style-row">
+            <div className="mobile-bottom-row">
               <button type="button" className="mobile-location-pill" onClick={openLocationModal}>
-                <span className="mobile-pin-icon">📍</span><span className="mobile-location-text">{displayLocationLabel}</span>
+                <span className="mobile-pin-icon">📍</span>
+                <span className="mobile-location-text">{displayLocationLabel}</span>
               </button>
+
               <div className="mobile-user-actions">
                 <Link to="/wishlist" className="mobile-action-link">❤️</Link>
                 {user && ["admin", "super_admin"].includes(user.role) && (<Link to="/admin" className="mobile-action-link">📊</Link>)}
                 <div className="mobile-profile-wrapper" ref={mobileProfileRef}>
                   <button type="button" className="mobile-profile-trigger" onClick={() => setShowProfile(!showProfile)}>
-                    {user && getProfileImageSrc(user) ? <img src={getProfileImageSrc(user)} alt="" className="mobile-profile-img" /> : <span className="mobile-profile-placeholder">👤</span>}
+                    {user && getProfileImageSrc(user) ? (
+                      <img src={getProfileImageSrc(user)} alt="Profile" className="mobile-profile-img" />
+                    ) : (
+                      <span className="mobile-profile-placeholder">👤</span>
+                    )}
                   </button>
+
+                  {showProfile && user && (
+                    <div className="mobile-profile-dropdown">
+                      <div className="profile-header"><strong>{user.name}</strong><span>{user.email}</span></div>
+                      <div className="profile-divider"></div>
+                      <div className="profile-dropdown-list">
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=profile"); }}>Profile</button>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/wishlist"); }}>My Wishlist</button>
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=orders"); }}>My Orders</button>
+
+                        <div className="profile-settings-wrapper">
+                          <button
+                            type="button"
+                            className="profile-dropdown-item settings-trigger"
+                            onClick={() => setShowSettingsMenu((prev) => !prev)}
+                          >
+                            Settings
+                            <span className="settings-arrow">{showSettingsMenu ? "▼" : "▶"}</span>
+                          </button>
+                          {showSettingsMenu && (
+                            <div className="profile-submenu">
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=settings&section=notifications"); }}>Notifications</button>
+                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=profile&edit=true"); }}>Edit Profile</button>
+                              <div className="profile-submenu-row">
+                                <span className="profile-submenu-label">Language</span>
+                                <select value={language} onChange={(e) => changeLanguage(e.target.value)} className="profile-submenu-select">
+                                  <option value="en">English</option>
+                                  <option value="ta">தமிழ்</option>
+                                  <option value="hi">हिन्दी</option>
+                                  <option value="te">తెలుగు</option>
+                                </select>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/contact"); }}>Help Center</button>
+                        <button type="button" className="profile-dropdown-item logout-button" onClick={() => { setShowProfile(false); setShowLogoutPopup(true); }}>Logout</button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-
-            {/* ROW 3: HORIZONTAL TAGS SCROLL */}
-            <div className="mobile-tags-scroll">
-               <button className="mobile-tag-btn active">Festivals</button>
-               <button className="mobile-tag-btn">Best Sellers</button>
-               <button className="mobile-tag-btn">New Arrivals</button>
-               <button className="mobile-tag-btn">Pooja Kits</button>
             </div>
           </div>
         </div>
@@ -481,15 +564,18 @@ const Navbar = () => {
               <button type="button" className="close-location-modal" onClick={() => setShowLocationModal(false)}>×</button>
             </div>
             <div className="location-modal-body">
-              <div className="location-address-field"><label>Address</label><textarea name="address" rows="3" value={locationForm.address} onChange={handleLocationFormChange} /></div>
+              <div className="location-address-field">
+                <label>Address</label>
+                <textarea name="address" rows="3" value={locationForm.address} onChange={handleLocationFormChange} placeholder="House / Flat / Street" />
+              </div>
               <div className="location-grid">
                 <div className="location-field"><label>City</label><input type="text" name="city" value={locationForm.city} onChange={handleLocationFormChange} /></div>
                 <div className="location-field"><label>State</label><input type="text" name="state" value={locationForm.state} onChange={handleLocationFormChange} /></div>
               </div>
-              <div className="location-field"><label>Pincode</label><input type="text" name="pincode" maxLength="6" value={locationForm.pincode} onChange={handleLocationFormChange} /></div>
+              <div className="location-field"><label>Pincode</label><input type="text" name="pincode" inputMode="numeric" maxLength="6" value={locationForm.pincode} onChange={handleLocationFormChange} /></div>
               <div className="location-modal-actions">
-                <button type="button" className="location-current-btn" onClick={handleUseCurrentLocation}>Use current location</button>
-                <button type="button" className="location-save-btn" onClick={saveLocation}>Save address</button>
+                <button type="button" className="location-current-btn" onClick={handleUseCurrentLocation} disabled={locationLoading}>Use current location</button>
+                <button type="button" className="location-save-btn" onClick={saveLocation} disabled={locationSaving || pincodeLoading}>Save address</button>
               </div>
             </div>
           </div>
