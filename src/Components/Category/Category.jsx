@@ -14,7 +14,7 @@ const Category = () => {
       <div className="category-grid-container">
 
         {/* 1. LARGE LEFT CARD */}
-        <Link to="/shop?category=Idols%20%26%20Murtis" className="cat-box box-large">
+        <Link to="/idols" className="cat-box box-large">
            <div className="cat-image-layer">
               <img src={Idols} alt="Idols" />
            </div>

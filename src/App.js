@@ -15,6 +15,7 @@ import Contact from "./Pages/Contact";
 import FestivalCalendar from "./Components/FestivalCalendar/FestivalCalendar";
 import Menu from "./Pages/Menu";
 import Wishlist from "./Pages/Wishlist";
+import Idols from "./Pages/Idols";
 
 import AdminLayout from "./Components/Admin/AdminLayout/AdminLayout";
 import Dashboard from "./Components/Admin/Dashboard/Dashboard";
@@ -192,6 +193,16 @@ function App() {
             <>
               <Navbar />
               <Wishlist />
+            </>
+          }
+        />
+
+        <Route
+          path="/idols"
+          element={
+            <>
+              <Navbar />
+              <Idols />
             </>
           }
         />

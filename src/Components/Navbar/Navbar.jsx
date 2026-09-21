@@ -490,7 +490,7 @@ const Navbar = () => {
           <div className="mobile-navbar-content">
             <div className="mobile-primary-row">
               <div className="mobile-left">
-                <button className="mobile-hamburger" onClick={() => setShowLogoutPopup(false)}>
+                <button className="mobile-hamburger" onClick={() => navigate("/menu")}>
                   <span></span><span></span><span></span>
                 </button>
                 <Link to="/" className="mobile-logo-link">
@@ -524,7 +524,6 @@ const Navbar = () => {
 
               <div className="mobile-user-actions">
                 <Link to="/wishlist" className="mobile-action-link">❤️</Link>
-                {user && ["admin", "super_admin"].includes(user.role) && (<Link to="/admin" className="mobile-action-link">📊</Link>)}
                 <div className="mobile-profile-wrapper" ref={mobileProfileRef}>
                   <button type="button" className="mobile-profile-trigger" onClick={() => setShowProfile(!showProfile)}>
                     {user && getProfileImageSrc(user) ? (
@@ -535,7 +534,7 @@ const Navbar = () => {
                   </button>
                   {showProfile && user && <ProfileDropdown />}
                 </div>
-                
+                {user && ["admin", "super_admin"].includes(user.role) && (<Link to="/admin" className="mobile-action-link">📊</Link>)}
               </div>
             </div>
           </div>
