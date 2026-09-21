@@ -14,7 +14,6 @@ const Navbar = () => {
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [showCameraComingSoon, setShowCameraComingSoon] = useState(false);
 
   const profileRef = useRef(null);
   const mobileProfileRef = useRef(null);
@@ -93,7 +92,7 @@ const Navbar = () => {
   };
 
   const triggerCameraSearch = () => {
-    setShowCameraComingSoon(true);
+    alert("Camera search coming soon!");
   };
 
   useEffect(() => {
@@ -108,7 +107,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // CLICK OUTSIDE TO CLOSE PROFILE DROPDOWN
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -333,135 +331,123 @@ const Navbar = () => {
   const deliveryPlace = user?.city || user?.state || user?.pincode;
   const displayLocationLabel = deliveryPlace ? `Deliver to ${deliveryPlace}` : "Select Location";
 
+  const ProfileDropdown = () => (
+    <div className="profile-dropdown-modern">
+      <div className="profile-header-modern">
+        <div className="profile-avatar-large">
+           {getProfileImageSrc(user) ? (
+              <img src={getProfileImageSrc(user)} alt="" />
+           ) : (
+              <span>👤</span>
+           )}
+        </div>
+        <div className="profile-meta-modern">
+          <strong>{user.name}</strong>
+          <span>{user.email}</span>
+        </div>
+      </div>
+      <div className="profile-divider-modern"></div>
+      <div className="profile-list-modern">
+        <button type="button" onClick={() => { setShowProfile(false); navigate("/profile?tab=profile"); }}>Profile</button>
+        <button type="button" onClick={() => { setShowProfile(false); navigate("/wishlist"); }}>My Wishlist</button>
+        <button type="button" onClick={() => { setShowProfile(false); navigate("/profile?tab=orders"); }}>My Orders</button>
+
+        <div className="profile-settings-wrapper-modern">
+          <button
+            type="button"
+            className="settings-trigger-modern"
+            onClick={() => setShowSettingsMenu((prev) => !prev)}
+          >
+            Settings
+            <span className={`arrow-icon ${showSettingsMenu ? 'up' : ''}`}>▼</span>
+          </button>
+          {showSettingsMenu && (
+            <div className="profile-inner-submenu">
+              <button type="button" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=settings&section=notifications"); }}>Notifications</button>
+              <button type="button" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=profile&edit=true"); }}>Edit Profile</button>
+              <div className="language-selector-modern">
+                <span>Language</span>
+                <select value={language} onChange={(e) => changeLanguage(e.target.value)}>
+                  <option value="en">English</option>
+                  <option value="ta">தமிழ்</option>
+                  <option value="hi">हिन्दी</option>
+                  <option value="te">తెలుగు</option>
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <button type="button" onClick={() => { setShowProfile(false); navigate("/contact"); }}>Help Center</button>
+        <div className="profile-divider-modern"></div>
+        <button type="button" className="logout-btn-modern" onClick={() => setShowLogoutPopup(true)}>Logout</button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="navbar">
       {/* DESKTOP VIEW */}
       <div className="navbar-container desktop-navbar">
-        <div className="nav-left">
-          <Link to="/">
-            <img src={Logo} alt="Logo" className="nav-logo-img" />
-          </Link>
+        <div className="nav-primary-row">
+          <div className="nav-left-group">
+            <Link to="/" className="nav-logo-link">
+              <img src={Logo} alt="Logo" className="nav-logo-img" />
+            </Link>
+          </div>
+
+          <div className="nav-center-group">
+            <div className="nav-search-bar">
+              <img
+                src="/search.svg"
+                alt="Search"
+                className="nav-search-icon-img"
+                onClick={handleSearch}
+              />
+              <input
+                type="text"
+                placeholder="Search for products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearch}
+              />
+              <img
+                src="/mic.png"
+                alt="Voice"
+                className={`nav-mic-icon-img ${isListening ? "listening" : ""}`}
+                onClick={handleVoiceSearch}
+              />
+              <img
+                src="/camera.svg"
+                alt="Camera"
+                className="nav-camera-icon-img"
+                onClick={triggerCameraSearch}
+              />
+            </div>
+          </div>
+
+          <div className="nav-right-group">
+            <Link to="/cart" className="cart-link-new">
+              <div className="cart-icon-wrap">
+                <img src={Cart} alt="Cart" />
+                <span className="cart-badge-new">{cartCount}</span>
+              </div>
+              <div className="cart-info-wrap">
+                <span className="cart-total-amt">₹{cartTotal.toLocaleString("en-IN")}</span>
+              </div>
+            </Link>
+          </div>
         </div>
 
-        <div className="nav-right">
-          <div className="nav-row-top">
+        <div className="nav-secondary-row">
+          <div className="nav-sec-left">
             <button type="button" className="nav-location" onClick={openLocationModal}>
               <span className="location-icon">📍</span>
               <span className="location-text">{displayLocationLabel}</span>
             </button>
-
-            <div className="nav-search-container">
-              <div className="nav-search-bar">
-                <img
-                  src="/search.svg"
-                  alt="Search"
-                  className="nav-search-icon-img"
-                  onClick={handleSearch}
-                />
-                <input
-                  type="text"
-                  placeholder="Search for products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={handleSearch}
-                />
-                <img
-                  src="/mic.png"
-                  alt="Voice"
-                  className={`nav-mic-icon-img ${isListening ? "listening" : ""}`}
-                  onClick={handleVoiceSearch}
-                />
-                <img
-                  src="/camera.svg"
-                  alt="Camera"
-                  className="nav-camera-icon-img"
-                  onClick={triggerCameraSearch}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      triggerCameraSearch();
-                    }
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="nav-actions">
-              {user ? (
-                <div className="profile-wrapper" ref={profileRef}>
-                  <button className="profile-button" onClick={() => setShowProfile(!showProfile)}>
-                    {getProfileImageSrc(user) ? (
-                      <img className="profile-nav-image" src={getProfileImageSrc(user)} alt="Profile" />
-                    ) : (
-                      <span className="profile-nav-image profile-nav-placeholder">👤</span>
-                    )}
-                    <span>{user.name ? user.name.split(" ")[0] : "Profile"}</span>
-                    <span className="profile-arrow">▼</span>
-                  </button>
-                  {showProfile && (
-                    <div className="profile-dropdown">
-                      <div className="profile-header">
-                        <strong>{user.name}</strong>
-                        <span>{user.email}</span>
-                      </div>
-                      <div className="profile-divider"></div>
-                      <div className="profile-dropdown-list">
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=profile"); }}>Profile</button>
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/wishlist"); }}>My Wishlist</button>
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=orders"); }}>My Orders</button>
-
-                        <div className="profile-settings-wrapper">
-                          <button
-                            type="button"
-                            className="profile-dropdown-item settings-trigger"
-                            onClick={() => setShowSettingsMenu((prev) => !prev)}
-                          >
-                            Settings
-                            <span className="settings-arrow">{showSettingsMenu ? "▼" : "▶"}</span>
-                          </button>
-                          {showSettingsMenu && (
-                            <div className="profile-submenu">
-                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=settings&section=notifications"); }}>Notifications</button>
-                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=profile&edit=true"); }}>Edit Profile</button>
-                              <div className="profile-submenu-row">
-                                <span className="profile-submenu-label">Language</span>
-                                <select value={language} onChange={(e) => changeLanguage(e.target.value)} className="profile-submenu-select">
-                                  <option value="en">English</option>
-                                  <option value="ta">தமிழ்</option>
-                                  <option value="hi">हिन्दी</option>
-                                  <option value="te">తెలుగు</option>
-                                </select>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/contact"); }}>Help Center</button>
-                        <button type="button" className="profile-dropdown-item logout-button" onClick={() => setShowLogoutPopup(true)}>Logout</button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link to="/login" className="login-link">
-                  <button className="login-btn">Login</button>
-                </Link>
-              )}
-
-                <Link to="/wishlist" className="wishlist-link" style={{marginRight: '10px', fontSize: '22px', textDecoration: 'none'}}>❤️</Link>
-                <Link to="/cart" className="cart-link" style={{display:'flex', alignItems:'center', gap:'8px', textDecoration:'none'}}>
-                  <div className="cart-icon-container">
-                    <img src={Cart} alt="Cart" />
-                    <span className="cart-badge">{cartCount}</span>
-                  </div>
-                  <span className="cart-total-nav" style={{color:'#a96f18', fontWeight:'700', fontSize:'14px'}}>₹{cartTotal.toLocaleString("en-IN")}</span>
-                </Link>
-            </div>
           </div>
 
-          <div className="nav-row-bottom">
+          <div className="nav-sec-center">
             <ul className="nav-menu-list">
               <li className={menu === "home" ? "active" : ""} onClick={() => setMenu("home")}><Link to="/">Home</Link></li>
               <li className={menu === "shop" ? "active" : ""} onClick={() => setMenu("shop")}><Link to="/shop">Shop</Link></li>
@@ -473,6 +459,28 @@ const Navbar = () => {
               )}
             </ul>
           </div>
+
+          <div className="nav-sec-right">
+            <div className="nav-actions">
+              <Link to="/wishlist" className="wishlist-link-row">❤️</Link>
+              {user ? (
+                <div className="profile-wrapper" ref={profileRef}>
+                  <button className="profile-button-circle" onClick={() => setShowProfile(!showProfile)}>
+                    {getProfileImageSrc(user) ? (
+                      <img className="profile-nav-image" src={getProfileImageSrc(user)} alt="Profile" />
+                    ) : (
+                      <span className="profile-nav-placeholder-circle">👤</span>
+                    )}
+                  </button>
+                  {showProfile && <ProfileDropdown />}
+                </div>
+              ) : (
+                <Link to="/login" className="login-link">
+                  <button className="login-btn-nav">Login</button>
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -480,14 +488,31 @@ const Navbar = () => {
       <div className="mobile-navbar">
         <div className="mobile-top-bar">
           <div className="mobile-navbar-content">
-            <div className="mobile-search-row">
-              <div className="mobile-search-box">
-                <img src="/search.svg" alt="Search" className="mobile-nav-icon-img" onClick={handleSearch} />
-                <input type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleSearch} />
-                <div className="mobile-search-right-icons">
-                  <img src="/mic.png" alt="Voice" className={`mobile-nav-icon-img ${isListening ? "listening" : ""}`} onClick={handleVoiceSearch} />
-                  <img src="/camera.svg" alt="Camera" className="mobile-nav-icon-img" onClick={triggerCameraSearch} />
+            <div className="mobile-primary-row">
+              <div className="mobile-left">
+                <button className="mobile-hamburger" onClick={() => setShowLogoutPopup(false)}>
+                  <span></span><span></span><span></span>
+                </button>
+                <Link to="/" className="mobile-logo-link">
+                  <img src={Logo} alt="Logo" className="mobile-logo-img" />
+                </Link>
+              </div>
+
+              <div className="mobile-center">
+                <div className="mobile-search-pill">
+                  <input type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleSearch} />
+                  <button className="mobile-search-go" onClick={handleSearch}><img src="/search.svg" alt="" /></button>
                 </div>
+              </div>
+
+              <div className="mobile-right">
+                <Link to="/cart" className="mobile-cart-new">
+                  <div className="mobile-cart-icon-box">
+                    <img src={Cart} alt="Cart" />
+                    <span className="mobile-cart-count-new">{cartCount}</span>
+                  </div>
+                  <span className="mobile-cart-total-new">₹{cartTotal.toLocaleString("en-IN")}</span>
+                </Link>
               </div>
             </div>
 
@@ -508,48 +533,9 @@ const Navbar = () => {
                       <span className="mobile-profile-placeholder">👤</span>
                     )}
                   </button>
-
-                  {showProfile && user && (
-                    <div className="mobile-profile-dropdown">
-                      <div className="profile-header"><strong>{user.name}</strong><span>{user.email}</span></div>
-                      <div className="profile-divider"></div>
-                      <div className="profile-dropdown-list">
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=profile"); }}>Profile</button>
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/wishlist"); }}>My Wishlist</button>
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/profile?tab=orders"); }}>My Orders</button>
-
-                        <div className="profile-settings-wrapper">
-                          <button
-                            type="button"
-                            className="profile-dropdown-item settings-trigger"
-                            onClick={() => setShowSettingsMenu((prev) => !prev)}
-                          >
-                            Settings
-                            <span className="settings-arrow">{showSettingsMenu ? "▼" : "▶"}</span>
-                          </button>
-                          {showSettingsMenu && (
-                            <div className="profile-submenu">
-                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=settings&section=notifications"); }}>Notifications</button>
-                              <button type="button" className="profile-submenu-item" onClick={() => { setShowSettingsMenu(false); setShowProfile(false); navigate("/profile?tab=profile&edit=true"); }}>Edit Profile</button>
-                              <div className="profile-submenu-row">
-                                <span className="profile-submenu-label">Language</span>
-                                <select value={language} onChange={(e) => changeLanguage(e.target.value)} className="profile-submenu-select">
-                                  <option value="en">English</option>
-                                  <option value="ta">தமிழ்</option>
-                                  <option value="hi">हिन्दी</option>
-                                  <option value="te">తెలుగు</option>
-                                </select>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        <button type="button" className="profile-dropdown-item" onClick={() => { setShowProfile(false); navigate("/contact"); }}>Help Center</button>
-                        <button type="button" className="profile-dropdown-item logout-button" onClick={() => { setShowProfile(false); setShowLogoutPopup(true); }}>Logout</button>
-                      </div>
-                    </div>
-                  )}
+                  {showProfile && user && <ProfileDropdown />}
                 </div>
+                
               </div>
             </div>
           </div>

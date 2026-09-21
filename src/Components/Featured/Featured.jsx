@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Featured.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import LoginPopup from "../LoginPopup/LoginPopup";
 import API_URL, { bypassHeaders } from "../../apiConfig";
@@ -12,6 +12,7 @@ const Featured = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [addingProductId, setAddingProductId] = useState(null);
   const [cartMap, setCartMap] = useState({}); // productId -> quantity
+  const navigate = useNavigate();
 
   const getLoggedInUser = () => {
     const user = localStorage.getItem("user");
@@ -165,6 +166,7 @@ const Featured = () => {
                     <span className="stars">★★★★☆</span>
                     <span className="count">12</span>
                   </div>
+                  <p className="shipping-info">Shipping, arrives <strong>Soon</strong></p>
                 </div>
               </div>
             );

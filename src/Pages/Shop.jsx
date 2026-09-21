@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import "./Shop.css";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 import LoginPopup from "../Components/LoginPopup/LoginPopup";
 import API_URL, { bypassHeaders } from "../apiConfig";
 
 // Icons for the top category strip
 import IdolsIcon from "../Components/Assets/idols.jpeg";
+import AllItems from "../Components/Assets/All_Items.jpg";
 import DiyasIcon from "../Components/Assets/diyas.jpeg";
 import IncenseIcon from "../Components/Assets/incense.jpeg";
 import EssentialsIcon from "../Components/Assets/Essentials.jpeg";
@@ -240,6 +241,7 @@ const Shop = () => {
   }, [products, category, search, selectedPriceRanges, selectedBrands, sortBy, selectedFestival]);
 
   const stripCategories = [
+    {name: "All", img: AllItems, link: "All"},
     { name: "Idols", img: IdolsIcon, link: "Idols" },
     { name: "Diyas", img: DiyasIcon, link: "Diyas" },
     { name: "Incense", img: IncenseIcon, link: "Incense" },
@@ -297,13 +299,14 @@ const Shop = () => {
               <h4 onClick={() => toggleFilter('category')}>Category {activeFilters.category ? '▴' : '▾'}</h4>
               {activeFilters.category && (
                 <div className="filter-options">
+                <label><input type="radio" name="cat" checked={category === "All"} onChange={() => setCategory("All")} /> All</label>
                    {["Idols", "Diyas", "Incense", "Pooja Essentials", "Pooja Kits"].map(c => (
                      <label key={c}>
                        <input type="radio" name="cat" checked={category === c} onChange={() => setCategory(c)} />
                        {c}
                      </label>
                    ))}
-                   <label><input type="radio" name="cat" checked={category === "All"} onChange={() => setCategory("All")} /> All</label>
+                   
                 </div>
               )}
             </div>

@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Hero.css";
 
 // Backgrounds and Main Graphics
-import BannerBg from "../../assets/banner1.png";
-import PaintStroke from "../../assets/paint01.png";
+import hero01 from "../../assets/hero_01.png";
+import hero02 from "../../assets/hero_02.png";
+import hero03 from "../../assets/hero_03.png";
+import hero04 from "../../assets/hero_04.png";
+import hero05 from "../../assets/hero_05.png";
+
+import mHero01 from "../../assets/mobile_hero_01.png";
+import mHero02 from "../../assets/mobile_hero_02.png";
+import mHero03 from "../../assets/mobile_hero_03.png";
+import mHero04 from "../../assets/mobile_hero_04.png";
+import mHero05 from "../../assets/mobile_hero_05.png";
+
 import Logo from "../Assets/lotus.png";
 import ShopNowButton from "../../assets/shop_now.png";
-import BringHome from "../../assets/bring_home.png";
-import DivineProducts from "../../assets/divine_products.png";
-import SalesButton from "../../assets/sales_started.png";
-import FastDelivery from "../../assets/fast_delivery.png";
-import SpecialOfferButton from "../../assets/special_offers.png";
 
 // Category Images from src/Components/Assets
 import Idols from "../Assets/idols.jpeg";
@@ -21,12 +26,35 @@ import Essentials from "../Assets/Essentials.jpeg";
 import Kumkum from "../Assets/kumkum.jpg";
 import Kits from "../Assets/pooja-kit.png";
 
+const desktopBanners = [hero01, hero02, hero03, hero04, hero05];
+const mobileBanners = [mHero01, mHero02, mHero03, mHero04, mHero05];
+
 const Hero = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const banners = isMobile ? mobileBanners : desktopBanners;
+
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(slideInterval);
+  }, [banners.length]);
+
   return (
     <section className="hero">
       {/* Main Visual Banner Area */}
       <div className="hero-main-banner">
-        {/* 1. Brand Header - MOVED INSIDE BANNER */}
+        {/* Brand Header */}
         <div className="hero-top-bar">
           <div className="brand-box">
             <img src={Logo} alt="" className="brand-logo-img" />
@@ -35,74 +63,34 @@ const Hero = () => {
               <p className="brand-tagline">Pooja Essentials • Spiritual Living • Online</p>
             </div>
           </div>
-          <div className="brand-quote">
-            <p>Light Up Your Prayers with the Best Pooja Essentials</p>
-          </div>
         </div>
 
-        <div className="banner-image-layer">
-          <img src={BannerBg} alt="Sacred Home Temple" />
-        </div>
-
-        <div className="banner-text-layer">
-          {/* CURVED BADGE TEXT */}
-          <div className="vibes-badge-curved">
-            <svg viewBox="0 0 400 60" className="vibes-svg">
-              <path id="vibes-curve" d="M 40 40 Q 200 10 360 40" fill="transparent" />
-              <text className="vibes-text">
-                <textPath href="#vibes-curve" startOffset="50%" textAnchor="middle">
-                  ✧ Divine Vibes, Now Online! ✧
-                </textPath>
-              </text>
-            </svg>
-          </div>
-
-          {/* CURVED TEXT WITH PAINT STROKE BG */}
-          <div className="promo-headline-curved">
-            <img src={PaintStroke} alt="" className="headline-paint-bg" />
-            <svg
-              className="sales-curved-svg"
-              viewBox="0 0 600 220"
-              role="img"
-              aria-label="Sales Started For Your Pooja"
-            >
-              <path id="sales-title-curve" d="M 45 155 Q 300 0 555 155" fill="transparent" />
-              <path id="sales-subtitle-curve" d="M 105 185 Q 300 85 495 185" fill="transparent" />
-              <text className="sales-title-text">
-                <textPath href="#sales-title-curve" startOffset="50%" textAnchor="middle">
-                  Sales Started
-                </textPath>
-              </text>
-              <text className="sales-subtitle-text">
-                <textPath href="#sales-subtitle-curve" startOffset="50%" textAnchor="middle">
-                  For Your Pooja !
-                </textPath>
-              </text>
-            </svg>
-          </div>
-
-          <div className="banner-footer-text">
-            <p className="purity-words">Pure • Sacred • Authentic</p>
-            <p className="blessed-home">Everything You Need for a Blessed Home</p>
-          </div>
-
-          {/* 3. Features Strip */}
-          <div className="hero-features-strip">
-            {[
-              { src: SalesButton, alt: "Sales started" },
-              { src: DivineProducts, alt: "Divine products" },
-              { src: BringHome, alt: "Bring home" },
-              { src: SpecialOfferButton, alt: "Special offers" },
-              { src: FastDelivery, alt: "Fast delivery" }
-            ].map((button, i) => (
-              <Link to="/shop" key={i} className="feature-item feature-button-card" aria-label={button.alt} > 
-              <img src={button.src} alt={button.alt} className="feature-button-image" /> </Link>
+        {/* SLIDING BANNER */}
+        <div className="banner-viewport">
+          <div
+            className="banner-inner-slider"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {banners.map((img, index) => (
+              <div key={index} className="banner-slide">
+                 <img src={img} alt={`Banner ${index + 1}`} className="banner-img-element" />
+              </div>
             ))}
           </div>
         </div>
+
+        <div className="slider-dots">
+          {banners.map((_, index) => (
+            <span
+              key={index}
+              className={`dot ${index === currentSlide ? "active" : ""}`}
+              onClick={() => setCurrentSlide(index)}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* 4. Explore Categories */}
+      {/* Explore Categories */}
       <div className="hero-explore-section">
         <div className="explore-header">
            <span className="script-text">Explore Our</span>
@@ -143,7 +131,7 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* 5. Bottom Navigation Bar */}
+      {/* Bottom Navigation Bar */}
       <div className="hero-action-bar">
         <div className="action-left-keywords">
           <span>Traditional</span>

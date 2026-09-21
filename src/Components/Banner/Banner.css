@@ -7,23 +7,23 @@
     position: relative;
     border-radius: 14px;
     overflow: hidden;
-    height: 400px; /* Increased height for better background display */
+    height: 400px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
     transition: background-color 0.4s ease;
 }
 
 .banner-slider {
     display: flex;
-    width: 100%;
     height: 100%;
+    /* Remove width: 100% to allow slides to sit side-by-side */
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .banner-slide {
-    flex: 0 0 100%;
+    flex: 0 0 100%; /* Each slide takes exactly 100% of the carousel width */
     width: 100%;
     height: 100%;
-    position: relative; /* For absolute image layer */
+    position: relative;
 }
 
 /* BACKGROUND IMAGE LAYER */
@@ -36,7 +36,7 @@
 .banner-main-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Fill the entire area */
+    object-fit: cover;
     display: block;
 }
 
@@ -53,8 +53,8 @@
 }
 
 .banner-text-content {
-    background: rgba(255, 255, 255, 0.15); /* Semi-transparent */
-    backdrop-filter: blur(12px); /* LIGHT BLUR EFFECT */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     padding: 40px;
     border-radius: 20px;
@@ -101,7 +101,6 @@
 .banner-pill-btn:hover {
     background: #f0f0f0;
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
 
 /* TOP RIGHT NAVIGATION */
@@ -130,12 +129,6 @@
     font-size: 14px;
     color: #333;
     transition: all 0.2s;
-}
-
-.banner-arrow-btn:hover,
-.banner-play-btn:hover {
-    background: white;
-    transform: scale(1.1);
 }
 
 /* BOTTOM INFO */
@@ -189,12 +182,6 @@
 
     .banner-title {
         font-size: 24px;
-        margin-bottom: 20px;
-    }
-
-    .banner-pill-btn {
-        padding: 10px 24px;
-        font-size: 13px;
     }
 
     .banner-nav-overlay {
@@ -205,10 +192,6 @@
     .banner-arrow-btn, .banner-play-btn {
         width: 32px;
         height: 32px;
-    }
-
-    .info-header h2 {
-        font-size: 22px;
     }
 }
 

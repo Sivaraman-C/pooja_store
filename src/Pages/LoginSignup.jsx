@@ -83,7 +83,7 @@ const LoginSignup = () => {
       setStep(2);
     } catch (err) {
       console.error("Login fetch error:", err);
-      setError(`Connection Error: ${err.message}. Ensure your laptop is on IP 192.168.1.8 and server is running.`);
+      setError(`Connection Error: ${err.message}. Please ensure the server is reachable.`);
     } finally {
       setLoading(false);
     }
