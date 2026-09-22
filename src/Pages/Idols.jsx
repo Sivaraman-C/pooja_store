@@ -8,6 +8,11 @@ import IdolsBanner1 from "../Components/Assets/idols.jpeg";
 import IdolsBanner2 from "../assets/Banner_1.png";
 import IdolsBanner3 from "../assets/hero_01.png";
 
+// Deity Banners
+import KrishnaBanner from "../assets/Shiva/krishna1.jpg";
+import LakshmiBanner from "../assets/Shiva/lakshmi1.jpeg";
+import VishnuBanner from "../assets/Shiva/vishnu1.jpeg";
+
 const idolBanners = [
   { id: 1, img: IdolsBanner1, title: "Sacred Idols & Murtis", sub: "Bring Home the Divine Presence" },
   { id: 2, img: IdolsBanner2, title: "Handcrafted Devotion", sub: "Premium Collection for Your Home Temple" },
@@ -19,6 +24,7 @@ const Idols = () => {
   const [cartMap, setCartMap] = useState({}); // productId -> quantity
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [activeDeityTab, setActiveDeityTab] = useState(null); // Tracks Krishna, Lakshmi, or Vishnu
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -120,6 +126,9 @@ const Idols = () => {
   const newlyArrived = products.slice(0, 8);
   const shivaProducts = getProductsByKeyword("Shiva");
   const ganeshaProducts = getProductsByKeyword("Ganesha");
+  const krishnaProducts = getProductsByKeyword("Krishna");
+  const lakshmiProducts = getProductsByKeyword("Lakshmi");
+  const vishnuProducts = getProductsByKeyword("Vishnu");
   const murugaProducts = getProductsByKeyword("Muruga");
   const parvathiProducts = getProductsByKeyword("Parvathi");
 
@@ -162,7 +171,7 @@ const Idols = () => {
     );
   };
 
-  const renderDeitySection = (title, subtitle, items, bannerTitle, bannerHeading, bannerImg) => {
+  const renderDeitySection = (title, subtitle, items, bannerTitle, bannerHeading, bannerImg, isBannerLeft = false) => {
     if (items.length === 0) return null;
 
     return (
@@ -175,7 +184,7 @@ const Idols = () => {
            <Link to={`/shop?search=${title}`} className="view-all-modern">View all</Link>
         </div>
 
-        <div className="section-content-modern">
+        <div className={`section-content-modern ${isBannerLeft ? 'banner-left' : ''}`}>
            <div className="products-scroll-area">
               {items.slice(0, 4).map(product => renderProductCard(product))}
            </div>
@@ -227,7 +236,7 @@ const Idols = () => {
           </div>
         </div>
 
-        {/* 3. Deity Sections */}
+        {/* 3. Deity Sections - UNIFIED LAYOUT TO MATCH SHIVA */}
         {renderDeitySection(
           "Shiva Collection",
           "Divine Mahadev idols for your home.",
@@ -245,6 +254,46 @@ const Idols = () => {
           "Handcrafted Siddhivinayak Murtis",
           ganeshaProducts[0]?.image ? (ganeshaProducts[0].image.startsWith("http") ? ganeshaProducts[0].image : `${API_URL}${ganeshaProducts[0].image}`) : IdolsBanner1
         )}
+
+        {/* SPECIAL TRIPLE ACCORDION SECTION (KRISHNA, LAKSHMI, VISHNU) */}
+        <div className="triple-accordion-container">
+           <div className="accordion-banner-row">
+              <div
+                className={`accordion-trigger-card ${activeDeityTab === 'Krishna' ? 'active' : ''}`}
+                style={{ backgroundImage: `url(${KrishnaBanner})` }}
+                onClick={() => setActiveDeityTab(activeDeityTab === 'Krishna' ? null : 'Krishna')}
+              >
+                 <div className="trigger-overlay"><h3>Krishna</h3></div>
+              </div>
+              <div
+                className={`accordion-trigger-card ${activeDeityTab === 'Lakshmi' ? 'active' : ''}`}
+                style={{ backgroundImage: `url(${LakshmiBanner})` }}
+                onClick={() => setActiveDeityTab(activeDeityTab === 'Lakshmi' ? null : 'Lakshmi')}
+              >
+                 <div className="trigger-overlay"><h3>Lakshmi</h3></div>
+              </div>
+              <div
+                className={`accordion-trigger-card ${activeDeityTab === 'Vishnu' ? 'active' : ''}`}
+                style={{ backgroundImage: `url(${VishnuBanner})` }}
+                onClick={() => setActiveDeityTab(activeDeityTab === 'Vishnu' ? null : 'Vishnu')}
+              >
+                 <div className="trigger-overlay"><h3>Vishnu</h3></div>
+              </div>
+           </div>
+
+           {/* EXPANDABLE PRODUCTS AREA */}
+           {activeDeityTab && (
+             <div className="accordion-products-area">
+                <div className="accordion-products-header">
+                   <h3>{activeDeityTab} Collection</h3>
+                   <Link to={`/shop?search=${activeDeityTab}`} className="view-all-link">View all {activeDeityTab} idols</Link>
+                </div>
+                <div className="accordion-grid">
+                   {(activeDeityTab === 'Krishna' ? krishnaProducts : activeDeityTab === 'Lakshmi' ? lakshmiProducts : vishnuProducts).slice(0, 8).map(product => renderProductCard(product))}
+                </div>
+             </div>
+           )}
+        </div>
 
         {renderDeitySection(
           "Muruga & Murugappa",

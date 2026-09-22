@@ -247,12 +247,106 @@
     align-items: stretch;
 }
 
+.section-content-modern.banner-left {
+    grid-template-columns: 450px 1fr;
+}
+
+.section-content-modern.banner-left .feature-banner-card {
+    order: -1;
+}
+
 .products-scroll-area {
     display: flex;
     gap: 20px;
     overflow-x: auto;
     scrollbar-width: none;
     padding-bottom: 10px;
+}
+
+/* TRIPLE ACCORDION STYLES */
+.triple-accordion-container {
+    margin-bottom: 60px;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.accordion-banner-row {
+    display: flex;
+    height: 350px;
+    gap: 0;
+}
+
+.accordion-trigger-card {
+    flex: 1;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    cursor: pointer;
+    transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s;
+    filter: grayscale(40%);
+}
+
+.accordion-trigger-card:hover {
+    filter: grayscale(0%);
+    flex: 1.2;
+}
+
+.accordion-trigger-card.active {
+    filter: grayscale(0%);
+    flex: 2;
+    border-bottom: 5px solid #6200ee;
+}
+
+.trigger-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 30px;
+}
+
+.trigger-overlay h3 {
+    color: white;
+    margin: 0;
+    font-size: 32px;
+    font-weight: 900;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.accordion-products-area {
+    padding: 40px;
+    background: #fafafa;
+    border-top: 1px solid #eee;
+    animation: idolSlideDown 0.5s ease-out forwards;
+}
+
+@keyframes idolSlideDown {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 2000px; }
+}
+
+.accordion-products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.accordion-products-header h3 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111;
+    margin: 0;
+}
+
+.accordion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
 }
 
 .feature-banner-card {
@@ -282,14 +376,34 @@
 
 /* RESPONSIVE */
 @media (max-width: 1200px) {
-    .section-content-modern { grid-template-columns: 1fr; }
-    .feature-banner-card { order: -1; min-height: 300px; }
+    .section-content-modern {
+        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* On mobile, banners come first, products follow */
+    .feature-banner-card {
+        order: 0 !important;
+        min-height: 300px;
+    }
+
+    .products-scroll-area {
+        order: 1 !important;
+    }
+
+    .section-content-modern.banner-left .feature-banner-card {
+        order: 0 !important;
+    }
 }
 
 @media (max-width: 768px) {
     .idols-carousel-banner { height: 350px; }
     .idols-slide-overlay { padding-left: 20px; padding-right: 20px; text-align: center; align-items: center; }
     .idols-nav-controls { top: 20px; right: 20px; }
+
+    .accordion-banner-row { height: 250px; }
+    .accordion-products-area { padding: 20px; }
 }
 
 @media (max-width: 480px) {
@@ -297,4 +411,6 @@
     .idol-product-card-v2 { flex: 0 0 180px; width: 180px; }
     .card-img-area { height: 160px; padding: 10px; }
     .b-title { font-size: 28px; }
+
+    .accordion-trigger-card h3 { font-size: 18px; }
 }
