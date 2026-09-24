@@ -1,0 +1,27 @@
+.global-language-switcher {
+    margin-top: 30px;
+    padding-left: 5px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.lang-select-dropdown {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background: white;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Ensure Google Translate elements don't mess up layout */
+.skiptranslate {
+    display: none !important;
+}
+body {
+    top: 0 !important;
+}

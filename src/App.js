@@ -16,6 +16,9 @@ import FestivalCalendar from "./Components/FestivalCalendar/FestivalCalendar";
 import Menu from "./Pages/Menu";
 import Wishlist from "./Pages/Wishlist";
 import Idols from "./Pages/Idols";
+import Diyas from "./Pages/Diyas";
+import Incense from "./Pages/Incense";
+import Essentials from "./Pages/Essentials";
 
 import AdminLayout from "./Components/Admin/AdminLayout/AdminLayout";
 import Dashboard from "./Components/Admin/Dashboard/Dashboard";
@@ -203,6 +206,26 @@ function App() {
             <>
               <Navbar />
               <Idols />
+            </>
+          }
+        />
+
+        <Route
+          path="/diyas"
+          element={
+            <>
+              <Navbar />
+              <Diyas />
+            </>
+          }
+        />
+
+        <Route
+          path="/incense"
+          element={
+            <>
+              <Navbar />
+              <Incense />
             </>
           }
         />

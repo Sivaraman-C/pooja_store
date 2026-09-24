@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Menu.css";
 import LogoutPopup from "../Components/LogoutPopup/LogoutPopup";
+import LanguageSwitcher from "../Components/LanguageSwitcher/LanguageSwitcher";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ const Menu = () => {
         <Link to="/cart" className="menu-card">My Cart</Link>
         <div className="menu-card logout-card" onClick={() => setShowLogoutPopup(true)}>Logout</div>
       </div>
+
+      <LanguageSwitcher />
 
       {showLogoutPopup && (
         <LogoutPopup

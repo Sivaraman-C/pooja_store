@@ -1184,37 +1184,213 @@
 
   /* UPCOMING SECTION MOBILE */
   .upcoming-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
   }
 
   .upcoming-title-card {
-    grid-column: span 2 !important;
-    grid-row: auto !important;
-    padding: 25px !important;
-    height: 180px !important;
-  }
-
-  .upcoming-title-card h2 {
-    font-size: 24px !important;
-  }
-
-  .upcoming-card {
-    grid-column: span 1 !important;
-    height: 200px !important;
+    grid-column: 2 / span 2 !important;
+    grid-row: 2 !important;
+    padding: 15px 10px !important;
+    height: 160px !important;
     border-radius: 16px !important;
   }
 
+  .upcoming-title-card h2 {
+    font-size: 20px !important;
+  }
+
+  .title-eyebrow {
+    font-size: 9px !important;
+    letter-spacing: 1.5px !important;
+  }
+
+  .upcoming-title-card .festival-icon {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 12px !important;
+  }
+
+  .upcoming-title-card .icon-diya { left: 8px !important; top: 8px !important; }
+  .upcoming-title-card .icon-lotus { right: 8px !important; top: 8px !important; }
+  .upcoming-title-card .icon-kalash { left: 8px !important; bottom: 8px !important; top: auto !important; }
+  .upcoming-title-card .icon-bell { right: 8px !important; bottom: 8px !important; top: auto !important; }
+
+  .upcoming-card {
+    grid-column: span 1 !important;
+    height: 160px !important;
+    border-radius: 14px !important;
+  }
+
   .upcoming-info {
-    bottom: 15px;
-    left: 15px;
-    right: 15px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
   }
 
   .upcoming-info h3 {
-    font-size: 16px !important;
+    font-size: 13px !important;
+  }
+
+  .upcoming-date {
+    font-size: 9px !important;
+  }
+
+  .upcoming-arrow {
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
   }
 
   .festival-modal { padding: 40px 24px 28px; width: 92%; }
   .festival-modal h2 { font-size: 35px; }
+}
+
+/* POOJA DETAILS & ESSENTIALS IN MODAL */
+.pooja-toggle-btn {
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  color: var(--festival-primary);
+  border: 1px solid var(--festival-primary);
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 20px 0 15px;
+  transition: all 0.2s ease;
+}
+
+.pooja-toggle-btn:hover {
+  background: rgba(143, 50, 31, 0.05);
+}
+
+.pooja-details-container {
+  text-align: left;
+  background: #fcf9f2;
+  border: 1px solid var(--festival-border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.pooja-steps-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--festival-text);
+  margin: 0 0 12px;
+}
+
+.pooja-steps-list {
+  margin: 0 0 20px;
+  padding-left: 20px;
+  color: var(--festival-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pooja-steps-list li {
+  margin-bottom: 10px;
+}
+
+.pooja-final-prayer {
+  background: #fdf5e6;
+  border-left: 4px solid var(--festival-gold);
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--festival-primary-dark);
+  line-height: 1.5;
+}
+
+.festival-essentials-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.essentials-list-scroll {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-bottom: 12px;
+  scrollbar-width: thin;
+}
+
+.festival-essentials-header h4 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--festival-text);
+  margin: 0;
+}
+
+.essentials-count {
+  font-size: 12px;
+  color: var(--festival-muted);
+  font-weight: 600;
+}
+
+.essential-product-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 1px solid var(--festival-border);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.essential-product-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f9f9f9;
+  flex-shrink: 0;
+}
+
+.essential-product-info {
+  flex: 1;
+  text-align: left;
+}
+
+.essential-product-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--festival-text);
+  margin: 0 0 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.essential-product-price {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--festival-primary);
+}
+
+.add-all-essentials-btn {
+  width: 100%;
+  height: 44px;
+  background: var(--festival-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.add-all-essentials-btn:hover {
+  background: var(--festival-primary-dark);
 }

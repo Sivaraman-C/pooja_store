@@ -29,7 +29,7 @@ const Category = () => {
         {/* 2. MIDDLE COLUMN */}
         <div className="cat-middle-col">
            {/* Top Medium Card */}
-           <Link to="/shop?category=Diyas%20%26%20Lamps" className="cat-box box-medium">
+           <Link to="/diyas" className="cat-box box-medium">
               <div className="cat-image-layer">
                  <img src={Diyas} alt="Diyas" />
               </div>
@@ -64,7 +64,7 @@ const Category = () => {
         </div>
 
         {/* 3. TALL RIGHT CARD */}
-        <Link to="/shop?category=Incense" className="cat-box box-tall">
+        <Link to="incense" className="cat-box box-tall">
            <div className="cat-image-layer">
               <img src={Incense} alt="Incense" />
            </div>

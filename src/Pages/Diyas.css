@@ -1,0 +1,424 @@
+.diyas-page {
+    width: 100%;
+    background: #ffffff;
+    padding-bottom: 80px;
+    font-family: 'Inter', sans-serif;
+}
+
+.diyas-content-container {
+    width: min(1440px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+.main-section-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111;
+    margin: 40px 0 25px;
+    padding-left: 10px;
+}
+
+/* 1. CAROUSEL BANNER */
+.diyas-carousel-banner {
+    width: 100%;
+    height: 450px;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+}
+
+.diyas-slider {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.diyas-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.diyas-slide-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.diyas-slide-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 8%;
+    color: white;
+}
+
+.diyas-slide-overlay h1 {
+    font-size: clamp(32px, 5vw, 64px);
+    margin: 0;
+    font-weight: 900;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    max-width: 650px;
+    line-height: 1.1;
+}
+
+.diyas-slide-overlay p {
+    font-size: clamp(16px, 2vw, 24px);
+    margin-top: 15px;
+    opacity: 0.95;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* TOP RIGHT CONTROLS */
+.diyas-nav-controls {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.diyas-nav-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s;
+}
+
+.diyas-nav-btn:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+/* PRODUCT CARD V2 STYLE FOR DIYAS */
+.diya-product-card-v2,
+.idol-product-card-v2 {
+    flex: 0 0 260px;
+    width: 260px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s;
+    position: relative;
+}
+
+.diya-product-card-v2:hover,
+.idol-product-card-v2:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.card-img-area {
+    width: 100%;
+    height: 240px;
+    position: relative;
+    padding: 15px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-img-area img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.card-wish-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 5;
+    color: #888;
+}
+
+.card-details-area {
+    padding: 0 15px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.purple-add-btn {
+    width: 100%;
+    height: 44px;
+    background: #6200ee;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.purple-add-btn:hover {
+    background: #4b00b5;
+}
+
+.purple-qty-pill {
+    width: 100%;
+    height: 44px;
+    background: #6200ee;
+    color: white;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.purple-qty-pill button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.card-meta { text-align: left; }
+.card-brand-tag { font-size: 12px; color: #72767e; margin-bottom: 6px; display: block; }
+.card-price-bold { font-size: 22px; font-weight: 800; color: #111; margin-bottom: 5px; }
+.card-title-text { font-size: 15px; font-weight: 400; color: #444; margin: 0 0 10px; line-height: 1.4; height: 2.8em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.card-rating-row { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+.card-stars { color: #ffc107; font-size: 13px; }
+.card-count { color: #888; font-size: 12px; }
+.card-shipping-text { font-size: 13px; color: #555; margin: 0; }
+
+.horizontal-scroll-new {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px 10px 30px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* DIYA CATEGORY / COLLECTION SECTIONS */
+.diya-section-modern,
+.deity-section-modern {
+    margin-bottom: 60px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+}
+
+.section-header-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.header-text h3 { font-size: 24px; font-weight: 800; color: #111; margin: 0 0 5px; }
+.header-text p { font-size: 14px; color: #666; margin: 0; }
+.view-all-modern { color: #111; font-weight: 600; font-size: 14px; text-decoration: underline; }
+
+.section-content-modern {
+    display: grid;
+    grid-template-columns: 1fr 450px;
+    gap: 30px;
+    align-items: stretch;
+}
+
+.section-content-modern.banner-left {
+    grid-template-columns: 450px 1fr;
+}
+
+.section-content-modern.banner-left .feature-banner-card {
+    order: -1;
+}
+
+.products-scroll-area {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 10px;
+}
+
+/* TRIPLE ACCORDION STYLES FOR DIYAS */
+.triple-accordion-container {
+    margin-bottom: 60px;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.accordion-banner-row {
+    display: flex;
+    height: 350px;
+    gap: 0;
+}
+
+.accordion-trigger-card {
+    flex: 1;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    cursor: pointer;
+    transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s;
+    filter: grayscale(40%);
+}
+
+.accordion-trigger-card:hover {
+    filter: grayscale(0%);
+    flex: 1.2;
+}
+
+.accordion-trigger-card.active {
+    filter: grayscale(0%);
+    flex: 2;
+    border-bottom: 5px solid #6200ee;
+}
+
+.trigger-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 30px;
+}
+
+.trigger-overlay h3 {
+    color: white;
+    margin: 0;
+    font-size: 32px;
+    font-weight: 900;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.accordion-products-area {
+    padding: 40px;
+    background: #fafafa;
+    border-top: 1px solid #eee;
+    animation: diyaSlideDown 0.5s ease-out forwards;
+}
+
+@keyframes diyaSlideDown {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 2000px; }
+}
+
+.accordion-products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.accordion-products-header h3 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111;
+    margin: 0;
+}
+
+.accordion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+.feature-banner-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 40px;
+    display: flex;
+    align-items: flex-start;
+    min-height: 380px;
+}
+
+.feature-banner-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    z-index: 1;
+}
+
+.banner-content { position: relative; z-index: 2; max-width: 80%; }
+.b-eyebrow { font-size: 14px; font-weight: 700; color: #1a0dab; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px; }
+.b-title { font-size: 38px; font-weight: 900; line-height: 1.1; color: #1a0dab; margin: 0 0 30px; }
+.b-shop-btn { display: inline-block; padding: 12px 28px; background: white; color: #111; border: 1px solid #ccc; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 15px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .section-content-modern {
+        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .feature-banner-card {
+        order: 0 !important;
+        min-height: 300px;
+    }
+
+    .products-scroll-area {
+        order: 1 !important;
+    }
+
+    .section-content-modern.banner-left .feature-banner-card {
+        order: 0 !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .diyas-carousel-banner { height: 350px; }
+    .diyas-slide-overlay { padding-left: 20px; padding-right: 20px; text-align: center; align-items: center; }
+    .diyas-nav-controls { top: 20px; right: 20px; }
+
+    .accordion-banner-row { height: 250px; }
+    .accordion-products-area { padding: 20px; }
+}
+
+@media (max-width: 480px) {
+    .diyas-carousel-banner { height: 280px; }
+    .diya-product-card-v2,
+    .idol-product-card-v2 { flex: 0 0 180px; width: 180px; }
+    .card-img-area { height: 160px; padding: 10px; }
+    .b-title { font-size: 28px; }
+
+    .accordion-trigger-card h3 { font-size: 18px; }
+}
