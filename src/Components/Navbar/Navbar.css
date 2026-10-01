@@ -361,7 +361,10 @@ body {
 }
 
 .cart-icon-wrap { position: relative; display: flex; align-items: center; }
-.cart-icon-wrap img { width: 26px; height: 26px; }
+.cart-emoji-icon {
+    font-size: 22px;
+    line-height: 1;
+}
 .cart-badge-new {
     position: absolute;
     top: -8px;
@@ -544,6 +547,7 @@ body {
 
 .mobile-right { display: flex; align-items: center; }
 .mobile-cart-new { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; }
+.mobile-cart-new .cart-emoji-icon { color: #ffffff; }
 .mobile-cart-icon-box { position: relative; }
 .mobile-cart-icon-box img { width: 24px; filter: brightness(0) invert(1); }
 .mobile-cart-count-new { position: absolute; top: -8px; right: -8px; background: #ffc220; color: #333; font-size: 10px; font-weight: 800; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }

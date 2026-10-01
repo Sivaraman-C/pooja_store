@@ -140,21 +140,25 @@ const Navbar = () => {
     }
 
     try {
+      const countRes = await fetch(`${API_URL}/api/cart/count?user_id=${userId}`, {
+        headers: { ...bypassHeaders }
+      });
+      const countData = await countRes.json();
+      if (countRes.ok) {
+        setCartCount(Number(countData.count || 0));
+      }
+
       const response = await fetch(`${API_URL}/api/cart?user_id=${userId}`, {
         headers: { ...bypassHeaders }
       });
       const data = await response.json();
       if (response.ok && data.cart) {
         const cart = data.cart;
-        const count = cart.reduce((acc, item) => acc + Number(item.quantity), 0);
         const total = cart.reduce((acc, item) => acc + (Number(item.price) * Number(item.quantity)), 0);
-        setCartCount(count);
         setCartTotal(total);
       }
     } catch (error) {
       console.error("Navbar cart data error:", error);
-      setCartCount(0);
-      setCartTotal(0);
     }
   };
 
@@ -429,7 +433,7 @@ const Navbar = () => {
           <div className="nav-right-group">
             <Link to="/cart" className="cart-link-new">
               <div className="cart-icon-wrap">
-                <img src={Cart} alt="Cart" />
+                <span className="cart-emoji-icon">🛒</span>
                 <span className="cart-badge-new">{cartCount}</span>
               </div>
               <div className="cart-info-wrap">
@@ -508,7 +512,7 @@ const Navbar = () => {
               <div className="mobile-right">
                 <Link to="/cart" className="mobile-cart-new">
                   <div className="mobile-cart-icon-box">
-                    <img src={Cart} alt="Cart" />
+                    <span className="cart-emoji-icon">🛒</span>
                     <span className="mobile-cart-count-new">{cartCount}</span>
                   </div>
                   <span className="mobile-cart-total-new">₹{cartTotal.toLocaleString("en-IN")}</span>
