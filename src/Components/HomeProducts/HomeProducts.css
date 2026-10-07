@@ -1,0 +1,201 @@
+.home-products-section {
+  width: 100%;
+  padding: 40px 0 70px;
+}
+
+.home-products-container {
+  width: min(1280px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.home-products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.home-products-header p {
+  margin: 0 0 8px;
+  color: #756d63;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.home-products-header h2 {
+  margin: 0;
+  color: #333;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.home-products-header a {
+  color: #a96f18;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-products-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.home-products-grid .walmart-card {
+  min-width: 0;
+  background-image: url(../../assets/divine_soft_bg.png);
+}
+
+.home-products-grid .card-image-wrap {
+  position: relative;
+}
+
+.home-products-grid .home-products-image-button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-products-grid .home-products-image-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.home-products-grid .card-details {
+  flex: 1;
+}
+
+.home-products-grid .card-name {
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+.home-products-message,
+.home-products-error {
+  margin: 0;
+  padding: 18px 0;
+  color: #62584e;
+}
+
+.home-products-error {
+  color: #a12626;
+}
+
+@media (max-width: 1000px) {
+  .home-products-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .home-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .home-products-grid .walmart-card {
+    flex-direction: column !important;
+    height: auto !important;
+    padding-bottom: 12px;
+  }
+
+  .home-products-grid .card-image-wrap {
+    width: 100% !important;
+    height: 170px !important;
+    padding: 10px !important;
+  }
+
+  .home-products-grid .card-add-area {
+    position: static;
+    width: 100%;
+    padding: 8px 10px 4px;
+  }
+
+  .home-products-grid .card-details {
+    padding: 8px 10px;
+  }
+
+  .home-products-grid .add-btn-expandable,
+  .home-products-grid .qty-selector-pill {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .home-products-header h2 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-products-container {
+    width: calc(100% - 24px);
+  }
+
+  .home-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .home-products-grid .walmart-card {
+    flex-direction: column !important;
+    height: auto !important;
+    min-width: 0;
+    padding-bottom: 10px;
+    border-radius: 14px;
+  }
+
+  .home-products-grid .card-image-wrap {
+    width: 100% !important;
+    height: 150px !important;
+    padding: 8px !important;
+  }
+
+  .home-products-grid .card-add-area {
+    position: static;
+    width: 100%;
+    padding: 8px 8px 2px;
+  }
+
+  .home-products-grid .card-details {
+    min-width: 0;
+    padding: 4px 8px 0 !important;
+  }
+
+  .home-products-grid .price-now {
+    font-size: 17px;
+  }
+
+  .home-products-grid .card-name {
+    font-size: 13px;
+  }
+
+  .home-products-grid .card-rating {
+    margin-bottom: 4px;
+  }
+
+  .home-products-grid .shipping-info {
+    font-size: 11px;
+  }
+
+  .home-products-grid .add-btn-expandable,
+  .home-products-grid .qty-selector-pill {
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .home-products-header {
+    align-items: center;
+  }
+}

@@ -6,6 +6,7 @@ import Category from "../Components/Category/Category";
 import Featured from "../Components/Featured/Featured";
 import ExtraCategories from "../Components/Category/ExtraCategories";
 import PoojaGuide from "../Components/PoojaGuide/PoojaGuide";
+import HomeProducts from "../Components/HomeProducts/HomeProducts";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <Featured />
       <ExtraCategories />
       <PoojaGuide />
+      <HomeProducts />
     </div>
   );
 };

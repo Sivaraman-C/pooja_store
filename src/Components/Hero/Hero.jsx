@@ -15,9 +15,6 @@ import hero05 from "../../assets/hero_05.png";
 // import mHero04 from "../../assets/mobile_hero_04.png";
 // import mHero05 from "../../assets/mobile_hero_05.png";
 
-// import Logo from "../Assets/lotus.png";
-import ShopNowButton from "../../assets/shop_now.png";
-
 // Category Images from src/Components/Assets
 import Idols from "../Assets/idols.jpeg";
 import Diyas from "../Assets/diyas.jpeg";
@@ -142,26 +139,39 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Bottom Navigation Bar */}
+      {/* Store benefits */}
       <div className="hero-action-bar">
-        <div className="action-left-keywords">
-          <span>Traditional</span>
-          <span className="dot">•</span>
-          <span>Trusted</span>
-          <span className="dot">•</span>
-          <span>Divine</span>
+        <div className="action-benefit">
+          <svg className="action-benefit-icon" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="17" />
+            <path d="M14 17h12l-1 12h-10l-1-12Z M17 17v-2a3 3 0 0 1 6 0v2" />
+          </svg>
+          <span>100% Pure &amp; Authentic<br />Products</span>
         </div>
-
-        <div className="action-center-btn">
-          <Link to="/shop" className="shop-now-image-link" aria-label="Shop Now">
-            <img src={ShopNowButton} alt="Shop Now" className="shop-now-image-button" />
-          </Link>
+        <div className="action-benefit">
+          <svg className="action-benefit-icon" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="17" />
+            <rect x="12" y="14" width="16" height="13" rx="2" />
+            <path d="M12 18h16m-11 5h4" />
+          </svg>
+          <span>Secure Payment<br />Options</span>
         </div>
-
-        <div className="action-right-info">
-           <div className="journey-text">
-              <p>Your Spiritual Journey <strong>Starts Here!</strong></p>
-           </div>
+        <div className="action-benefit">
+          <svg className="action-benefit-icon" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="17" />
+            <path d="M10 16h14v11H10zM24 19h4l3 4v4h-7" />
+            <circle cx="15" cy="28" r="2" />
+            <circle cx="27" cy="28" r="2" />
+          </svg>
+          <span>Fast &amp; Reliable<br />Delivery</span>
+        </div>
+        <div className="action-benefit">
+          <svg className="action-benefit-icon" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="17" />
+            <path d="M20 11 27 14v6c0 5-3 8-7 10-4-2-7-5-7-10v-6l7-3Z" />
+            <path d="M17 20h6m-3-3v6" />
+          </svg>
+          <span>Dedicated Customer<br />Support</span>
         </div>
       </div>
     </section>

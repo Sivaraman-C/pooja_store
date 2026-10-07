@@ -1,7 +1,15 @@
 .category-section {
+    background-image: url(../../assets/divine_soft_bg.png);
     width: 100%;
     padding: 40px 0 60px;
     font-family: 'Inter', sans-serif;
+    border: 1px solid #D97706;
+  border-radius: 20px;
+  padding: 35px 40px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  width: min(1280px, calc(100% - 40px));
+  margin: 0 auto;
 }
 
 .category-section .category-grid-container {
@@ -9,7 +17,7 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1.3fr 1fr;
-    grid-template-rows: 360px 240px;
+    grid-template-rows: 240px 240px;
     gap: 15px;
 }
 
@@ -73,7 +81,7 @@
 }
 
 .category-section .box-medium {
-    flex: 0 0 360px;
+    flex: 0 0 240px;
     height: 500px;
 }
 

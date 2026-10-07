@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./Featured.css";
-import { Link, useNavigate } from "react-router-dom";
 
 import LoginPopup from "../LoginPopup/LoginPopup";
 import ProductModal from "../ProductModal/ProductModal";
@@ -14,17 +13,16 @@ const Featured = () => {
   const [addingProductId, setAddingProductId] = useState(null);
   const [cartMap, setCartMap] = useState({}); // productId -> quantity
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const navigate = useNavigate();
 
   const getLoggedInUser = () => {
     const user = localStorage.getItem("user");
     try { return user ? JSON.parse(user) : null; } catch { return null; }
   };
 
-  const getUserId = () => {
+  const getUserId = useCallback(() => {
     const user = getLoggedInUser();
     return user?.id || user?.user_id || null;
-  };
+  }, []);
 
   const fetchCart = async (userId) => {
     try {
@@ -51,7 +49,7 @@ const Featured = () => {
     fetchFeaturedProducts();
     const userId = getUserId();
     if (userId) { fetchWishlist(userId); fetchCart(userId); }
-  }, []);
+  }, [getUserId]);
 
   const fetchWishlist = async (userId) => {
     try {
