@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Idols.css";
 import API_URL, { bypassHeaders } from "../apiConfig";
+import ProductModal from "../Components/ProductModal/ProductModal";
 
 // Carousel Images
 import IdolsBanner1 from "../Components/Assets/idols.jpeg";
@@ -29,6 +30,7 @@ const Idols = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id || user?.user_id;
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Carousel Logic
   useEffect(() => {
@@ -136,11 +138,9 @@ const Idols = () => {
     const qty = cartMap[product.id] || 0;
     return (
       <div key={product.id} className="idol-product-card-v2">
-        <div className="card-img-area">
-          <button className="card-wish-btn">🤍</button>
-          <Link to={`/product/${product.id}`}>
-            <img src={product.image.startsWith("http") ? product.image : `${API_URL}${product.image}`} alt={product.name} />
-          </Link>
+        <div className="card-img-area" onClick={() => setSelectedProduct(product)} style={{ cursor: 'pointer' }}>
+          <button className="card-wish-btn" onClick={(e) => e.stopPropagation()}>🤍</button>
+          <img src={product.image.startsWith("http") ? product.image : `${API_URL}${product.image}`} alt={product.name} />
         </div>
 
         <div className="card-details-area">
@@ -159,7 +159,7 @@ const Idols = () => {
           <div className="card-meta">
              <span className="card-brand-tag">{product.brand || "Other"} ⓘ</span>
              <div className="card-price-bold">₹{Number(product.price).toLocaleString("en-IN")}</div>
-             <h4 className="card-title-text">{product.name}</h4>
+             <h4 className="card-title-text" onClick={() => setSelectedProduct(product)} style={{ cursor: 'pointer' }}>{product.name}</h4>
              <div className="card-rating-row">
                 <span className="card-stars">★★★★☆</span>
                 <span className="card-count">12</span>
@@ -313,6 +313,14 @@ const Idols = () => {
           parvathiProducts[0]?.image ? (parvathiProducts[0].image.startsWith("http") ? parvathiProducts[0].image : `${API_URL}${parvathiProducts[0].image}`) : IdolsBanner1
         )}
       </div>
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={handleAddToCart}
+          allProducts={products}
+        />
+      )}
     </div>
   );
 };

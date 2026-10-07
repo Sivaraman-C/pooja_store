@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   height: 65px;
-  background-color: #ffc107;
+  background-color: #F24636;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -18,7 +18,7 @@
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: #222;
+  color: #fff;
   flex: 1;
   transition: all 0.2s ease;
   position: relative;
@@ -37,7 +37,7 @@
   transform: translateX(-50%);
   width: 56px;
   height: 56px;
-  background: #ffc107;
+  background: #F24636;
   border-radius: 50%;
   border: 4px solid #ffffff;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);

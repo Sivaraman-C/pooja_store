@@ -53,31 +53,34 @@
 }
 
 .banner-text-content {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
+    /* background: rgba(255, 255, 255, 0.15); */
+    backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(12px);
     padding: 40px;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* border: 1px solid rgba(255, 255, 255, 0.3); */
     max-width: 500px;
-    color: white;
+    /* color: white; */
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     text-align: left;
 }
 
 .banner-eyebrow {
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 10px;
     display: block;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: #fff;
+    color: #7d1232;
     text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .banner-title {
+    font-family: 'Cormorant Garamond', serif;
     font-size: 38px;
+    color: #111;
     font-weight: 800;
     margin: 0 0 30px;
     line-height: 1.1;

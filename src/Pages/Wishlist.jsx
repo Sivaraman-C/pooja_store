@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API_URL, { bypassHeaders } from "../apiConfig";
+import ProductModal from "../Components/ProductModal/ProductModal";
 import "./Wishlist.css";
 
 const Wishlist = () => {
@@ -13,6 +14,7 @@ const Wishlist = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id || user?.user_id;
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const fetchCart = async (uId) => {
     try {
@@ -159,11 +161,11 @@ const Wishlist = () => {
                 const qty = cartMap[product.id] || 0;
                 return (
                   <div key={product.id} className="walmart-card">
-                    <div className="card-image-wrap">
+                    <div className="card-image-wrap" onClick={() => setSelectedProduct(product)} style={{ cursor: 'pointer' }}>
                       <img src={getImageUrl(product.image)} alt={product.name} />
                       <button
                         className="wish-btn active"
-                        onClick={() => handleToggleWishlist(product.id)}
+                        onClick={(e) => { e.stopPropagation(); handleToggleWishlist(product.id); }}
                       >
                         ❤️
                       </button>
@@ -192,7 +194,7 @@ const Wishlist = () => {
                       <div className="card-price-row">
                         <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
                       </div>
-                      <h4 className="card-name">{product.name}</h4>
+                      <h4 className="card-name" onClick={() => setSelectedProduct(product)} style={{ cursor: 'pointer' }}>{product.name}</h4>
                       <div className="card-rating">
                         <span className="stars">★★★★☆</span>
                         <span className="count">12</span>
@@ -214,6 +216,14 @@ const Wishlist = () => {
           </>
         )}
       </div>
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={handleAddToCart}
+          allProducts={items}
+        />
+      )}
     </div>
   );
 };

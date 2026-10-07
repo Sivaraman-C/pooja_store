@@ -5,7 +5,7 @@ import Banner from "../Components/Banner/Banner";
 import Category from "../Components/Category/Category";
 import Featured from "../Components/Featured/Featured";
 import ExtraCategories from "../Components/Category/ExtraCategories";
-import RelatedContent from "../Components/RelatedContent/RelatedContent";
+import PoojaGuide from "../Components/PoojaGuide/PoojaGuide";
 
 const Home = () => {
   return (
@@ -16,7 +16,7 @@ const Home = () => {
       <Category />
       <Featured />
       <ExtraCategories />
-      <RelatedContent />
+      <PoojaGuide />
     </div>
   );
 };

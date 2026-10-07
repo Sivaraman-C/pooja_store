@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./Banner.css";
 import { Link } from "react-router-dom";
 
-import Banner1 from "../../assets/Banner_1.png";
-import Banner2 from "../../assets/Banner_2.png";
-import Banner3 from "../../assets/banner.png";
+import Banner1 from "../../assets/banner_01.png";
+import Banner2 from "../../assets/banner_02.png";
+import Banner3 from "../../assets/banner_04.png";
 
 const banners = [
   {
@@ -14,7 +14,6 @@ const banners = [
     title: "Save up to 40% on Premium Brass Items",
     btnText: "Shop Brass Collection",
     link: "/shop?category=Diyas%20%26%20Lamps",
-    bgColor: "#4d00d1"
   },
   {
     id: 2,
@@ -23,7 +22,7 @@ const banners = [
     title: "Divine Deals on Complete Pooja Kits",
     btnText: "View Pooja Kits",
     link: "/shop?category=Pooja%20Kits",
-    bgColor: "#0071ce"
+    // bgColor: "#0071ce"
   },
   {
     id: 3,
@@ -32,7 +31,7 @@ const banners = [
     title: "Handcrafted Idols for Your Home Temple",
     btnText: "Explore Idols",
     link: "/shop?category=Idols%20%26%20Murtis",
-    bgColor: "#76361A"
+    // bgColor: "#76361A"
   }
 ];
 
@@ -59,6 +58,9 @@ const Banner = () => {
         <div className="banner-slider" style={{ transform: `translateX(-${current * 100}%)` }}>
           {banners.map((b) => (
             <div key={b.id} className="banner-slide">
+              <div className="banner-image-content">
+                <img src={b.image} alt="" className="banner-main-img" />
+              </div>
               <div className="banner-content-wrapper">
                 <div className="banner-text-content">
                   <span className="banner-eyebrow">{b.eyebrow}</span>
@@ -66,9 +68,6 @@ const Banner = () => {
                   <Link to={b.link} className="banner-pill-btn">
                     {b.btnText}
                   </Link>
-                </div>
-                <div className="banner-image-content">
-                  <img src={b.image} alt="" className="banner-main-img" />
                 </div>
               </div>
             </div>

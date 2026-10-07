@@ -18,12 +18,7 @@ const Category = () => {
            <div className="cat-image-layer">
               <img src={Idols} alt="Idols" />
            </div>
-           <div className="cat-text-layer">
-              <span className="cat-promo">Blessed Collections</span>
-              <h2 className="cat-title">Divine Murtis & Handcrafted Idols</h2>
-              <button className="cat-pill-btn">Shop now</button>
-           </div>
-           <div className="cat-badge-oval">New Arrivals</div>
+           <span className="cat-title">Divine Idols</span>
         </Link>
 
         {/* 2. MIDDLE COLUMN */}
@@ -33,11 +28,7 @@ const Category = () => {
               <div className="cat-image-layer">
                  <img src={Diyas} alt="Diyas" />
               </div>
-              <div className="cat-text-layer">
-                 <span className="cat-promo">Decor & more</span>
-                 <h2 className="cat-title">Traditional Diyas</h2>
-                 <span className="cat-link-text">Shop now</span>
-              </div>
+              <span className="cat-title">Traditional Diyas</span>
            </Link>
 
            {/* Bottom two small cards */}
@@ -46,19 +37,13 @@ const Category = () => {
                  <div className="cat-image-layer">
                     <img src={Kumkum} alt="Kumkum" />
                  </div>
-                 <div className="cat-text-layer">
-                    <h3 className="cat-title-small">Pooja Essentials</h3>
-                    <span className="cat-link-text">Shop now</span>
-                 </div>
+                 <span className="cat-title-small">Pooja Essentials</span>
               </Link>
               <Link to="/shop?category=Essentials" className="cat-box box-small">
                  <div className="cat-image-layer">
                     <img src={Haldi} alt="Haldi" />
                  </div>
-                 <div className="cat-text-layer">
-                    <h3 className="cat-title-small">Pure Haldi</h3>
-                    <span className="cat-link-text">Shop now</span>
-                 </div>
+                 <span className="cat-title-small">Pure Haldi</span>
               </Link>
            </div>
         </div>
@@ -68,11 +53,7 @@ const Category = () => {
            <div className="cat-image-layer">
               <img src={Incense} alt="Incense" />
            </div>
-           <div className="cat-text-layer">
-              <span className="cat-promo">Classic Fragrance</span>
-              <h2 className="cat-title">Sacred Incense & Dhoop</h2>
-              <span className="cat-link-text">Shop now</span>
-           </div>
+           <span className="cat-title">Sacred Incense & Dhoop</span>
         </Link>
 
       </div>

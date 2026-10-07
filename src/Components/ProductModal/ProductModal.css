@@ -1,0 +1,363 @@
+.product-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.product-modal-container {
+  background: #fdfaf5;
+  width: min(900px, 95vw);
+  max-height: 90vh;
+  border-radius: 24px;
+  overflow-y: auto;
+  position: relative;
+  padding: 40px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  font-family: 'Inter', sans-serif;
+}
+
+.product-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.product-modal-close:hover {
+  background: #f0f0f0;
+}
+
+.product-modal-top {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 35px;
+  margin-bottom: 30px;
+}
+
+.product-modal-gallery {
+  display: flex;
+  gap: 15px;
+}
+
+.product-modal-thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.thumb-item {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #eadfd2;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.thumb-item:hover {
+  border-color: #a96f18;
+}
+
+.thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-modal-main-img {
+  flex: 1;
+  height: 340px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.product-modal-main-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.favorite-badge {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product-modal-info h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 10px 0;
+}
+
+.product-modal-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.stars {
+  color: #ffa41c;
+  letter-spacing: 2px;
+}
+
+.product-modal-price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.price-current {
+  font-size: 26px;
+  font-weight: 800;
+  color: #222;
+}
+
+.price-old {
+  font-size: 16px;
+  color: #888;
+  text-decoration: line-through;
+}
+
+.discount-badge {
+  background: #388e3c;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.product-modal-summary {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+.product-modal-qty-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.modal-qty-selector {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #eadfd2;
+  border-radius: 30px;
+  background: #fff;
+  padding: 4px 12px;
+  gap: 15px;
+}
+
+.modal-qty-selector button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+.modal-add-cart-btn, .modal-buy-now-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 30px;
+  border: none;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-add-cart-btn {
+  background: #e65100;
+  color: white;
+  box-shadow: 0 4px 15px rgba(230, 81, 0, 0.3);
+}
+
+.modal-add-cart-btn:hover {
+  background: #d84315;
+}
+
+.modal-buy-now-btn {
+  background: #ff9800;
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+}
+
+.modal-buy-now-btn:hover {
+  background: #f57c00;
+}
+
+.product-modal-features {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.product-modal-tabs-section {
+  border-top: 1px solid #eadfd2;
+  padding-top: 25px;
+  margin-top: 25px;
+}
+
+.modal-tabs-header {
+  display: flex;
+  gap: 30px;
+  border-bottom: 2px solid #eadfd2;
+  margin-bottom: 20px;
+}
+
+.modal-tabs-header button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: #666;
+  padding-bottom: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.modal-tabs-header button.active {
+  color: #e65100;
+}
+
+.modal-tabs-header button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #e65100;
+}
+
+.modal-tabs-body {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.modal-tabs-body ul {
+  padding-left: 20px;
+  margin: 10px 0 0;
+}
+
+.product-modal-related-section {
+  border-top: 1px solid #eadfd2;
+  padding-top: 30px;
+  margin-top: 35px;
+}
+
+.product-modal-related-section h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 20px;
+}
+
+.modal-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.modal-related-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.modal-related-card:hover {
+  transform: translateY(-4px);
+}
+
+.modal-related-card img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-related-card h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-price {
+  font-size: 14px;
+  font-weight: 800;
+  color: #e65100;
+}
+
+@media (max-width: 800px) {
+  .product-modal-top {
+    grid-template-columns: 1fr;
+  }
+  .modal-related-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .product-modal-container {
+    padding: 20px;
+  }
+}
