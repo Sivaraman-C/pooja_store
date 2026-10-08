@@ -552,39 +552,106 @@ const FestivalCalendar = () => {
 
             {showPoojaDetails && (
               <div className="pooja-details-container">
-                <h3 className="pooja-steps-title">Simple pooja steps</h3>
-                <ol className="pooja-steps-list">
-                  {getFestivalDetails().steps.map((step, idx) => (
-                    <li key={idx}>{step}</li>
-                  ))}
-                </ol>
-
-                {getFestivalDetails().finalPrayer && (
-                  <div className="pooja-final-prayer">
-                    <p style={{ margin: 0 }}><strong>🙏 Final prayer:</strong><br />{getFestivalDetails().finalPrayer}</p>
-                  </div>
-                )}
-
-                <div className="festival-essentials-header">
-                  <h4>Festival essentials</h4>
-                  <span className="essentials-count">{getFestivalEssentials().length} items</span>
+                <div className="pooja-steps-header">
+                  <span className="pooja-header-mark">🌿</span>
+                  <h3 className="pooja-steps-title">Follow These Easy Steps for a Blessed Pooja and Festival essentials</h3>
+                  <span className="pooja-header-mark">🌿</span>
                 </div>
 
-                <div className="essentials-list-scroll">
-                  {getFestivalEssentials().map(item => (
-                    <div key={item.id} className="essential-product-card">
-                      <img src={item.image.startsWith("http") ? item.image : `${API_URL}${item.image}`} alt={item.name} className="essential-product-img" />
-                      <div className="essential-product-info">
-                        <p className="essential-product-name">{item.name}</p>
-                        <div className="essential-product-price">₹{Number(item.price).toLocaleString("en-IN")}</div>
+                <div className="pooja-split-layout">
+                  <div className="pooja-steps-panel">
+                    <div className="pooja-layout-top">
+                      <div className="pooja-main-feature-img">
+                        <img src={getFestivalImage(selectedFestival.name)} alt={selectedFestival.name} />
+                        <div className="feature-img-caption">
+                          <h4>{selectedFestival.name} Vidhi & Rituals</h4>
+                          <p>Complete sacred guide for devotees</p>
+                        </div>
+                      </div>
+
+                      <div className="pooja-sidebar-steps">
+                        <h4 className="sidebar-steps-heading">Simple Steps</h4>
+                        <div className="sidebar-steps-list">
+                          {getFestivalDetails().steps.slice(0, 4).map((step, idx) => {
+                            const stepImages = [ShivaratriBg, NavratriBg, DiwaliBg, GanpatiBg, SankrantiBg];
+                            const stepImg = stepImages[idx % stepImages.length];
+                            const preview = step.includes(" – ")
+                              ? step.split(" – ")[1] || step
+                              : step.includes(" - ")
+                                ? step.split(" - ")[1] || step
+                                : step;
+
+                            return (
+                              <div className="pooja-step-row-card" key={idx}>
+                                <div className="pooja-step-visual-small">
+                                  <img src={stepImg} alt={`Step ${idx + 1}`} className="pooja-step-photo" />
+                                  <span className="pooja-step-number-small">{idx + 1}</span>
+                                </div>
+                                <p>{preview}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
 
-                <button className="add-all-essentials-btn" onClick={handleAddAllEssentials}>
-                  Add All Festival Essentials to Cart
-                </button>
+                    {getFestivalDetails().steps.length > 4 && (
+                      <div className="pooja-continues-section">
+                        <div className="pooja-steps-grid-bottom">
+                          {getFestivalDetails().steps.slice(4).map((step, idx) => {
+                            const realIdx = idx + 4;
+                            const stepImages = [HoliBg, DefaultBg, ShivaratriBg, NavratriBg, DiwaliBg];
+                            const stepImg = stepImages[idx % stepImages.length];
+                            const preview = step.includes(" – ")
+                              ? step.split(" – ")[1] || step
+                              : step.includes(" - ")
+                                ? step.split(" - ")[1] || step
+                                : step;
+
+                            return (
+                              <div className="pooja-step-card" key={realIdx}>
+                                <div className="pooja-step-visual">
+                                  <img src={stepImg} alt={`Step ${realIdx + 1}`} className="pooja-step-photo" />
+                                  <span className="pooja-step-number">{realIdx + 1}</span>
+                                </div>
+                                <p>{preview}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {getFestivalDetails().finalPrayer && (
+                      <div className="pooja-final-prayer">
+                        <p style={{ margin: 0 }}><strong>🙏 Final prayer:</strong><br />{getFestivalDetails().finalPrayer}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pooja-essentials-panel">
+                    <div className="festival-essentials-header">
+                      <h4>Festival essentials</h4>
+                      <span className="essentials-count">{getFestivalEssentials().length} items</span>
+                    </div>
+
+                    <div className="essentials-list-scroll">
+                      {getFestivalEssentials().map(item => (
+                        <div key={item.id} className="essential-product-card">
+                          <img src={item.image.startsWith("http") ? item.image : `${API_URL}${item.image}`} alt={item.name} className="essential-product-img" />
+                          <div className="essential-product-info">
+                            <p className="essential-product-name">{item.name}</p>
+                            <div className="essential-product-price">₹{Number(item.price).toLocaleString("en-IN")}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button className="add-all-essentials-btn" onClick={handleAddAllEssentials}>
+                      Add All Festival Essentials to Cart
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
