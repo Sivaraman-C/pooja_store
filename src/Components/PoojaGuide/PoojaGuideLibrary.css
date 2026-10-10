@@ -1,0 +1,234 @@
+.pooja-guide-library {
+  min-height: 100vh;
+  padding: 48px 20px 70px;
+  color: #2d211c;
+  font-family: 'Inter', sans-serif;
+}
+
+.pooja-guide-library-header,
+.pooja-guide-library-content {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+.pooja-guide-library-header {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.pooja-guide-library-header > span {
+  color: #b7863f;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+}
+
+.pooja-guide-library-header h1 {
+  margin: 8px 0;
+  color: #692217;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 46px);
+}
+
+.pooja-guide-library-header p {
+  margin: 0;
+  color: #76685e;
+  font-size: 14px;
+}
+
+.pooja-guide-library-tools {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.pooja-guide-library-search {
+  display: flex;
+  min-width: 0;
+  height: 48px;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border: 1px solid #eadfd2;
+  border-radius: 13px;
+  background: #fffdf9;
+}
+
+.pooja-guide-library-search span {
+  color: #b7863f;
+  font-size: 22px;
+}
+
+.pooja-guide-library-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #2d211c;
+  font: inherit;
+  font-size: 14px;
+}
+
+.pooja-guide-library-category {
+  display: flex;
+  min-width: 210px;
+  flex-direction: column;
+  gap: 6px;
+  color: #86766d;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.pooja-guide-library-category select {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #eadfd2;
+  border-radius: 13px;
+  background: #fffdf9;
+  color: #2d211c;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.pooja-guide-library-count {
+  margin: 0 0 14px;
+  color: #86766d;
+  font-size: 13px;
+}
+
+.pooja-guide-library-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.pooja-guide-library-card {
+  overflow: hidden;
+  border: 1px solid #efe5d8;
+  border-radius: 16px;
+  background-image: url(../../assets/divine_soft_bg.png);
+  box-shadow: 0 5px 18px rgba(71, 40, 25, 0.06);
+}
+
+.pooja-guide-library-card > img {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.pooja-guide-library-card-content {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+}
+
+.pooja-guide-library-type {
+  color: #a96f18;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.pooja-guide-library-date {
+  margin-top: 5px;
+  color: #86766d;
+  font-size: 12px;
+}
+
+.pooja-guide-library-card h2 {
+  margin: 8px 0 14px;
+  color: #2d211c;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.pooja-guide-library-card button {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: #8f321f;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pooja-guide-library-card button:hover {
+  background: #692217;
+}
+
+.pooja-guide-library-message {
+  padding: 26px;
+  border: 1px solid #eadfd2;
+  border-radius: 14px;
+  background: #fffdf9;
+  color: #76685e;
+  text-align: center;
+}
+
+.pooja-guide-library-description {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #66564b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 850px) {
+  .pooja-guide-library-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .pooja-guide-library {
+    padding: 32px 14px 50px;
+  }
+
+  .pooja-guide-library-tools {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pooja-guide-library-category {
+    min-width: 0;
+  }
+
+  .pooja-guide-library-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .pooja-guide-library-card {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+  }
+
+  .pooja-guide-library-card > img {
+    height: 100%;
+    min-height: 170px;
+  }
+
+  .pooja-guide-library-card-content {
+    min-height: 0;
+    padding: 12px;
+  }
+}

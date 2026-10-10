@@ -134,9 +134,9 @@
     transition: all 0.2s;
 }
 
-/* BOTTOM INFO */
-.banner-bottom-info {
-    margin-top: 25px;
+/* TOP INFO */
+.banner-top-info {
+    margin-bottom: 25px;
     padding: 0 5px;
 }
 
@@ -148,7 +148,7 @@
 
 .info-header h2 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem;
+    font-size: 3rem;
     font-weight: 800;
     margin: 0;
     color: #fff;
@@ -161,10 +161,16 @@
     text-decoration: underline;
 }
 
-.banner-bottom-info p {
-    font-size: 14px;
-    color: #666;
-    margin: 5px 0 0;
+.banner-top-info p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  color: #D5892B;
 }
 
 /* =========================

@@ -253,6 +253,12 @@
   margin-bottom: 28px;
 }
 
+.festival-data-error {
+  margin: -14px 0 20px;
+  color: var(--festival-primary);
+  font-size: 13px;
+}
+
 
 .festival-search {
   width: 100%;

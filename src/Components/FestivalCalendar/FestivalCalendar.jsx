@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { unzipSync } from "fflate";
 import "./FestivalCalendar.css";
 import API_URL, { bypassHeaders } from "../../apiConfig";
 
@@ -72,6 +73,38 @@ const normalizeFestivalName = (name = "") =>
     .replace(/[^\w\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+
+const regionalFestivalAliases = {
+  navarathiri: "navratri",
+  navaratri: "navratri",
+  "vijaya dashami": "vijayadashami",
+  dussehra: "vijayadashami",
+  deepavali: "diwali",
+  "saraswati poojai": "saraswati puja",
+  "vinayagar chathurthi": "ganesh chaturthi",
+  "vinayaka chaturthi": "ganesh chaturthi",
+  gokulastami: "krishna janmashtami",
+  "astami rohini": "krishna janmashtami",
+  "ashtami rohini": "krishna janmashtami",
+};
+
+const areRegionalFestivalNamesEquivalent = (eventName, calendarName) => {
+  const normalizedEvent = normalizeFestivalName(eventName);
+  const normalizedCalendar = normalizeFestivalName(calendarName);
+  const eventKey = regionalFestivalAliases[normalizedEvent] || normalizedEvent;
+  const calendarKey = regionalFestivalAliases[normalizedCalendar] || normalizedCalendar;
+
+  if (eventKey === calendarKey || eventKey.replace(/\s/g, "") === calendarKey.replace(/\s/g, "")) {
+    return true;
+  }
+
+  return (
+    eventKey.startsWith(`${calendarKey} `) ||
+    eventKey.endsWith(` ${calendarKey}`) ||
+    calendarKey.startsWith(`${eventKey} `) ||
+    calendarKey.endsWith(` ${eventKey}`)
+  );
+};
 
 const festivalAliases = {
   "ganesh chaturthi": "ganesha chaturthi",
@@ -149,6 +182,92 @@ const parseCsvLine = (line) => {
   return result;
 };
 
+const parseOdsRegionalCalendars = (arrayBuffer) => {
+  const files = unzipSync(new Uint8Array(arrayBuffer));
+  const contentXml = files["content.xml"];
+  if (!contentXml) throw new Error("Festival spreadsheet is missing content.xml");
+
+  const xml = new DOMParser().parseFromString(
+    new TextDecoder().decode(contentXml),
+    "application/xml"
+  );
+  if (xml.getElementsByTagName("parsererror").length) {
+    throw new Error("Festival spreadsheet contains invalid XML");
+  }
+
+  const tableNamespace = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
+  const textNamespace = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+  const tables = Array.from(xml.getElementsByTagNameNS(tableNamespace, "table"));
+  const getRows = (table) =>
+    Array.from(table.getElementsByTagNameNS(tableNamespace, "table-row")).map((row) => {
+      const cells = [];
+      let columnIndex = 0;
+
+      Array.from(row.children).forEach((cell) => {
+        if (
+          cell.namespaceURI !== tableNamespace ||
+          !["table-cell", "covered-table-cell"].includes(cell.localName)
+        ) {
+          return;
+        }
+
+        const repeatCount = Math.max(
+          1,
+          Number(cell.getAttributeNS(tableNamespace, "number-columns-repeated")) || 1
+        );
+        const value = Array.from(cell.children)
+          .filter(
+            (paragraph) =>
+              paragraph.namespaceURI === textNamespace &&
+              paragraph.localName === "p"
+          )
+          .map((paragraph) => paragraph.textContent.trim())
+          .filter(Boolean)
+          .join(" ");
+
+        for (let count = 0; count < repeatCount && columnIndex < 12; count += 1) {
+          cells[columnIndex] = value;
+          columnIndex += 1;
+        }
+      });
+
+      return cells;
+    });
+
+  const calendars = {
+    "Tamil Calendar": [],
+    "Malayalam Calendar": [],
+    "Telugu Calendar": [],
+  };
+  tables.forEach((table) => {
+    const sheetName = table.getAttributeNS(tableNamespace, "name");
+    const rows = getRows(table).slice(2);
+
+    if (sheetName === "Calendars") {
+      rows.forEach((row) => {
+        calendars["Tamil Calendar"].push(row[2]);
+        calendars["Malayalam Calendar"].push(row[3]);
+        calendars["Telugu Calendar"].push(row[4]);
+      });
+    }
+  });
+
+  Object.keys(calendars).forEach((calendar) => {
+    calendars[calendar] = [
+      ...new Set(
+        calendars[calendar]
+          .filter((name) => typeof name === "string" && name.trim())
+          .map((name) => name.trim())
+      ),
+    ];
+  });
+  if (Object.values(calendars).every((names) => names.length === 0)) {
+    throw new Error("Festival spreadsheet does not contain regional calendar names");
+  }
+
+  return calendars;
+};
+
 const getFestivalCategory = (title) => {
   const name = title.toLowerCase();
   if (name.includes("shivaratri") || name.includes("shiva") || name.includes("pradosh")) return "Shaivite Festival";
@@ -187,6 +306,9 @@ const FestivalCalendar = () => {
   const [selectedFestival, setSelectedFestival] = useState(null);
   const [showPoojaDetails, setShowPoojaDetails] = useState(false);
   const [calendarFestivals, setCalendarFestivals] = useState([]);
+  const [regionalCalendars, setRegionalCalendars] = useState({});
+  const [calendarLoadError, setCalendarLoadError] = useState("");
+  const [regionalCalendarsError, setRegionalCalendarsError] = useState("");
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -196,13 +318,40 @@ const FestivalCalendar = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("/hindu_calendar_1900_2100.csv")
-      .then(res => res.text())
-      .then(csv => {
-        setCalendarFestivals(parseCalendarCsv(csv));
-        setLoading(false);
+    let isMounted = true;
+
+    const loadCalendarDates = fetch("/hindu_calendar_1900_2100.csv")
+      .then((res) => {
+        if (!res.ok) throw new Error(`Calendar CSV request failed (${res.status})`);
+        return res.text();
       })
-      .catch(err => console.error("CSV Load Error:", err));
+      .then((csv) => {
+        if (isMounted) setCalendarFestivals(parseCalendarCsv(csv));
+      })
+      .catch((err) => {
+        console.error("Calendar CSV Load Error:", err);
+        if (isMounted) setCalendarLoadError("Unable to load calendar dates.");
+      });
+
+    const loadFestivalOptions = fetch("/Festival_Calendars.ods")
+      .then((res) => {
+        if (!res.ok) throw new Error(`Festival ODS request failed (${res.status})`);
+        return res.arrayBuffer();
+      })
+      .then((data) => {
+        const calendars = parseOdsRegionalCalendars(data);
+        if (isMounted) setRegionalCalendars(calendars);
+      })
+      .catch((err) => {
+        console.error("Festival spreadsheet Load Error:", err);
+        if (isMounted) {
+          setRegionalCalendarsError("Unable to load regional calendars.");
+        }
+      });
+
+    Promise.all([loadCalendarDates, loadFestivalOptions]).finally(() => {
+      if (isMounted) setLoading(false);
+    });
 
     fetch(`${API_URL}/api/products`, { headers: { ...bypassHeaders } })
       .then(res => res.json())
@@ -210,6 +359,10 @@ const FestivalCalendar = () => {
         if (Array.isArray(data)) setAllProducts(data);
       })
       .catch(err => console.error("Products Load Error:", err));
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const parseCalendarCsv = (csv) => {
@@ -363,6 +516,10 @@ const FestivalCalendar = () => {
       let matchesCalendar = true;
       if (selectedCalendar === "Vrat & Upavas") {
         matchesCalendar = f.category === "Vrat & Upavas";
+      } else if (regionalCalendars[selectedCalendar]) {
+        matchesCalendar = regionalCalendars[selectedCalendar].some((festivalName) => {
+          return areRegionalFestivalNamesEquivalent(f.name, festivalName);
+        });
       } else if (selectedCalendar !== "Hindu Calendar") {
         const keywords = calendarRegionKeywords[selectedCalendar] || [];
         const nameLower = f.name.toLowerCase();
@@ -373,7 +530,7 @@ const FestivalCalendar = () => {
 
       return matchesMonthYear && matchesCategory && matchesSearch && matchesCalendar;
     });
-  }, [calendarFestivals, currentMonth, currentYear, selectedCategory, selectedCalendar, search]);
+  }, [calendarFestivals, currentMonth, currentYear, selectedCategory, selectedCalendar, regionalCalendars, search]);
 
   const upcomingList = useMemo(() => {
     const now = new Date();
@@ -458,6 +615,9 @@ const FestivalCalendar = () => {
             </select>
           </div>
         </div>
+
+        {calendarLoadError && <p className="festival-data-error" role="alert">{calendarLoadError}</p>}
+        {regionalCalendarsError && <p className="festival-data-error" role="alert">{regionalCalendarsError}</p>}
 
         {loading ? <div className="loading-container"><p>Loading sacred data...</p></div> : (
           <>

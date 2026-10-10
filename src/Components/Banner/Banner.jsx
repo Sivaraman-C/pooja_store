@@ -54,6 +54,14 @@ const Banner = () => {
 
   return (
     <div className="banner-carousel-container">
+      {/* TOP INFO ROW */}
+      <div className="banner-top-info">
+        <p>Pure authentic products at blessed prices</p>
+        <div className="info-header">
+          <h2>Sacred Deals</h2>
+        </div>
+      </div>
+
       <div className="banner-carousel" style={{ backgroundColor: banners[current].bgColor }}>
         <div className="banner-slider" style={{ transform: `translateX(-${current * 100}%)` }}>
           {banners.map((b) => (
@@ -82,15 +90,6 @@ const Banner = () => {
            </button>
            <button className="banner-arrow-btn" onClick={nextSlide}>❯</button>
         </div>
-      </div>
-
-      {/* BOTTOM INFO ROW */}
-      <div className="banner-bottom-info">
-        <div className="info-header">
-           <h2>Sacred Deals</h2>
-           <Link to="/shop">View all</Link>
-        </div>
-        <p>Pure authentic products at blessed prices</p>
       </div>
     </div>
   );

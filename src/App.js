@@ -1,5 +1,7 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { App as CapacitorApp } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "./Components/Navbar/Navbar";
 // import Footer from "./Components/Footer/Footer";
@@ -13,12 +15,12 @@ import Cart from "./Pages/Cart";
 import Checkout from "./Pages/Checkout";
 import Contact from "./Pages/Contact";
 import FestivalCalendar from "./Components/FestivalCalendar/FestivalCalendar";
+import PoojaGuideLibrary from "./Components/PoojaGuide/PoojaGuideLibrary";
 import Menu from "./Pages/Menu";
 import Wishlist from "./Pages/Wishlist";
 import Idols from "./Pages/Idols";
 import Diyas from "./Pages/Diyas";
 import Incense from "./Pages/Incense";
-import Essentials from "./Pages/Essentials";
 
 import AdminLayout from "./Components/Admin/AdminLayout/AdminLayout";
 import Dashboard from "./Components/Admin/Dashboard/Dashboard";
@@ -36,6 +38,7 @@ import Settings from "./Components/Admin/Settings/Settings";
 import "./App.css";
 import { CartProvider } from "./Context/CartContext";
 import BottomNav from "./Components/BottomNav/BottomNav";
+import ScrollToTopButton from "./Components/ScrollToTopButton/ScrollToTopButton";
 
 function AdminRoute() {
   let user = null;
@@ -65,6 +68,51 @@ function ScrollToTop() {
   return null;
 }
 
+function NativeBackButtonHandler() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentPath = React.useRef(location.pathname);
+  currentPath.current = location.pathname;
+
+  React.useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return undefined;
+
+    let isMounted = true;
+    let backButtonListener;
+
+    CapacitorApp.addListener("backButton", () => {
+      const historyIndex = window.history.state?.idx ?? 0;
+
+      if (historyIndex > 0) {
+        navigate(-1);
+      } else if (currentPath.current !== "/") {
+        navigate("/", { replace: true });
+      } else {
+        CapacitorApp.exitApp().catch((error) => {
+          console.error("Unable to exit the app:", error);
+        });
+      }
+    })
+      .then((listener) => {
+        if (isMounted) {
+          backButtonListener = listener;
+        } else {
+          listener.remove();
+        }
+      })
+      .catch((error) => {
+        console.error("Unable to register Android back button handler:", error);
+      });
+
+    return () => {
+      isMounted = false;
+      backButtonListener?.remove();
+    };
+  }, [navigate]);
+
+  return null;
+}
+
 function App() {
   const [user, setUser] = React.useState(() => JSON.parse(localStorage.getItem("user")));
 
@@ -79,6 +127,7 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <NativeBackButtonHandler />
       <CartProvider>
 
       <Routes>
@@ -107,6 +156,16 @@ function App() {
             <>
               <Navbar />
               <FestivalCalendar />
+            </>
+          }
+        />
+
+        <Route
+          path="/pooja-guide"
+          element={
+            <>
+              <Navbar />
+              <PoojaGuideLibrary />
             </>
           }
         />
@@ -249,6 +308,7 @@ function App() {
 
       </Routes>
       {user && <BottomNav />}
+      <ScrollToTopButton />
       </CartProvider>
 
     </BrowserRouter>

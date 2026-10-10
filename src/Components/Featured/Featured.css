@@ -23,21 +23,23 @@
 }
 
 .featured-heading p {
-    margin: 0 0 8px;
-    color: #756d63;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  color: #D5892B;
 }
 
 .featured-heading h2 {
-    margin: 0;
-    color: #333;
-    font-family: 'Inter', sans-serif;
-    font-size: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
     font-weight: 800;
+    margin: 0;
+    color: #fff;
 }
 
 

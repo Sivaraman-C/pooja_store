@@ -11,6 +11,13 @@ import Haldi from "../Assets/Haldi.jpg";
 const Category = () => {
   return (
     <section className="category-section">
+      <div className="category-top-info">
+        <p>Discover everything you need for your daily pooja rituals</p>
+        <div className="category-info-header">
+          <h2>Shop by Category</h2>
+        </div>
+      </div>
+
       <div className="category-grid-container">
 
         {/* 1. LARGE LEFT CARD */}
