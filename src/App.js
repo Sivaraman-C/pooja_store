@@ -21,6 +21,7 @@ import Wishlist from "./Pages/Wishlist";
 import Idols from "./Pages/Idols";
 import Diyas from "./Pages/Diyas";
 import Incense from "./Pages/Incense";
+import ProductDetail from "./Pages/ProductDetail";
 
 import AdminLayout from "./Components/Admin/AdminLayout/AdminLayout";
 import Dashboard from "./Components/Admin/Dashboard/Dashboard";
@@ -196,6 +197,16 @@ function App() {
             <>
               <Navbar />
               <Shop />
+            </>
+          }
+        />
+
+        <Route
+          path="/product/:id"
+          element={
+            <>
+              <Navbar />
+              <ProductDetail />
             </>
           }
         />

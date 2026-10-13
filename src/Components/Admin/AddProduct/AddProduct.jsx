@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AddProduct.css";
 import API_URL from "../../../apiConfig";
+import compressProductImage from "../../../utils/compressProductImage";
 
 const brandMapping = {
   "Idols": ["Devaloka Artisans", "Vedic Crafts", "Divine Statues", "Ancient Heritage"],
@@ -22,8 +23,9 @@ const AddProduct = () => {
     featured: false,
   });
 
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
   const [message, setMessage] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -46,13 +48,30 @@ const AddProduct = () => {
     });
   };
 
+  const handleImagesChange = (event) => {
+    const selectedImages = Array.from(event.target.files || []);
+    if (selectedImages.length > 8) {
+      setMessage("Choose up to 8 product photos.");
+      event.target.value = "";
+      setImages([]);
+      return;
+    }
+    setMessage("");
+    setImages(selectedImages);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (images.length === 0) {
+      setMessage("Choose at least one product photo.");
+      return;
+    }
     setLoading(true);
     setMessage("");
 
     try {
+      setUploadStatus("Optimizing photos...");
+      const optimizedImages = await Promise.all(images.map(compressProductImage));
       const data = new FormData();
       data.append("name", formData.name);
       data.append("category", formData.category);
@@ -62,10 +81,10 @@ const AddProduct = () => {
       data.append("stock", formData.stock);
       data.append("featured", formData.featured);
 
-      if (image) {
-        data.append("image", image);
-      }
+      data.append("image", optimizedImages[0]);
+      optimizedImages.slice(1).forEach((image) => data.append("images", image));
 
+      setUploadStatus("Uploading product...");
       const response = await fetch(`${API_URL}/api/products`, {
         method: "POST",
         body: data,
@@ -74,6 +93,11 @@ const AddProduct = () => {
       const result = await response.json();
 
       if (!response.ok) {
+        if (/unknown column.*images|images.*unknown column/i.test(result.error || "")) {
+          throw new Error(
+            "Product photo database setup is incomplete. Run `npm run migrate:product-images` from the backend directory, then retry."
+          );
+        }
         throw new Error(result.message || "Failed to add product");
       }
 
@@ -90,15 +114,20 @@ const AddProduct = () => {
         featured: false,
       });
 
-      setImage(null);
+      setImages([]);
       const fileInput = document.getElementById("product-image");
       if (fileInput) fileInput.value = "";
 
     } catch (error) {
       setShowSuccessPopup(false);
-      setMessage(error.message);
+      setMessage(
+        /unexpected field/i.test(error.message)
+          ? "The product server needs an update to accept multiple photos. Deploy or restart the updated backend, then run the product-images database migration."
+          : error.message
+      );
     } finally {
       setLoading(false);
+      setUploadStatus("");
     }
   };
 
@@ -181,8 +210,17 @@ const AddProduct = () => {
           </div>
 
           <div className="form-group">
-            <label>Product Image</label>
-            <input id="product-image" type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => setImage(e.target.files[0])} required />
+            <label>Product Photos (up to 8)</label>
+            <input
+              id="product-image"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={handleImagesChange}
+              multiple
+              required
+            />
+            {images.length > 0 && <small>{images.length} photo{images.length === 1 ? "" : "s"} selected.</small>}
+            <small>Large photos are automatically resized and compressed before upload.</small>
           </div>
 
           <div className="featured-checkbox">
@@ -191,7 +229,7 @@ const AddProduct = () => {
           </div>
 
           <button type="submit" disabled={loading}>
-            {loading ? "Adding Product..." : "Add Product"}
+            {loading ? uploadStatus : "Add Product"}
           </button>
         </form>
       </div>

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { unzipSync } from "fflate";
 import "./FestivalCalendar.css";
 import API_URL, { bypassHeaders } from "../../apiConfig";
+import ProductImageCarousel from "../ProductImageCarousel/ProductImageCarousel";
 
 import DiwaliBg from "../Assets/Diwali.jpeg";
 import GanpatiBg from "../Assets/Ganpati.jpeg";
@@ -485,7 +486,8 @@ const FestivalCalendar = () => {
         ? product.image
         : product.image
           ? `${API_URL}${product.image}`
-          : DefaultBg
+          : DefaultBg,
+    images: product.images
   }));
 };
 
@@ -798,9 +800,11 @@ const FestivalCalendar = () => {
                     <div className="essentials-list-scroll">
                       {getFestivalEssentials().map(item => (
                         <div key={item.id} className="essential-product-card">
-                          <img src={item.image.startsWith("http") ? item.image : `${API_URL}${item.image}`} alt={item.name} className="essential-product-img" />
+                          <div className="essential-product-img">
+                            <ProductImageCarousel product={item} />
+                          </div>
                           <div className="essential-product-info">
-                            <p className="essential-product-name">{item.name}</p>
+                            <p className="essential-product-name"><Link to={`/product/${item.id}`}>{item.name}</Link></p>
                             <div className="essential-product-price">₹{Number(item.price).toLocaleString("en-IN")}</div>
                           </div>
                         </div>

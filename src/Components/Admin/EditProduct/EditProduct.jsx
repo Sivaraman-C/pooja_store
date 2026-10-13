@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./EditProduct.css";
 import API_URL from "../../../apiConfig";
+import compressProductImage from "../../../utils/compressProductImage";
 
 const brandMapping = {
   "Idols": ["Devaloka Artisans", "Vedic Crafts", "Divine Statues", "Ancient Heritage"],
@@ -26,8 +27,8 @@ const EditProduct = () => {
     featured: false,
   });
 
-  const [image, setImage] = useState(null);
-  const [currentImage, setCurrentImage] = useState("");
+  const [newImages, setNewImages] = useState([]);
+  const [currentImages, setCurrentImages] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -55,10 +56,28 @@ const EditProduct = () => {
           featured: Boolean(data.featured),
         });
 
-        setCurrentImage(data.image || "");
+        let savedImages = data.images;
+        if (typeof savedImages === "string") {
+          try {
+            savedImages = JSON.parse(savedImages);
+          } catch {
+            savedImages = [];
+          }
+        }
+        setCurrentImages(
+          Array.isArray(savedImages) && savedImages.length > 0
+            ? savedImages
+            : data.image
+              ? [data.image]
+              : []
+        );
 
       } catch (error) {
-        setError(error.message);
+        setError(
+          /unexpected field/i.test(error.message)
+            ? "The product server needs an update to accept multiple photos. Deploy or restart the updated backend, then run the product-images database migration."
+            : error.message
+        );
       } finally {
         setLoading(false);
       }
@@ -87,7 +106,15 @@ const EditProduct = () => {
 
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const selectedImages = Array.from(e.target.files || []);
+    if (selectedImages.length + currentImages.length > 8) {
+      setError("A product can have up to 8 photos. Remove an existing photo before adding more.");
+      e.target.value = "";
+      setNewImages([]);
+      return;
+    }
+    setError("");
+    setNewImages(selectedImages);
   };
 
 
@@ -98,6 +125,7 @@ const EditProduct = () => {
     setSaving(true);
 
     try {
+      const optimizedImages = await Promise.all(newImages.map(compressProductImage));
       const data = new FormData();
       data.append("name", formData.name);
       data.append("category", formData.category);
@@ -107,8 +135,10 @@ const EditProduct = () => {
       data.append("stock", formData.stock);
       data.append("featured", formData.featured ? "1" : "0");
 
-      if (image) {
-        data.append("image", image);
+      data.append("keepImages", JSON.stringify(currentImages));
+      if (optimizedImages.length > 0) {
+        data.append("image", optimizedImages[0]);
+        optimizedImages.slice(1).forEach((image) => data.append("images", image));
       }
 
       const response = await fetch(`${API_URL}/api/products/${id}`, {
@@ -208,17 +238,31 @@ const EditProduct = () => {
             </div>
           </div>
 
-          {currentImage && (
+          {currentImages.length > 0 && (
             <div className="current-image">
-              <label>Current Image</label>
-              <img src={currentImage.startsWith("http") ? currentImage : `${API_URL}${currentImage}`} alt={formData.name} />
+              <label>Product Photos</label>
+              <div className="current-image-list">
+                {currentImages.map((image) => (
+                  <div className="current-image-item" key={image}>
+                    <img src={image.startsWith("http") ? image : `${API_URL}${image}`} alt={formData.name} />
+                    <button
+                      type="button"
+                      onClick={() => setCurrentImages((images) => images.filter((current) => current !== image))}
+                      aria-label={`Remove photo of ${formData.name}`}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
           <div className="form-group">
-            <label>Change Product Image</label>
-            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} />
-            <small>Leave empty to keep the current image.</small>
+            <label>Add Product Photos</label>
+            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} multiple />
+            <small>Keep existing photos, remove any you do not want, or add more. Up to 8 photos total.</small>
+            {newImages.length > 0 && <small>{newImages.length} new photo{newImages.length === 1 ? "" : "s"} selected.</small>}
           </div>
 
           <div className="featured-check">

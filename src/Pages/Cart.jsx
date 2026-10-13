@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Cart.css";
 import API_URL, { bypassHeaders } from "../apiConfig";
+import ProductImageCarousel from "../Components/ProductImageCarousel/ProductImageCarousel";
 
 const getUser = () => {
   try {
@@ -166,7 +167,6 @@ const Cart = () => {
 
   const totalItems = items.reduce((total, item) => total + Number(item.quantity || 0), 0);
   const subtotal = items.reduce((total, item) => total + Number(item.price || 0) * Number(item.quantity || 0), 0);
-  const imageUrl = (image) => image?.startsWith("http") ? image : `${API_URL}${image || ""}`;
 
   if (!userId) {
     return (
@@ -226,10 +226,12 @@ const Cart = () => {
                     {items.map((item) => (
                       <div className="walmart-cart-item" key={item.product_id}>
                         <div className="item-main-row">
-                          <div className="item-img"><img src={imageUrl(item.image)} alt="" /></div>
+                          <div className="item-img">
+                            <ProductImageCarousel product={{ ...item, id: item.product_id }} />
+                          </div>
                           <div className="item-info">
                              <div className="item-price-row"><span className="item-price">₹{Number(item.price).toLocaleString("en-IN")}</span></div>
-                             <h4 className="item-name">{item.name}</h4>
+                             <h4 className="item-name"><Link to={`/product/${item.product_id}`}>{item.name}</Link></h4>
                              <span className="returns-tag">↺ Free 31-day returns</span>
                              <div className="item-actions-row">
                                 <div className="item-links">
@@ -261,7 +263,7 @@ const Cart = () => {
                     const isAdding = addingProductId === p.id;
                     return (
                       <div key={p.id} className="walmart-card">
-                        <div className="card-image-wrap"><img src={imageUrl(p.image)} alt="" /><button className="wish-btn">🤍</button></div>
+                        <div className="card-image-wrap"><ProductImageCarousel product={p} /><button className="wish-btn">🤍</button></div>
                         <div className="card-add-area">
                           {qty === 0 ? (
                             <button
@@ -295,7 +297,7 @@ const Cart = () => {
                     const qty = cartMap[p.id] || 0;
                     return (
                       <div key={p.id} className="walmart-card">
-                        <div className="card-image-wrap"><img src={imageUrl(p.image)} alt="" /><button className="wish-btn">🤍</button></div>
+                        <div className="card-image-wrap"><ProductImageCarousel product={p} /><button className="wish-btn">🤍</button></div>
                         <div className="card-add-area">
                           {qty === 0 ? <button className="add-btn-expandable" onClick={() => handleAddToCart(p)}>+ Add</button> :
                           <div className="qty-selector-pill"><button onClick={() => updateQuantity(p.id, qty - 1)}>−</button><span>{qty}</span><button onClick={() => updateQuantity(p.id, qty + 1)}>+</button></div>}
@@ -342,11 +344,13 @@ const Cart = () => {
                       <div className="saved-list">
                          {savedLaterItems.map(item => (
                            <div className="saved-item-card" key={item.product_id}>
-                              <div className="s-img-wrap"><img src={imageUrl(item.image)} alt="" /></div>
+                              <div className="s-img-wrap">
+                                <ProductImageCarousel product={{ ...item, id: item.product_id }} />
+                              </div>
                               <div className="s-item-details">
                                  <button className="move-to-cart-btn" onClick={() => handleMoveToCart(item)}>Move to cart</button>
                                  <div className="s-item-price">₹{Number(item.price).toLocaleString("en-IN")}</div>
-                                 <h4 className="s-item-name">{item.name}</h4>
+                                 <h4 className="s-item-name"><Link to={`/product/${item.product_id}`}>{item.name}</Link></h4>
                                  <p className="s-item-qty">Qty: {item.quantity}</p>
                                  <button className="s-item-remove" onClick={() => removeSavedItem(item.product_id)}>Remove</button>
                               </div>

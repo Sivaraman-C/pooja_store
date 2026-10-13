@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
 import "./Hero.css";
 
 // Backgrounds and Main Graphics
@@ -22,6 +23,8 @@ import Incense from "../Assets/incense.jpeg";
 import Essentials from "../Assets/Essentials.jpeg";
 import Kumkum from "../Assets/kumkum.jpg";
 import Kits from "../Assets/pooja-kit.png";
+import Featured from "../Featured/Featured";
+import Banner from "../Banner/Banner";
 
 const desktopBanners = [hero01, hero02, hero03, hero04, hero05];
 const mobileBanners = [hero01, hero02, hero03, hero04, hero05];
@@ -30,6 +33,9 @@ const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [slideOffset, setSlideOffset] = useState(0);
+  const bannerViewportRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const handleResize = () => {
@@ -40,6 +46,23 @@ const Hero = () => {
   }, []);
 
   const banners = isMobile ? mobileBanners : desktopBanners;
+
+  useLayoutEffect(() => {
+    const updateSlideOffset = () => {
+      const viewport = bannerViewportRef.current;
+      if (!viewport) return;
+
+      const styles = window.getComputedStyle(viewport);
+      const horizontalPadding =
+        parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+      const gap = parseFloat(styles.getPropertyValue("--slide-gap")) || 0;
+      setSlideOffset(viewport.clientWidth - horizontalPadding + gap);
+    };
+
+    updateSlideOffset();
+    window.addEventListener("resize", updateSlideOffset);
+    return () => window.removeEventListener("resize", updateSlideOffset);
+  }, []);
 
   useEffect(() => {
     const slideInterval = setInterval(() => {
@@ -78,27 +101,31 @@ const Hero = () => {
         </div> */}
 
         {/* SLIDING BANNER */}
-        <div className="banner-viewport">
-          <div
+        <div className="banner-viewport" ref={bannerViewportRef}>
+          <motion.div
             className="banner-inner-slider"
-            style={{
-              transform: `translateX(calc(-${displaySlide} * (100% + var(--slide-gap, 20px))))`,
-              transition: transitionEnabled ? "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)" : "none"
+            animate={{ x: -displaySlide * slideOffset }}
+            transition={{
+              duration: transitionEnabled && !shouldReduceMotion ? 0.6 : 0,
+              ease: [0.4, 0, 0.2, 1],
             }}
           >
             {extendedBanners.map((img, index) => (
               <div key={index} className="banner-slide">
-                 <img src={img} alt={`Banner ${index}`} className="banner-img-element" />
+                 <img src={img} alt={`Banner ${index + 1}`} className="banner-img-element" />
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
         <div className="slider-dots">
           {banners.map((_, index) => (
-            <span
+            <button
               key={index}
+              type="button"
               className={`dot ${index === (currentSlide % banners.length) ? "active" : ""}`}
+              aria-label={`Show banner ${index + 1}`}
+              aria-current={index === (currentSlide % banners.length) ? "true" : undefined}
               onClick={() => setCurrentSlide(index)}
             />
           ))}
@@ -118,16 +145,20 @@ const Hero = () => {
 
           <div className="explore-horizontal-grid">
           {[
-            { img: Idols, name: "Idols & Murthis", desc: "Bring divinity home", link: "Idols" },
+             { img: Idols, name: "Idols", desc: "Bring divinity home", link: "Idols" },
             { img: Diyas, name: "Pooja Items", desc: "For every ritual", link: "Diyas" },
-            { img: Incense, name: "Incense & Dhoop", desc: "Fragrance of faith", link: "Incense" },
+            { img: Incense, name: "Incense", desc: "Fragrance of faith", link: "Incense" },
             { img: Essentials, name: "Essentials", desc: "Freshness & purity", link: "Pooja Essentials" },
             { img: Kits, name: "Pooja Samagri", desc: "Complete kits", link: "Pooja%20Kits" },
-            { img: Kumkum, name: "Kumkum & Turmeric", desc: "Positive energy", link: "Kumkum%20%26%20Turmeric" },
+            { img: Kumkum, name: "Kumkum", desc: "Positive energy", link: "Kumkum%20%26%20Turmeric" },
             { img: Idols, name: "Books & More", desc: "Knowledge for devotion", link: "Idols%20%26%20Murtis" },
-            { img: Diyas, name: "Flowers & Garlands", desc: "Pure offerings", link: "Diyas%20%26%20Lamps" },
-          ].map((cat, i) => (
-            <Link key={i} to={`/shop?category=${cat.link}`} className="explore-card">
+            { img: Diyas, name: "Flowers", desc: "Pure offerings", link: "Diyas%20%26%20Lamps" },
+          ].map((cat) => (
+            <Link
+              key={cat.name}
+              to={cat.link ? `/shop?category=${encodeURIComponent(cat.link)}` : "/shop"}
+              className={`explore-card${cat.name === "All" ? " active" : ""}`}
+            >
               <div className="explore-card-arch">
                 <img src={cat.img} alt={cat.name} />
               </div>
@@ -138,6 +169,9 @@ const Hero = () => {
         </div>
         </div>
       </div>
+
+      <Featured />
+      <Banner />
 
       {/* Store benefits */}
       <div className="hero-action-bar">

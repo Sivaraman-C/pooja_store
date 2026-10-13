@@ -75,6 +75,19 @@
   margin-bottom: 22px;
 }
 
+.current-image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.current-image-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
 .current-image img {
   display: block;
   width: 180px;
@@ -82,6 +95,15 @@
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #ddd;
+}
+
+.current-image-item button {
+  padding: 6px 10px;
+  border: 1px solid #d7cfc7;
+  border-radius: 5px;
+  background: #fff;
+  color: #6b3028;
+  cursor: pointer;
 }
 
 .form-group small {

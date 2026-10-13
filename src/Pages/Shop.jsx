@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import "./Shop.css";
-// import { Link } from "react-router-dom";
 
 import LoginPopup from "../Components/LoginPopup/LoginPopup";
-import ProductModal from "../Components/ProductModal/ProductModal";
+import ProductImageCarousel from "../Components/ProductImageCarousel/ProductImageCarousel";
 import API_URL, { bypassHeaders } from "../apiConfig";
 
 // Icons for the top category strip
@@ -33,7 +33,6 @@ const Shop = () => {
   const [addingProductId, setAddingProductId] = useState(null);
   const [wishlist, setWishlist] = useState([]);
   const [cartMap, setCartMap] = useState({}); // productId -> quantity
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Filter States
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
@@ -336,8 +335,8 @@ const Shop = () => {
                 const qty = cartMap[product.id] || 0;
                 return (
                   <div className="walmart-card" key={product.id}>
-                    <div className="card-image-wrap" onClick={() => setSelectedProduct(product)} style={{ cursor: 'pointer' }}>
-                      <img src={product.image.startsWith("http") ? product.image : `${API_URL}${product.image}`} alt={product.name} />
+                    <div className="card-image-wrap">
+                      <ProductImageCarousel product={product} />
                       <button className={`wish-btn ${wishlist.includes(product.id) ? 'active' : ''}`} onClick={(e) => { e.stopPropagation(); handleToggleWishlist(product.id); }}>
                         {wishlist.includes(product.id) ? '❤️' : '🤍'}
                       </button>
@@ -362,7 +361,7 @@ const Shop = () => {
                       <div className="card-price-row">
                         <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
                       </div>
-                      <h4 className="card-name" onClick={() => setSelectedProduct(product)} style={{ cursor: 'pointer' }}>{product.name}</h4>
+                      <h4 className="card-name"><Link to={`/product/${product.id}`}>{product.name}</Link></h4>
                       <div className="card-rating">
                         <span className="stars">★★★★☆</span>
                         <span className="count">12</span>
@@ -383,14 +382,6 @@ const Shop = () => {
         </div>
       </div>
       {showLoginPopup && <LoginPopup onClose={() => setShowLoginPopup(false)} />}
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onAddToCart={handleAddToCart}
-          allProducts={products}
-        />
-      )}
     </div>
   );
 };

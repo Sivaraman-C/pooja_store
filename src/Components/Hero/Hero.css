@@ -63,7 +63,7 @@
 .banner-viewport {
     width: 100%;
     height: 100%;
-    overflow: visible;
+    overflow: hidden;
     padding: 0 45px;
     box-sizing: border-box;
     --slide-gap: 20px;
@@ -73,7 +73,6 @@
     display: flex;
     height: 100%;
     gap: var(--slide-gap);
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .banner-slide {
@@ -104,13 +103,15 @@
 }
 
 .slider-dots .dot {
+  display: block;
   width: 12px;
   height: 12px;
+  padding: 0;
+  border: 1px solid rgba(255, 193, 7, 0.8);
   border-radius: 50%;
   background: #94193e;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 193, 7, 0.8);
 }
 
 .slider-dots .dot.active {
@@ -122,8 +123,12 @@
 /* 4. Explore Categories */
 .hero-explore-section {
   width: 100%;
-  padding: 40px 0;
+  padding: 22px 0;
   border-top: none;
+}
+
+.hero > .featured-section {
+  padding: 18px 0 26px;
 }
 
 .hero-explore-container {
@@ -132,7 +137,7 @@
 }
 
 .explore-header {
-  margin-bottom: 35px;
+  margin-bottom: 16px;
   text-align: left;
 }
 
@@ -173,48 +178,52 @@
 }
 
 .explore-horizontal-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px 15px;
-  padding: 0;
-  overflow-x: visible;
-
-  border: 1px solid #D97706;
-  border-radius: 20px;
-  padding: 35px 40px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 30px;
+  padding: 14px 18px 10px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  border: 1px solid rgba(217, 119, 6, 0.18);
+  border-radius: 16px;
   box-sizing: border-box;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 18px rgba(67, 43, 22, 0.05);
+  backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .explore-card {
-  background-image: url(../../assets/divine_soft_bg.png);
+  flex: 0 0 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  background: transparent;
   text-align: center;
   text-decoration: none;
-  color: inherit;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  border: 1px solid #D97706;
-  border-radius: 20px;
-  padding: 35px 40px;
+  color: #302720;
+  transition: transform 0.2s ease;
   box-sizing: border-box;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .explore-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-3px);
 }
 
 .explore-card-arch {
-  width: 100%;
-  height: 120px;
+  flex: 0 0 88px;
+  width: 88px;
+  height: 88px;
   position: relative;
-  background: #f8f8f8;
-  border-radius: 16px;
+  background: #f1f1f1;
+  border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin: 0 auto 8px auto;
-  border: 2px solid rgba(212, 160, 23, 0.2);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 0 5px #f0f0f0;
+  margin: 3px auto 12px;
+  border: 2px solid #fff;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .explore-card-arch img {
@@ -228,31 +237,49 @@
 }
 
 .explore-card:hover .explore-card-arch {
-  box-shadow: 0 0 25px rgba(243, 199, 111, 0.8), 0 0 50px rgba(125, 18, 50, 0.3), 0 10px 30px rgba(0, 0, 0, 0.2);
-  border-color: #f3c76f;
+  box-shadow: 0 0 0 5px #e5e7eb, 0 3px 10px rgba(31, 41, 55, 0.18);
   transform: scale(1.03);
 }
 
 .explore-card:hover .explore-card-arch img {
-  transform: scale(1.12) rotate(1.5deg);
-  filter: brightness(1.05) saturate(1.1);
+  transform: scale(1.08);
+}
+
+.explore-card.active .explore-card-arch {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #315efb;
 }
 
 .explore-card h4 {
+  display: flex;
+  width: 100%;
+  min-height: 2.4em;
+  align-items: flex-start;
+  justify-content: center;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #7d1232;
-  margin: 6px 0 2px 0;
-  text-align: left;
+  color: #111;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  margin: 0;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .explore-card p {
+  display: block;
+  width: 100%;
+  min-height: 2.6em;
+  margin: 4px 0 0;
+  color: #fff;
   font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;
-  color: #000;
-  margin: 0;
-  text-align: left;
+  font-size: 0.74rem;
+  line-height: 1.3;
+  text-align: center;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .discount-circle {
@@ -346,29 +373,21 @@
   }
 
   .explore-horizontal-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px 8px;
-    overflow-x: visible;
+    display: flex;
+    gap: 14px;
+    padding: 12px 14px 9px;
+    overflow-x: auto;
   }
 
-.explore-card {
-  background-image: url(../../assets/divine_soft_bg.png);
-  text-align: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  border: 1px solid #D97706;
-  border-radius: 20px;
-  padding: 5px 20px;
-  box-sizing: border-box;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
   .explore-card-arch {
-    width: 100%;
-    height: 85px;
+    flex-basis: 74px;
+    width: 74px;
+    height: 74px;
+    margin-bottom: 10px;
+  }
+
+  .explore-card {
+    flex-basis: 78px;
   }
 
   .special-discount-card {
@@ -402,5 +421,43 @@
 
   .explore-header h2 {
     font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .explore-horizontal-grid {
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 12px 8px 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .explore-card {
+    display: block;
+    flex: 0 0 calc((100% - 16px) / 5);
+    min-width: 0;
+  }
+
+  .explore-card-arch {
+    width: clamp(42px, 13vw, 62px);
+    height: clamp(42px, 13vw, 62px);
+    margin: 3px auto 9px;
+  }
+
+  .explore-card h4 {
+    min-height: 2.3em;
+    font-size: 0.75rem;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  .explore-card p {
+    min-height: 2.4em;
+    margin: 3px 0 0;
+    font-size: 0.56rem;
+    line-height: 1.2;
   }
 }

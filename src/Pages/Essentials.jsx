@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Idols.css";
 import API_URL, { bypassHeaders } from "../apiConfig";
+import ProductImageCarousel from "../Components/ProductImageCarousel/ProductImageCarousel";
 
 // Banner Assets
 import EssentialsBanner from "../Components/Assets/Essentials.jpeg";
@@ -104,7 +105,7 @@ const Essentials = () => {
       <div key={product.id} className="idol-product-card-v2">
         <div className="card-img-area">
           <button className="card-wish-btn">🤍</button>
-          <Link to={`/product/${product.id}`}><img src={product.image.startsWith("http") ? product.image : `${API_URL}${product.image}`} alt={product.name} /></Link>
+          <ProductImageCarousel product={product} />
         </div>
         <div className="card-details-area">
           <div className="card-add-action">
@@ -121,7 +122,7 @@ const Essentials = () => {
           <div className="card-meta">
              <span className="card-brand-tag">{product.brand || "Sacred"} ⓘ</span>
              <div className="card-price-bold">₹{Number(product.price).toLocaleString("en-IN")}</div>
-             <h4 className="card-title-text">{product.name}</h4>
+             <h4 className="card-title-text"><Link to={`/product/${product.id}`}>{product.name}</Link></h4>
              <div className="card-rating-row"><span className="card-stars">★★★★☆</span><span className="card-count">12</span></div>
              <p className="card-shipping-text">Shipping, arrives <strong>Soon</strong></p>
           </div>

@@ -47,6 +47,132 @@
   gap: 20px;
 }
 
+.promo-banner-row {
+  grid-column: 1 / -1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 136px;
+  border-radius: 18px;
+  background-image: url(../../assets/divine_soft_bg.png);
+  box-shadow: 0 10px 24px rgba(124, 4, 14, 0.22);
+  overflow: hidden;
+  margin: 8px 0 6px;
+}
+
+.promo-banner-row::before,
+.promo-banner-row::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.promo-banner-row::before {
+  background-image:
+    radial-gradient(circle, rgba(255, 245, 210, 0.7) 0 2px, transparent 2.8px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.14) 0 2px, transparent 2.8px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+  opacity: 0.6;
+}
+
+.promo-banner-row::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+  mix-blend-mode: screen;
+}
+
+.promo-banner-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 136px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px 28px;
+}
+
+.promo-text-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.promo-text-wrap h3 {
+  margin: 0;
+  color: #000;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(34px, 3vw, 62px);
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+}
+
+.promo-small-label {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.92);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.promo-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #76361a;
+  border: 1px solid rgba(255, 241, 180, 0.5);
+  box-shadow: inset 0 0 0 2px rgba(255, 236, 165, 0.18);
+  font-size: 26px;
+  color: #fffdf5;
+}
+
+.promo-icon-left {
+  left: 18%;
+}
+
+.promo-icon-right {
+  right: 18%;
+}
+
+@media (max-width: 700px) {
+  .promo-banner-row {
+    min-height: 120px;
+  }
+
+  .promo-banner-content {
+    min-height: 120px;
+    padding: 16px 20px;
+  }
+
+  .promo-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .promo-icon-left {
+    left: 8%;
+  }
+
+  .promo-icon-right {
+    right: 8%;
+  }
+}
+
 .home-products-grid .walmart-card {
   min-width: 0;
   background-image: url(../../assets/divine_soft_bg.png);
@@ -60,9 +186,6 @@
   display: block;
   width: 100%;
   height: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
   cursor: pointer;
 }
 
@@ -79,7 +202,15 @@
 
 .home-products-grid .card-name {
   margin: 6px 0;
-  cursor: pointer;
+}
+
+.home-products-grid .card-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-products-grid .card-name a:hover {
+  color: #a96f18;
 }
 
 .home-products-message,
@@ -95,13 +226,15 @@
 
 @media (max-width: 1000px) {
   .home-products-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-flow: row dense;
   }
 }
 
 @media (max-width: 700px) {
   .home-products-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-flow: row dense;
     gap: 12px;
   }
 
@@ -131,6 +264,16 @@
   .home-products-grid .qty-selector-pill {
     height: 36px;
     font-size: 13px;
+  }
+
+  .promo-main-line {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .promo-offer-btn {
+    font-size: 16px;
+    padding: 10px 16px;
   }
 
   .home-products-header h2 {

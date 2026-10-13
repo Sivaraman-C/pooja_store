@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API_URL, { bypassHeaders } from "../../apiConfig";
 import LoginPopup from "../LoginPopup/LoginPopup";
-import ProductModal from "../ProductModal/ProductModal";
+import ProductImageCarousel from "../ProductImageCarousel/ProductImageCarousel";
 import "./HomeProducts.css";
 
 const getUserId = () => {
@@ -18,11 +18,6 @@ const getUserId = () => {
   }
 };
 
-const getProductImageUrl = (image) => {
-  if (typeof image !== "string" || !image) return "";
-  return image.startsWith("http") ? image : `${API_URL}${image}`;
-};
-
 const HomeProducts = () => {
   const [products, setProducts] = useState([]);
   const [cartMap, setCartMap] = useState({});
@@ -31,7 +26,6 @@ const HomeProducts = () => {
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [addingProductId, setAddingProductId] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   useEffect(() => {
@@ -227,74 +221,76 @@ const HomeProducts = () => {
           <p className="home-products-message">No products are available right now.</p>
         ) : (
           <div className="home-products-grid">
-            {products.map((product) => {
+            {products.map((product, index) => {
               const quantity = cartMap[product.id] || 0;
-              const imageUrl = getProductImageUrl(product.image);
-              const productWithImage = {
-                ...product,
-                image: typeof product.image === "string" ? product.image : "",
-              };
+
+              const showBanner = index === 5 && products.length > 6;
 
               return (
-                <article className="walmart-card" key={product.id}>
-                  <div className="card-image-wrap">
-                    <button
-                      type="button"
-                      className="home-products-image-button"
-                      onClick={() => setSelectedProduct(productWithImage)}
-                      aria-label={`View ${product.name}`}
-                    >
-                      <img src={imageUrl} alt="" />
-                    </button>
-                    <button
-                      type="button"
-                      className={`wish-btn ${wishlist.includes(product.id) ? "active" : ""}`}
-                      aria-label={wishlist.includes(product.id) ? "Remove from wishlist" : "Add to wishlist"}
-                      aria-pressed={wishlist.includes(product.id)}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleToggleWishlist(product.id);
-                      }}
-                    >
-                      {wishlist.includes(product.id) ? "❤️" : "🤍"}
-                    </button>
-                  </div>
+                <React.Fragment key={product.id}>
+                  {showBanner && (
+                    <div className="promo-banner-row" aria-label="Upcoming festivals">
+                      <div className="promo-banner-content">
+                        <div className="promo-icon promo-icon-left" aria-hidden="true">🪔</div>
+                        <div className="promo-icon promo-icon-right" aria-hidden="true">🔔</div>
+                        <div className="promo-text-wrap">
+                          <span className="promo-small-label">Mark your calendar</span>
+                          <h3>Upcoming Festivals</h3>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
-                  <div className="card-add-area">
-                    {quantity === 0 ? (
+                  <article className="walmart-card" key={product.id}>
+                    <div className="card-image-wrap">
+                      <ProductImageCarousel product={product} className="home-products-image-button" />
                       <button
                         type="button"
-                        className="add-btn-expandable"
-                        onClick={() => handleAddToCart(product)}
-                        disabled={addingProductId === product.id}
+                        className={`wish-btn ${wishlist.includes(product.id) ? "active" : ""}`}
+                        aria-label={wishlist.includes(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                        aria-pressed={wishlist.includes(product.id)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleToggleWishlist(product.id);
+                        }}
                       >
-                        {addingProductId === product.id ? "Adding..." : "+ Add"}
+                        {wishlist.includes(product.id) ? "❤️" : "🤍"}
                       </button>
-                    ) : (
-                      <div className="qty-selector-pill" aria-label={`Quantity: ${quantity}`}>
-                        <button type="button" aria-label="Remove one" onClick={() => handleUpdateQuantity(product.id, quantity - 1)}>−</button>
-                        <span>{quantity}</span>
-                        <button type="button" aria-label="Add one" onClick={() => handleUpdateQuantity(product.id, quantity + 1)}>+</button>
-                      </div>
-                    )}
-                  </div>
+                    </div>
 
-                  <div className="card-details">
-                    <span className="sponsored-tag">{product.brand || "Sacred Item"}</span>
-                    <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
-                    <h3
-                      className="card-name"
-                      onClick={() => setSelectedProduct(productWithImage)}
-                    >
-                      {product.name}
-                    </h3>
-                    <div className="card-rating">
-                    <span className="stars">★★★★☆</span>
-                    <span className="count">12</span>
-                  </div>
-                  <p className="shipping-info">Shipping, arrives <strong>Soon</strong></p>
-                  </div>
-                </article>
+                    <div className="card-add-area">
+                      {quantity === 0 ? (
+                        <button
+                          type="button"
+                          className="add-btn-expandable"
+                          onClick={() => handleAddToCart(product)}
+                          disabled={addingProductId === product.id}
+                        >
+                          {addingProductId === product.id ? "Adding..." : "+ Add"}
+                        </button>
+                      ) : (
+                        <div className="qty-selector-pill" aria-label={`Quantity: ${quantity}`}>
+                          <button type="button" aria-label="Remove one" onClick={() => handleUpdateQuantity(product.id, quantity - 1)}>−</button>
+                          <span>{quantity}</span>
+                          <button type="button" aria-label="Add one" onClick={() => handleUpdateQuantity(product.id, quantity + 1)}>+</button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="card-details">
+                      <span className="sponsored-tag">{product.brand || "Sacred Item"}</span>
+                      <span className="price-now">₹{Number(product.price).toLocaleString("en-IN")}</span>
+                      <h3 className="card-name">
+                        <Link to={`/product/${product.id}`}>{product.name}</Link>
+                      </h3>
+                      <div className="card-rating">
+                        <span className="stars">★★★★☆</span>
+                        <span className="count">12</span>
+                      </div>
+                      <p className="shipping-info">Shipping, arrives <strong>Soon</strong></p>
+                    </div>
+                  </article>
+                </React.Fragment>
               );
             })}
           </div>
@@ -302,14 +298,6 @@ const HomeProducts = () => {
       </div>
 
       {showLoginPopup && <LoginPopup onClose={() => setShowLoginPopup(false)} />}
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onAddToCart={handleAddToCart}
-          allProducts={products}
-        />
-      )}
     </section>
   );
 };

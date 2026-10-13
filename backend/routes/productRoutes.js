@@ -8,16 +8,37 @@ const router = express.Router();
 const upload = multer({
   storage: productStorage,
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: 10 * 1024 * 1024,
   },
 });
+const uploadProductImages = upload.fields([
+  { name: "image", maxCount: 1 },
+  { name: "images", maxCount: 8 },
+]);
+
+const getStoredImages = (value, fallbackImage) => {
+  let images = value;
+  if (typeof images === "string") {
+    try {
+      images = JSON.parse(images);
+    } catch {
+      images = [];
+    }
+  }
+
+  const storedImages = Array.isArray(images)
+    ? images.filter((image) => typeof image === "string" && image)
+    : [];
+  if (storedImages.length > 0) return [...new Set(storedImages)];
+  return fallbackImage ? [fallbackImage] : [];
+};
 
 
 /* =========================
    ADD PRODUCT
 ========================= */
 
-router.post("/", upload.single("image"), (req, res) => {
+router.post("/", uploadProductImages, (req, res) => {
     console.log("POST /api/products - BODY:", req.body);
 
     const {
@@ -34,11 +55,20 @@ router.post("/", upload.single("image"), (req, res) => {
       return res.status(400).json({ message: "Name, category and price are required" });
     }
 
-    const image = req.file ? req.file.path : null;
+    const legacyImage = req.files?.image?.[0]?.path;
+    const uploadedImages = (req.files?.images || []).map((file) => file.path);
+    const images = [...new Set([
+      ...(legacyImage ? [legacyImage] : []),
+      ...uploadedImages,
+    ])];
+    if (images.length > 8) {
+      return res.status(400).json({ message: "A product can have up to 8 photos." });
+    }
+    const image = images[0] || null;
 
     const sql = `
-      INSERT INTO products (name, category, brand, description, price, stock, image, featured)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO products (name, category, brand, description, price, stock, image, images, featured)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -49,12 +79,18 @@ router.post("/", upload.single("image"), (req, res) => {
       Number(price),
       Number(stock) || 0,
       image,
+      images.length > 0 ? JSON.stringify(images) : null,
       featured === "true" || featured === "1" ? 1 : 0,
     ];
 
     db.query(sql, values, (err, result) => {
         if (err) {
           console.error("DATABASE INSERT ERROR:", err);
+          if (err.code === "ER_BAD_FIELD_ERROR" && /images/i.test(err.message)) {
+            return res.status(503).json({
+              message: "Product photo database setup is incomplete. Run `npm run migrate:product-images` from the backend directory, then retry.",
+            });
+          }
           return res.status(500).json({ message: "Failed to add product", error: err.message });
         }
         res.status(201).json({ message: "Product added successfully", productId: result.insertId });
@@ -141,7 +177,7 @@ router.get("/:id", (req, res) => {
    UPDATE PRODUCT
 ========================= */
 
-router.put("/:id", upload.single("image"), (req, res) => {
+router.put("/:id", uploadProductImages, (req, res) => {
     const { id } = req.params;
     console.log(`PUT /api/products/${id} - BODY:`, req.body);
 
@@ -159,35 +195,73 @@ router.put("/:id", upload.single("image"), (req, res) => {
       return res.status(400).json({ message: "Name, category and price are required" });
     }
 
-    let sql;
-    let values;
-
-    if (req.file) {
-      const image = req.file.path;
-      sql = `
-        UPDATE products
-        SET name = ?, category = ?, brand = ?, description = ?, price = ?, stock = ?, image = ?, featured = ?
-        WHERE id = ?
-      `;
-      values = [name, category, brand || null, description || "", Number(price), Number(stock) || 0, image, featured === "true" || featured === "1" ? 1 : 0, id];
-    } else {
-      sql = `
-        UPDATE products
-        SET name = ?, category = ?, brand = ?, description = ?, price = ?, stock = ?, featured = ?
-        WHERE id = ?
-      `;
-      values = [name, category, brand || null, description || "", Number(price), Number(stock) || 0, featured === "true" || featured === "1" ? 1 : 0, id];
+    let keptImages;
+    if (req.body.keepImages !== undefined) {
+      try {
+        keptImages = JSON.parse(req.body.keepImages);
+        if (!Array.isArray(keptImages) || keptImages.some((image) => typeof image !== "string")) {
+          throw new Error("The retained images list is invalid.");
+        }
+      } catch (error) {
+        return res.status(400).json({ message: error.message || "The retained images list is invalid." });
+      }
     }
 
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error("DATABASE UPDATE ERROR:", err);
-        return res.status(500).json({ message: "Failed to update product", error: err.message });
+    db.query("SELECT image, images FROM products WHERE id = ?", [id], (selectError, products) => {
+      if (selectError) {
+        console.error("DATABASE PRODUCT LOOKUP ERROR:", selectError);
+        return res.status(500).json({ message: "Failed to update product", error: selectError.message });
       }
-      if (result.affectedRows === 0) {
+
+      if (products.length === 0) {
         return res.status(404).json({ message: "Product not found" });
       }
-      res.json({ message: "Product updated successfully" });
+
+      const uploadedImages = (req.files?.images || []).map((file) => file.path);
+      const legacyImage = req.files?.image?.[0]?.path;
+      const currentImages = getStoredImages(products[0].images, products[0].image);
+      const baseImages = keptImages || (legacyImage ? [] : currentImages);
+      const hasImageChanges =
+        keptImages !== undefined || uploadedImages.length > 0 || Boolean(legacyImage);
+      const images = hasImageChanges
+        ? [...new Set([
+            ...baseImages,
+            ...uploadedImages,
+            ...(legacyImage ? [legacyImage] : []),
+          ])]
+        : currentImages;
+      if (hasImageChanges && images.length > 8) {
+        return res.status(400).json({ message: "A product can have up to 8 photos." });
+      }
+      const image = images[0] || null;
+      const sql = `
+        UPDATE products
+        SET name = ?, category = ?, brand = ?, description = ?, price = ?, stock = ?, image = ?, images = ?, featured = ?
+        WHERE id = ?
+      `;
+      const values = [
+        name,
+        category,
+        brand || null,
+        description || "",
+        Number(price),
+        Number(stock) || 0,
+        image,
+        images.length > 0 ? JSON.stringify(images) : null,
+        featured === "true" || featured === "1" ? 1 : 0,
+        id,
+      ];
+
+      db.query(sql, values, (err, result) => {
+        if (err) {
+          console.error("DATABASE UPDATE ERROR:", err);
+          return res.status(500).json({ message: "Failed to update product", error: err.message });
+        }
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ message: "Product not found" });
+        }
+        res.json({ message: "Product updated successfully" });
+      });
     });
 });
 
