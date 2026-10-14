@@ -39,7 +39,7 @@
   height: 56px;
   background-image: url(../../assets/divine_soft_bg1.png);
   border-radius: 50%;
-  border: 4px solid #ffffff;
+  border: 4px solid transparent;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
@@ -48,8 +48,47 @@
   transition: transform 0.2s ease;
 }
 
+.center-floating-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 4px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--center-nav-glow-angle),
+    transparent 0deg,
+    #D97706 60deg,
+    #FDE68A 100deg,
+    transparent 140deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: centerNavGlowRotate 4s linear infinite;
+}
+
+.center-floating-btn .bottom-nav-icon {
+  position: relative;
+  z-index: 1;
+}
+
 .center-floating-btn:hover {
   transform: translateX(-50%) scale(1.05);
+}
+
+@property --center-nav-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes centerNavGlowRotate {
+  to {
+    --center-nav-glow-angle: 360deg;
+  }
 }
 
 .bottom-nav-icon {

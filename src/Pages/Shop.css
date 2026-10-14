@@ -106,7 +106,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     transition: all 0.2s;
+}
+
+.strip-icon-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    padding: 3px;
+    border-radius: inherit;
+    background: conic-gradient(
+        from var(--shop-icon-glow-angle),
+        transparent 0deg,
+        #D97706 60deg,
+        #FDE68A 100deg,
+        transparent 140deg,
+        transparent 360deg
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: shopIconGlowRotate 4s linear infinite;
+    pointer-events: none;
 }
 
 .strip-icon-box.active {
@@ -119,6 +143,20 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    position: relative;
+    z-index: 1;
+}
+
+@property --shop-icon-glow-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes shopIconGlowRotate {
+    to {
+        --shop-icon-glow-angle: 360deg;
+    }
 }
 
 .strip-item span {

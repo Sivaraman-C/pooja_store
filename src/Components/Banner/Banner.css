@@ -50,6 +50,62 @@
     align-items: center;
     padding: 0 6%;
     box-sizing: border-box;
+
+    /* Glow border settings */
+    border-radius: 16px;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+/* Animated glow border */
+.banner-content-wrapper::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--banner-glow-angle),
+        transparent 0deg,
+        #D97706 60deg,
+        #FDE68A 100deg,
+        transparent 140deg,
+        transparent 360deg
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: devalokaGlowRotate 2s linear infinite;
+}
+
+/* Inner background */
+.banner-content-wrapper::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 3px;
+    border-radius: 13px;
+    /* background: #fffaf0; */
+}
+
+/* Keep banner content above the glow */
+.banner-content-wrapper > * {
+    position: relative;
+    z-index: 1;
+}
+
+@property --banner-glow-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes devalokaGlowRotate {
+    to {
+        --banner-glow-angle: 360deg;
+    }
 }
 
 .banner-text-content {
@@ -63,6 +119,7 @@
     /* color: white; */
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     text-align: left;
+
 }
 
 .banner-eyebrow {

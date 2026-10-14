@@ -217,13 +217,34 @@
   width: 88px;
   height: 88px;
   position: relative;
-  background: #f1f1f1;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 0 0 5px #f0f0f0;
   margin: 3px auto 12px;
-  border: 2px solid #fff;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.explore-card-arch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 5px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--hero-card-glow-angle),
+    transparent 0deg,
+    #D97706 60deg,
+    #FDE68A 100deg,
+    transparent 140deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: heroCardGlowRotate 2s linear infinite;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .explore-card-arch img {
@@ -234,6 +255,19 @@
   object-fit: cover;
   display: block;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+  z-index: 1;
+}
+
+@property --hero-card-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes heroCardGlowRotate {
+  to {
+    --hero-card-glow-angle: 360deg;
+  }
 }
 
 .explore-card:hover .explore-card-arch {
