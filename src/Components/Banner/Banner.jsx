@@ -10,6 +10,7 @@ const banners = [
   {
     id: 1,
     image: Banner1,
+    video: "/video/devaloka_brand_video.mp4",
     eyebrow: "Pooja Special",
     title: "Save up to 40% on Premium Brass Items",
     btnText: "Shop Brass Collection",
@@ -18,6 +19,7 @@ const banners = [
   {
     id: 2,
     image: Banner2,
+    video: "/video/devaloka_brand_video.mp4",
     eyebrow: "Exclusive Offer",
     title: "Divine Deals on Complete Pooja Kits",
     btnText: "View Pooja Kits",
@@ -27,6 +29,7 @@ const banners = [
   {
     id: 3,
     image: Banner3,
+    video: "/video/devaloka_brand_video.mp4",
     eyebrow: "Sacred Collection",
     title: "Handcrafted Idols for Your Home Temple",
     btnText: "Explore Idols",
@@ -56,27 +59,44 @@ const Banner = () => {
     <div className="banner-carousel-container">
       {/* TOP INFO ROW */}
       <div className="banner-top-info">
-        <p>Pure authentic products at blessed prices</p>
         <div className="info-header">
           <h2>Sacred Deals</h2>
         </div>
       </div>
 
       <div className="banner-carousel" style={{ backgroundColor: banners[current].bgColor }}>
-        <div className="banner-slider" style={{ transform: `translateX(-${current * 100}%)` }}>
-          {banners.map((b) => (
+        <div className="banner-slider" style={{ left: `-${current * 100}%` }}>
+          {banners.map((b, index) => (
             <div key={b.id} className="banner-slide">
               <div className="banner-image-content">
                 <img src={b.image} alt="" className="banner-main-img" />
               </div>
               <div className="banner-content-wrapper">
-                <div className="banner-text-content">
-                  <span className="banner-eyebrow">{b.eyebrow}</span>
-                  <h2 className="banner-title">{b.title}</h2>
-                  <Link to={b.link} className="banner-pill-btn">
-                    {b.btnText}
-                  </Link>
+                <div className="banner-left-content">
+                  <div
+                    className="banner-video-container"
+                  >
+                    {index === current && (
+                      <video
+                        src={b.video || "/video/devaloka_brand_video.mp4"}
+                        poster={b.image}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                        className="banner-main-video"
+                      />
+                    )}
+                  </div>
+                  <div className="banner-text-content">
+                    <span className="banner-eyebrow">{b.eyebrow}</span>
+                    <h2 className="banner-title">{b.title}</h2>
+                  </div>
                 </div>
+                <Link to={b.link} className="banner-pill-btn">
+                  {b.btnText}
+                </Link>
               </div>
             </div>
           ))}
@@ -91,6 +111,7 @@ const Banner = () => {
            <button className="banner-arrow-btn" onClick={nextSlide}>❯</button>
         </div>
       </div>
+
     </div>
   );
 };

@@ -9,14 +9,16 @@
     overflow: hidden;
     height: 400px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    transition: background-color 0.4s ease;
+    background-color: #fffaf0;
 }
 
 .banner-slider {
+    position: relative;
+    left: 0;
     display: flex;
+    width: 100%;
     height: 100%;
-    /* Remove width: 100% to allow slides to sit side-by-side */
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .banner-slide {
@@ -30,31 +32,47 @@
 .banner-image-content {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: 0;
 }
 
-.banner-main-img {
+.banner-main-img,
+.banner-main-video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
+.banner-video-container {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    aspect-ratio: 16 / 9;
+}
+
 /* TEXT CONTENT LAYER OVER IMAGE */
 .banner-content-wrapper {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     height: 100%;
     width: 100%;
     display: flex;
-    align-items: center;
-    padding: 0 6%;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 40px 6% 24px;
     box-sizing: border-box;
 
     /* Glow border settings */
     border-radius: 16px;
     isolation: isolate;
     overflow: hidden;
+}
+
+.banner-left-content {
+    width: min(44%, 480px);
+    flex: 0 0 auto;
 }
 
 /* Animated glow border */
@@ -109,47 +127,39 @@
 }
 
 .banner-text-content {
-    /* background: rgba(255, 255, 255, 0.15); */
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 40px;
-    border-radius: 20px;
-    /* border: 1px solid rgba(255, 255, 255, 0.3); */
-    max-width: 500px;
-    /* color: white; */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
     text-align: left;
-
 }
 
 .banner-eyebrow {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin: 0 0 6px;
     display: block;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: #7d1232;
+    color: #ffff;
     text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .banner-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 38px;
-    color: #111;
+    font-size: 28px;
+    color: #000;
     font-weight: 800;
-    margin: 0 0 30px;
+    margin: 0;
     line-height: 1.1;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 10px rgb(255, 251, 251);
 }
 
 /* PILL BUTTON STYLE */
 .banner-pill-btn {
+    align-self: flex-end;
     display: inline-block;
     background: #ffffff;
     color: #111;
-    padding: 14px 32px;
+    padding: 14px 24px;
     border-radius: 40px;
     text-decoration: none;
     font-weight: 700;
@@ -218,18 +228,6 @@
     text-decoration: underline;
 }
 
-.banner-top-info p {
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  color: #D5892B;
-}
-
 /* =========================
    MOBILE RESPONSIVE
 ========================= */
@@ -239,26 +237,41 @@
         height: 320px;
     }
 
+    .banner-content-wrapper {
+        gap: 12px;
+        padding: 18px 5%;
+    }
+
+    .banner-left-content {
+        width: min(60%, 480px);
+    }
+
     .banner-text-content {
-        padding: 25px;
-        margin: 0 auto;
-        max-width: 85%;
-        text-align: center;
-        backdrop-filter: blur(8px);
+        padding-top: 8px;
     }
 
     .banner-title {
-        font-size: 24px;
+        font-size: 21px;
+    }
+
+    .banner-eyebrow {
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+
+    .banner-pill-btn {
+        padding: 10px 14px;
+        font-size: 12px;
     }
 
     .banner-nav-overlay {
         top: 15px;
-        right: 15px;
+        right: 1px;
     }
 
     .banner-arrow-btn, .banner-play-btn {
-        width: 32px;
-        height: 32px;
+        width: 22px;
+        height: 22px;
     }
 }
 
@@ -267,12 +280,29 @@
         height: 280px;
     }
 
-    .banner-text-content {
-        width: 90%;
-        padding: 20px;
+    .banner-content-wrapper {
+        gap: 8px;
+        padding: 16px 4%;
+    }
+
+    .banner-left-content {
+        width: 75%;
+    }
+
+    .banner-video-container {
+        aspect-ratio: 4 / 3;
     }
 
     .banner-title {
-        font-size: 20px;
+        font-size: 17px;
+    }
+
+    .banner-pill-btn {
+        width: 30%;
+        padding: 8px 10px;
+        font-size: 10px;
+        line-height: 1.2;
+        text-align: center;
+        box-sizing: border-box;
     }
 }

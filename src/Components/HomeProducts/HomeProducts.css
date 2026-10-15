@@ -43,8 +43,9 @@
 
 .home-products-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
+  grid-auto-flow: row dense;
 }
 
 .promo-banner-row {
